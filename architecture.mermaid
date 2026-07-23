@@ -1,0 +1,382 @@
+classDiagram
+    %% =========================================================================
+    %% FEATURE MODULE 1: PLAYER SYSTEM (COMPOSED FACADE ARCHITECTURE)
+    %% =========================================================================
+    class PlayerController {
+        <<MonoBehaviour - Gameplay Scene>>
+        -PlayerMovement movementSystem
+        -CameraController cameraSystem
+        -PlayerInteraction interactionSystem
+        -WorldWatchView wristWatch
+        +bool IsControlRoomDeparted
+        +InitializePlayer() void
+        +SetInputEnabled(bool isEnabled) void
+        +OnInteractInput() void
+        +OnWatchInput() void
+    }
+
+    class PlayerMovement {
+        <<MonoBehaviour - Gameplay Scene>>
+        -float moveSpeed
+        -float gravity
+        -CharacterController characterController
+        +ProcessMovement(Vector2 moveInput) void
+        +ApplyGravity() void
+    }
+
+    class CameraController {
+        <<MonoBehaviour - Gameplay Scene>>
+        -float mouseSensitivity
+        -Vector2 pitchLimits
+        -Camera playerCamera
+        +ProcessMouseLook(Vector2 lookInput) void
+        +SetWatchViewPose(bool isWatching) void
+    }
+
+    class PlayerInteraction {
+        <<MonoBehaviour - Gameplay Scene>>
+        -float interactDistance
+        -LayerMask interactableMask
+        -IInteractable currentTarget
+        +OnInteractableTargetChanged Action
+        +DetectInteractable() void
+        +ExecuteInteraction(PlayerController player) void
+    }
+
+    class IInteractable {
+        <<interface>>
+        +Interact(PlayerController player) void
+        +GetPrompt() string
+    }
+
+    class ControlRoomTrigger {
+        <<MonoBehaviour - Gameplay Scene>>
+        -PlayerController playerController
+        +OnTriggerExit(Collider other) void
+    }
+
+    PlayerController --> PlayerMovement
+    PlayerController --> CameraController
+    PlayerController --> PlayerInteraction
+    PlayerController --> WorldWatchView
+    PlayerInteraction --> IInteractable
+    ControlRoomTrigger ..> PlayerController : sets IsControlRoomDeparted
+
+    %% =========================================================================
+    %% FEATURE MODULE 2: TIME & WATCH SYSTEM (7 MINUTE CONSTANT TIMER)
+    %% =========================================================================
+    class WatchManager {
+        <<Controller - Plain C# / UniTask>>
+        +const float TOTAL_TIME_SECONDS = 420f
+        -float timeRemaining
+        -bool isRunning
+        +OnTimeUpdated Action
+        +OnMinuteChanged Action
+        +OnTimeExpired Action
+        +StartCountdownAsync(CancellationToken ct) UniTask
+        +GetFormattedTime() string
+        +AddTime(float seconds) void
+        +ReduceTime(float seconds) void
+    }
+
+    class ITimerModifier {
+        <<interface>>
+        +ApplyTimeModification(WatchManager watch) void
+    }
+
+    class WorldWatchView {
+        <<MonoBehaviour - Gameplay Scene>>
+        -TextMeshPro watchDisplay3D
+        -WatchManager watchManager
+        +UpdateDisplay(float timeRemaining) void
+        +PlayWatchBeep() void
+    }
+
+    class SkeletonTrigger {
+        <<MonoBehaviour - Gameplay Scene>>
+        -bool triggered
+        -float bonusSeconds
+        +OnTriggerEnter(Collider other) void
+    }
+
+    class BabushkaDoll {
+        <<MonoBehaviour - Gameplay Scene>>
+        -int layerCount
+        +Interact(PlayerController player) void
+    }
+
+    WorldWatchView --> WatchManager
+    ITimerModifier <|.. SkeletonTrigger
+    ITimerModifier <|.. BabushkaDoll
+    IInteractable <|.. BabushkaDoll
+    SkeletonTrigger ..> WatchManager : AddTime
+    BabushkaDoll ..> WatchManager : AddTime
+
+    %% =========================================================================
+    %% FEATURE MODULE 3: DOOR & LOCK SYSTEM
+    %% =========================================================================
+    class RoomConfig {
+        <<ScriptableObject>>
+        +string roomId
+        +float actualUnlockTimeMinutes
+        +float expectedUnlockTimeMinutes
+        +string correctPasscode
+    }
+
+    class RoomDoor {
+        <<MonoBehaviour - Gameplay Scene>>
+        -Transform doorPivot
+        -bool isOpen
+        +OpenDoor() void
+        +CloseDoor() void
+    }
+
+    class DoorLockController {
+        <<MonoBehaviour - Gameplay Scene (per door)>>
+        -RoomConfig config
+        -RoomDoor door
+        -WatchManager watchManager
+        -bool isUnlocked
+        +bool IsInteractable
+        +CanUnlockAtCurrentTime() bool
+        +ValidateCode(string enteredCode) bool
+        +Interact(PlayerController player) void
+        +GetPrompt() string
+    }
+
+    class KeypadPopupUI {
+        <<MonoBehaviour - Gameplay Scene>>
+        -DoorLockController currentLock
+        -string enteredBuffer
+        +OnNumPadPressed(int digit) void
+        +SubmitCode() void
+        +ShowLockedMessage() void
+    }
+
+    IInteractable <|.. DoorLockController
+    DoorLockController --> RoomConfig
+    DoorLockController --> RoomDoor
+    DoorLockController --> WatchManager
+    KeypadPopupUI --> DoorLockController
+
+    %% =========================================================================
+    %% FEATURE MODULE 4: PUZZLE & GAME PROGRESSION (2 ENDINGS & GENERIC CHECK SOLVE)
+    %% =========================================================================
+    class EndingType {
+        <<enumeration>>
+        WorldSaved
+        NuclearWar
+    }
+
+    class PhoneCallChoice {
+        <<enumeration>>
+        NoCallMade
+        ReportFalseAlarm
+        ReportIncomingNuke
+    }
+
+    class GameManager {
+        <<MonoBehaviour - Scene Singleton>>
+        -PuzzleTracker puzzleTracker
+        +Instance GameManager
+        +StartGame() void
+        +EndGame(EndingType ending) void
+        +RestartScene() void
+        +AreAllPuzzlesSolved() bool
+        +EvaluateEnding(bool leftControlRoom, PhoneCallChoice callChoice) EndingType
+        +OnTimeExpiredHandler() void
+    }
+
+    class PuzzleConfig {
+        <<ScriptableObject>>
+        +string puzzleId
+        +string puzzleName
+        +bool preserveProgressOnExit
+    }
+
+    class IPuzzle {
+        <<interface>>
+        +bool IsSolved
+        +InitializePuzzle() void
+        +bool CheckSolve()
+        +ResetPuzzle() void
+        +OnPuzzleSolved Action
+    }
+
+    class BasePuzzle~T~ {
+        <<abstract MonoBehaviour - Generic Puzzle>>
+        #PuzzleConfig puzzleConfig
+        #T currentState
+        #T targetState
+        #bool isSolved
+        +bool IsSolved
+        +InitializePuzzle() void
+        +bool CheckSolve()
+        +SaveState() void
+        +RestoreState() void
+    }
+
+    class PuzzleTracker {
+        <<Controller - Plain C#>>
+        +const int TOTAL_ROOM_PUZZLES = 4
+        -int solvedPuzzlesCount
+        +int SolvedPuzzlesCount
+        +bool IsAllPuzzlesSolved
+        +OnPuzzleCounterIncremented Action
+        +RegisterPuzzle(IPuzzle puzzle) void
+        +IncrementSolvedCount() void
+    }
+
+
+    class PhoneInteractable {
+        <<MonoBehaviour - Gameplay Scene>>
+        -bool hasBeenUsed
+        +Interact(PlayerController player) void
+        +GetPrompt() string
+        +GetAvailableChoices() PhoneCallChoice[]
+    }
+
+    class PhoneChoiceUI {
+        <<MonoBehaviour - Gameplay Scene>>
+        -PhoneInteractable currentPhone
+        +ShowChoices(PhoneCallChoice[] choices) void
+        +OnChoiceSelected(PhoneCallChoice choice) void
+    }
+
+    IPuzzle <|.. BasePuzzle~T~
+    IInteractable <|.. PhoneInteractable
+    BasePuzzle~T~ --> PuzzleConfig
+    GameManager --> PuzzleTracker
+    PhoneInteractable ..> GameManager : via Instance
+    PhoneChoiceUI --> PhoneInteractable
+    PhoneChoiceUI ..> GameManager : via Instance
+
+    %% =========================================================================
+    %% FEATURE MODULE 5: AUDIO MANAGER & UI PRESENTATION
+    %% =========================================================================
+    class SFXType {
+        <<enumeration>>
+        DoorUnlock
+        KeypadPress
+        WatchBeep
+        TypewriterChar
+        PuzzleSolved
+        PhoneRing
+        SkeletonDrop
+    }
+
+    class BGMType {
+        <<enumeration>>
+        BunkerAmbient
+        TensionLoop
+        SilenceLoop
+    }
+
+    class MusicType {
+        <<enumeration>>
+        OpeningCutscene
+        EndingVictory
+        EndingNuclearWar
+    }
+
+    class AudioManager {
+        <<MonoBehaviour - Persistent Singleton>>
+        -AudioClip[] sfxClips
+        -AudioClip[] bgmClips
+        -AudioClip[] musicClips
+        -AudioSource sfxSource
+        -AudioSource bgmSource
+        -AudioSource musicSource
+        +Instance AudioManager
+        +PlaySFX(SFXType sfxType) void
+        +PlayBGM(BGMType bgmType) void
+        +StopBGM() void
+        +PlayMusic(MusicType musicType) void
+        +StopMusic() void
+    }
+
+    class CrosshairUI {
+        <<MonoBehaviour - Gameplay Scene>>
+        -Image crosshairImage
+        -Sprite defaultCrosshair
+        -Sprite interactCrosshair
+        +SetInteractable(bool isTargeting) void
+    }
+
+    class InteractionPromptUI {
+        <<MonoBehaviour - Gameplay Scene>>
+        -TextMeshProUGUI promptText
+        -GameObject promptContainer
+        +ShowPrompt(string text) void
+        +HidePrompt() void
+    }
+
+    class UIManager {
+        <<MonoBehaviour - Gameplay Scene>>
+        -KeypadPopupUI keypadPopup
+        -PhoneChoiceUI phoneChoiceUI
+        -InteractionPromptUI promptUI
+        -CrosshairUI crosshairUI
+        -CutscenePlayer cutscenePlayer
+        +OpenKeypadModal(DoorLockController lock) void
+        +CloseKeypadModal() void
+        +UpdatePuzzleCounterDisplay(int solved, int total) void
+    }
+
+    class CutscenePlayer {
+        <<MonoBehaviour - Gameplay Scene>>
+        -PlayableDirector director
+        -PlayableAsset openingTimeline
+        -PlayableAsset victoryTimeline
+        -PlayableAsset defeatTimeline
+        +PlayCutscene(EndingType ending) void
+        +PlayOpeningCutscene() void
+        +OnCutsceneFinished Action
+    }
+
+    class MainMenuUI {
+        <<MonoBehaviour - Main Menu Scene>>
+        -Button playButton
+        -Button quitButton
+        +OnPlayPressed() void
+        +OnQuitPressed() void
+    }
+
+    class PauseMenuUI {
+        <<MonoBehaviour - Gameplay Scene>>
+        -GameObject pausePanel
+        -Button resumeButton
+        -Button restartButton
+        -Button mainMenuButton
+        +TogglePause() void
+        +OnResumePressed() void
+        +OnRestartPressed() void
+        +OnMainMenuPressed() void
+    }
+
+    class WorldSpaceTerminal {
+        <<MonoBehaviour - Gameplay Scene>>
+        -string terminalId
+        -TextMeshPro terminalScreenText
+        +UpdateScreenText(string text) void
+    }
+
+    class TypewriterEffect {
+        <<MonoBehaviour - Gameplay Scene>>
+        -float printSpeed
+        -AudioSource audioSource
+        +TypeTextAsync(string fullText) UniTask
+    }
+
+    AudioManager ..> SFXType : sfxClips indexed by int
+    AudioManager ..> BGMType : bgmClips indexed by int
+    AudioManager ..> MusicType : musicClips indexed by int
+    UIManager --> KeypadPopupUI
+    UIManager --> PhoneChoiceUI
+    UIManager --> InteractionPromptUI
+    UIManager --> CrosshairUI
+    UIManager --> CutscenePlayer
+    CutscenePlayer ..> EndingType
+    InteractionPromptUI ..> PlayerInteraction : listens to OnInteractableTargetChanged
+    CrosshairUI ..> PlayerInteraction : listens to OnInteractableTargetChanged
+    PauseMenuUI ..> GameManager

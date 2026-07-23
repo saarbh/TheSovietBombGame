@@ -10,6 +10,25 @@ For any project-specific architecture, refer to the `PROJECT_GUIDE.md` or `.agen
 
 ---
 
+## 0. Minimum Target Versions & Modern C# Usage
+
+- **Minimum Unity Version**: Unity 2022.3 LTS or Unity 6 (6000.x+).
+- **Minimum C# Version**: C# 9.0+ / C# 10+.
+- **Modern Language Features**: AI agents and developers should actively leverage modern C# features supported by modern Unity versions:
+  - **Auto-Implemented Properties**: Use auto-properties (`public float Speed { get; private set; }` or `public int Score { get; set; }`) without manual private backing fields unless custom getter/setter logic is strictly required.
+  - **Expression-Bodied Members**: Use `=>` for single-line methods, properties, and getters.
+  - **Target-Typed `new()` Expressions**: Use concise target-typed `new()` initialization where the type on the left-hand side is explicit.
+
+### ⚠️ Critical Rule: `UnityEngine.Object` vs. Pure C# Null Handling
+- **`UnityEngine.Object` Types** (`MonoBehaviour`, `Transform`, `GameObject`, `ScriptableObject`, etc.):
+  - Unity overrides `==` and `!=` to perform custom "destroyed native object" (`fake null`) checks.
+  - **NEVER** use C# pattern matching (`obj is null`, `obj is not null`), null-conditional (`obj?.Method()`), or null-coalescing (`obj ?? default`) on `UnityEngine.Object` types! Pattern matching bypasses Unity's native `==` operator override and will fail to detect destroyed Unity objects.
+  - **ALWAYS** use standard equality (`if (obj == null)`, `if (obj != null)`) or implicit boolean checks (`if (obj)`, `if (!obj)`) for `UnityEngine.Object` instances.
+- **Pure C# Types** (Plain C# classes, interfaces, records, DTOs):
+  - **ALWAYS** use modern C# pattern matching (`if (service is null)`, `if (data is not null)`), `?.`, and `??=`.
+
+---
+
 ## 1. Naming Conventions
 
 | Element | Convention | Example |
@@ -84,21 +103,24 @@ if (isReady) StartGame();
 - **`Awake()`**: Initialize internal state, cache components, set Singleton references.
 - **`Start()`**: Resolve external dependencies, trigger initial game logic.
 - **`OnEnable()` / `OnDisable()`**: Subscribe and unsubscribe from events here — never elsewhere.
-- **`Update()`**: Keep lean. Delegate all non-trivial logic to descriptively named private helper methods. No heavy allocations, no `GetComponent`, no LINQ in the hot path.
+- **`Update()`**: 
+  - **NEVER UNLESS ABSOLUTELY NEEDED DO NOT ADD ANY INITIALIZATION OR HEAVY CREATIONS INSIDE UPDATE LOOPS.**
+  - `Update()`, `FixedUpdate()`, and `LateUpdate()` must ONLY be used for logic that *must* execute every single frame.
+  - Every time you create a function or logic intended to be placed in `Update()`, you MUST stop and evaluate:
+    1. *Can this result be cached or driven by events/callbacks instead?*
+    2. *Does this really need to run every frame?*
+  - **Do NOT** put `GetComponent`, `new` allocations, string concatenations, or searches inside `Update()`.
 - **Keep MonoBehaviours as thin shells.** All real logic should live in plain C# classes (services, controllers, utils) that are injected in. This makes systems unit-testable without needing a running Unity scene.
 
 ```csharp
-// BAD — logic directly in MonoBehaviour
+// BAD — heavy allocation and direct logic in Update
 private void Update()
 {
-    if (health <= 0 && !isDead)
-    {
-        isDead = true;
-        // 20 lines of death logic...
-    }
+    var enemyList = new List<Enemy>(); // GC spike every frame!
+    var controller = GetComponent<PlayerController>(); // Expensive lookup every frame!
 }
 
-// GOOD — MonoBehaviour delegates to injected service
+// GOOD — cached references, MonoBehaviour delegates to injected service
 private void Update()
 {
     _healthService.Tick(Time.deltaTime);
@@ -115,6 +137,19 @@ private void Update()
 - **Interface Segregation**: Prefer small, focused interfaces (`IInteractable`, `IUnlockable`) over large, monolithic ones.
 - **Dependency Inversion**: Depend on abstractions (interfaces), not concrete classes. Inject dependencies rather than instantiating them internally.
 - **DRY**: If the same logic appears more than once, extract it into a shared helper or service. Never duplicate code across classes — create a utility method or a base class.
+
+---
+
+## 5.1. Senior AAA Design Patterns
+
+As a senior engineer building production-grade architecture, enforce established software design patterns:
+
+- **State Pattern / Finite State Machines (FSM)**: Decouple state-dependent logic (e.g. AI states, player movement states, game flow) into discrete State classes rather than monolithic `switch` or `if/else` ladders in `Update()`.
+- **Observer Pattern / Event-Driven Architecture**: Use C# `event`, `Action<T>`, or a central Event Bus to notify systems of state changes (e.g. player health change -> UI update). Systems must react to events instead of polling values inside frame updates.
+- **Object Pool Pattern**: Mandatory for any frequently created/destroyed entities (projectiles, visual effects, sound nodes, UI cards). Never `Instantiate` or `Destroy` in high frequency.
+- **Factory Pattern**: Encapsulate object creation logic in dedicated Factory classes (`EnemyFactory`, `ItemFactory`) to keep callers decoupled from concrete sub-classes.
+- **Strategy Pattern**: Encapsulate interchangeable algorithms (e.g. `IAttackStrategy`, `IPathfindingStrategy`) behind interfaces to allow runtime swapping.
+- **Flyweight / ScriptableObject Data Separation**: Separate mutable runtime state from immutable configuration data. Store shared configuration/stats in `ScriptableObject` assets.
 
 ---
 

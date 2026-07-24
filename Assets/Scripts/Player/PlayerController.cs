@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 /// <summary>
 /// Scene facade for the player. Owns the per-frame order of operations for its
@@ -9,7 +8,11 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private PlayerMovement movementSystem;
+    [SerializeField] private CameraController cameraSystem;
     [SerializeField] private PlayerInteraction interactionSystem;
+
+    // TODO: WorldWatchView is not written yet (Module 2).
+    // OnWatchInput raises OnWatchToggled so the watch view can subscribe once it exists.
 
     /// <summary>One-way flag set by ControlRoomTrigger. Once departed, never unset.</summary>
     public bool IsControlRoomDeparted { get; private set; }
@@ -18,11 +21,21 @@ public class PlayerController : MonoBehaviour
 
     public PlayerInteraction InteractionSystem => interactionSystem;
 
+    /// <summary>Raised when the player raises/lowers the wrist watch.</summary>
+    public event Action<bool> OnWatchToggled;
+
+    private bool isWatchRaised;
+
     private void Awake()
     {
         if (movementSystem == null)
         {
             movementSystem = GetComponentInChildren<PlayerMovement>();
+        }
+
+        if (cameraSystem == null)
+        {
+            cameraSystem = GetComponentInChildren<CameraController>();
         }
 
         if (interactionSystem == null)
@@ -51,6 +64,7 @@ public class PlayerController : MonoBehaviour
     public void InitializePlayer()
     {
         IsControlRoomDeparted = false;
+        isWatchRaised = false;
         SetInputEnabled(true);
     }
 
@@ -80,6 +94,17 @@ public class PlayerController : MonoBehaviour
         movementSystem?.ProcessMovement(moveInput);
     }
 
+    /// <summary>Feed the look delta (mouse/stick). Hook to your input callback.</summary>
+    public void OnLookInput(Vector2 lookInput)
+    {
+        if (!IsInputEnabled)
+        {
+            return;
+        }
+
+        cameraSystem?.ProcessMouseLook(lookInput);
+    }
+
     public void OnInteractInput()
     {
         if (!IsInputEnabled)
@@ -90,6 +115,17 @@ public class PlayerController : MonoBehaviour
         interactionSystem?.ExecuteInteraction(this);
     }
 
+    public void OnWatchInput()
+    {
+        if (!IsInputEnabled)
+        {
+            return;
+        }
+
+        isWatchRaised = !isWatchRaised;
+        cameraSystem?.SetWatchViewPose(isWatchRaised);
+        OnWatchToggled?.Invoke(isWatchRaised);
+    }
 
     /// <summary>Called by ControlRoomTrigger on exit. Idempotent.</summary>
     public void MarkControlRoomDeparted()

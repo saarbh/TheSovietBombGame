@@ -18,6 +18,9 @@ public class PlayerInteraction : MonoBehaviour
     [Tooltip("Should the ray stop at trigger colliders? Doors using trigger volumes need this on.")]
     [SerializeField] private bool detectTriggers = true;
 
+    [Tooltip("Crosshair GameObject shown only while aiming at an interactable (leave empty to disable this behaviour).")]
+    [SerializeField] private GameObject interactCrosshair;
+
     private IInteractable currentTarget;
 
     /// <summary>The interactable currently under the crosshair, or null.</summary>
@@ -35,6 +38,12 @@ public class PlayerInteraction : MonoBehaviour
         {
             rayOrigin = Camera.main.transform;
         }
+
+        // Hidden until the player actually aims at something interactable.
+        if (interactCrosshair != null)
+        {
+            interactCrosshair.SetActive(false);
+        }
     }
 
     /// <summary>
@@ -43,15 +52,7 @@ public class PlayerInteraction : MonoBehaviour
     /// </summary>
     public void DetectInteractable()
     {
-        var found = Raycast();
-
-        if (ReferenceEquals(found, currentTarget))
-        {
-            return;
-        }
-
-        currentTarget = found;
-        OnInteractableTargetChanged?.Invoke(currentTarget);
+        SetTarget(Raycast());
     }
 
     /// <summary>
@@ -74,13 +75,28 @@ public class PlayerInteraction : MonoBehaviour
     /// </summary>
     public void ClearTarget()
     {
-        if (currentTarget == null)
+        SetTarget(null);
+    }
+
+    /// <summary>
+    /// Central point for changing the target: fires the change event and shows/hides
+    /// the interact crosshair. No-op when the target hasn't actually changed.
+    /// </summary>
+    private void SetTarget(IInteractable target)
+    {
+        if (ReferenceEquals(target, currentTarget))
         {
             return;
         }
 
-        currentTarget = null;
-        OnInteractableTargetChanged?.Invoke(null);
+        currentTarget = target;
+
+        if (interactCrosshair != null)
+        {
+            interactCrosshair.SetActive(currentTarget != null);
+        }
+
+        OnInteractableTargetChanged?.Invoke(currentTarget);
     }
 
     private IInteractable Raycast()

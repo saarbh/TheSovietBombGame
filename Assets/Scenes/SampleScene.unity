@@ -415,6 +415,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: a56b1aa7fb21c9a44bbb57234a5f7c3c, type: 3}
+--- !u!1 &15338539 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1462239344048343812, guid: a56b1aa7fb21c9a44bbb57234a5f7c3c, type: 3}
+  m_PrefabInstance: {fileID: 15338538}
+  m_PrefabAsset: {fileID: 0}
 --- !u!21 &18192606
 Material:
   serializedVersion: 8
@@ -7689,6 +7694,7 @@ GameObject:
   - component: {fileID: 662726043}
   - component: {fileID: 662726042}
   - component: {fileID: 662726041}
+  - component: {fileID: 662726046}
   m_Layer: 0
   m_Name: ComboDoor1
   m_TagString: Untagged
@@ -7857,6 +7863,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 662726039}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &662726046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 662726039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e238ebee97c8f8479706293b4a726fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PuzzleDoorOpener
+  puzzleObject: {fileID: 15338539}
+  door: {fileID: 662726042}
+  requireCorrectAnswer: 0
 --- !u!1 &663640805
 GameObject:
   m_ObjectHideFlags: 0

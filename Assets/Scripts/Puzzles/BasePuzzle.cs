@@ -7,7 +7,7 @@ using UnityEngine;
 /// type describes their solved state (<c>class RadarPuzzle : BasePuzzle&lt;int&gt;</c>);
 /// an open generic cannot be attached to a GameObject.
 /// </summary>
-public abstract class BasePuzzle<T> : MonoBehaviour, IPuzzle
+public abstract class BasePuzzle<T> : MonoBehaviour, IPuzzle, IPuzzleResolution
 {
     [Header("Config")]
     [SerializeField] protected PuzzleConfig puzzleConfig;
@@ -23,10 +23,20 @@ public abstract class BasePuzzle<T> : MonoBehaviour, IPuzzle
 
     public bool IsSolved => isSolved;
 
+    /// <summary>
+    /// True once the player has filed an answer, whether or not it was right. Doors and
+    /// other room-exit behaviour hang off this rather than <see cref="IsSolved"/>, since
+    /// a wrong answer still ends the player's business in the room.
+    /// </summary>
+    public bool IsResolved { get; private set; }
+
     public PuzzleConfig Config => puzzleConfig;
 
     /// <summary>Raised once, the moment the puzzle transitions to solved.</summary>
     public event Action OnPuzzleSolved;
+
+    /// <summary>Raised once the room is resolved. The flag is whether the answer was correct.</summary>
+    public event Action<bool> OnResolved;
 
     protected virtual void Awake()
     {
@@ -73,12 +83,28 @@ public abstract class BasePuzzle<T> : MonoBehaviour, IPuzzle
     }
 
     /// <summary>
+    /// Marks the room as finished with, right or wrong, and raises <see cref="OnResolved"/>
+    /// exactly once. Subclasses call this when the player commits an answer.
+    /// </summary>
+    protected void MarkResolved(bool wasCorrect)
+    {
+        if (IsResolved)
+        {
+            return;
+        }
+
+        IsResolved = true;
+        OnResolved?.Invoke(wasCorrect);
+    }
+
+    /// <summary>
     /// Returns the puzzle to its unsolved state. Note this does not decrement
     /// <see cref="PuzzleTracker"/> - a room that has already been counted stays counted.
     /// </summary>
     public virtual void ResetPuzzle()
     {
         isSolved = false;
+        IsResolved = false;
         currentState = default;
     }
 

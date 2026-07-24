@@ -144,6 +144,10 @@ public class GeneratorPuzzle : BasePuzzle<bool>
 
         OnConfirmed?.Invoke(result);
 
+        // Resolved regardless of correctness - the room is done with the player either way,
+        // which is what the exit door keys off.
+        MarkResolved(result.WasCorrect);
+
         return result;
     }
 

@@ -19,8 +19,11 @@ public class PuzzleConfig : ScriptableObject
     [Tooltip("Verification stage this room satisfies, e.g. CONFIRMATION. Printed on the room's output card.")]
     [SerializeField] private string stageLabel;
 
-    [Tooltip("Single character this room contributes to the final code.")]
+    [Tooltip("Character this room contributes when the player solved it correctly.")]
     [SerializeField] private string codeCharacter;
+
+    [Tooltip("Character emitted when the player confirms a WRONG answer. Must differ from the correct one, otherwise a player who fails every room still assembles the correct final code.")]
+    [SerializeField] private string incorrectCodeCharacter;
 
     [Tooltip("What a correct solve tells the player about the launch warning.")]
     [TextArea]
@@ -42,4 +45,12 @@ public class PuzzleConfig : ScriptableObject
     /// requires every confirmed room to emit a character, even a wrong one.
     /// </summary>
     public char CodeCharacter => string.IsNullOrEmpty(codeCharacter) ? '?' : codeCharacter[0];
+
+    /// <summary>
+    /// Character emitted for a confirmed-but-wrong attempt. Falls back to '?' rather
+    /// than to <see cref="CodeCharacter"/>: handing out the right digit for a failed
+    /// room would make the final code correct no matter how the player performed.
+    /// </summary>
+    public char IncorrectCodeCharacter =>
+        string.IsNullOrEmpty(incorrectCodeCharacter) ? '?' : incorrectCodeCharacter[0];
 }

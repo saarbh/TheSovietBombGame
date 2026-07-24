@@ -17,6 +17,7 @@ MonoBehaviour:
   preserveProgressOnExit: 1
   stageLabel: CONFIRMATION
   codeCharacter: 9
+  incorrectCodeCharacter: 4
   correctEvidence: The original launch warning was issued while this verification
     system had no power. The launch was never independently confirmed.
   misleadingEvidence: Verification system reports nominal. Independent confirmation

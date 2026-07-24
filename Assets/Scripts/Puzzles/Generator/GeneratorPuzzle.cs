@@ -29,6 +29,14 @@ public class GeneratorPuzzle : BasePuzzle<bool>
     public float LastSyncSpread { get; private set; }
 
     /// <summary>
+    /// True when every generator has finished starting, so the attempt is complete and
+    /// can be filed. Confirming with generators idle or still spinning up is a nonsense
+    /// action, and letting it through permanently seals the room before the player has
+    /// done anything.
+    /// </summary>
+    public bool CanConfirm => !IsConfirmed && AreAllGeneratorsAtFullPower();
+
+    /// <summary>
     /// Raised when the final generator lands, with whether the three landed inside tolerance.
     /// Drives the "verification system online" hum or the comedy misfire.
     /// </summary>
@@ -98,6 +106,7 @@ public class GeneratorPuzzle : BasePuzzle<bool>
         areGeneratorsSynced = false;
         LastSyncSpread = 0f;
 
+        Debug.Log("[Generator] RESET - all generators returned to idle.", this);
         OnGeneratorsReset?.Invoke();
     }
 
@@ -112,6 +121,14 @@ public class GeneratorPuzzle : BasePuzzle<bool>
             return BuildResult();
         }
 
+        if (!AreAllGeneratorsAtFullPower())
+        {
+            // Guarded rather than silently filed: sealing the room before the player
+            // has run the generators would leave them with a dead puzzle and no reset.
+            Debug.LogWarning("[Generator] CONFIRM refused - not every generator is at full power yet.", this);
+            return BuildResult();
+        }
+
         IsConfirmed = true;
 
         // The solve is only evaluated here, never while the player is still experimenting.
@@ -121,6 +138,10 @@ public class GeneratorPuzzle : BasePuzzle<bool>
         CheckSolve();
 
         var result = BuildResult();
+
+        Debug.Log($"[Generator] CONFIRM filed - spread {LastSyncSpread:0.00}s, correct={result.WasCorrect}, "
+                  + $"card \"{result.ToPrintedLine()}\". Room is now sealed.", this);
+
         OnConfirmed?.Invoke(result);
 
         return result;
@@ -147,10 +168,15 @@ public class GeneratorPuzzle : BasePuzzle<bool>
         LastSyncSpread = CalculateCompletionSpread();
         areGeneratorsSynced = LastSyncSpread <= syncToleranceSeconds;
 
+        Debug.Log($"[Generator] All three at full power. Spread {LastSyncSpread:0.000}s "
+                  + $"(tolerance {syncToleranceSeconds:0.00}s) -> {(areGeneratorsSynced ? "SYNCED" : "MISFIRE")}. "
+                  + "Pull CONFIRM to file, or RESET to retry.", this);
+
         OnSyncEvaluated?.Invoke(areGeneratorsSynced);
     }
 
-    private bool AreAllGeneratorsAtFullPower()
+    /// <summary>True when every wired generator has finished spinning up.</summary>
+    public bool AreAllGeneratorsAtFullPower()
     {
         if (generators.Length == 0)
         {
@@ -200,9 +226,17 @@ public class GeneratorPuzzle : BasePuzzle<bool>
 
         var evidence = wasCorrect ? puzzleConfig.CorrectEvidence : puzzleConfig.MisleadingEvidence;
 
+        // A failed room must hand out a DIFFERENT character, not just different prose.
+        // Emitting the correct digit either way would make the final assembled code
+        // correct no matter how badly the player played, which removes the point of
+        // the central decoder.
+        var character = wasCorrect
+            ? puzzleConfig.CodeCharacter
+            : puzzleConfig.IncorrectCodeCharacter;
+
         return new GeneratorResult(
             puzzleConfig.StageLabel,
-            puzzleConfig.CodeCharacter,
+            character,
             evidence,
             wasCorrect);
     }

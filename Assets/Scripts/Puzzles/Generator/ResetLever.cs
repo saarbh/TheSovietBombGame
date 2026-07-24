@@ -19,8 +19,17 @@ public class ResetLever : MonoBehaviour, IInteractable
 
     public void Interact(PlayerController player)
     {
-        if (puzzle == null || puzzle.IsConfirmed)
+        Debug.Log("[Interact] RESET lever used.", this);
+
+        if (puzzle == null)
         {
+            Debug.LogError("[Interact] RESET lever has no GeneratorPuzzle reference.", this);
+            return;
+        }
+
+        if (puzzle.IsConfirmed)
+        {
+            Debug.Log("[Interact] RESET ignored - the result is already filed and the panel is sealed.", this);
             return;
         }
 
@@ -29,7 +38,12 @@ public class ResetLever : MonoBehaviour, IInteractable
 
     public string GetPrompt()
     {
-        if (puzzle != null && puzzle.IsConfirmed)
+        if (puzzle == null)
+        {
+            return "Reset (unwired)";
+        }
+
+        if (puzzle.IsConfirmed)
         {
             return "Panel sealed";
         }

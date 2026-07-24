@@ -8,13 +8,16 @@ using UnityEngine;
 /// The joke on a failed sync: instead of the verification computer, the surge briefly
 /// powers something useless. Cycles through the props so repeated failures escalate
 /// rather than repeating the same gag.
+///
+/// Props stay visible at all times and change their power state via <see cref="PoweredProp"/>;
+/// they are never switched off, because equipment that disappears reads as a bug.
 /// </summary>
 public class GeneratorMisfire : MonoBehaviour
 {
     [Serializable]
     public class MisfireProp
     {
-        [Tooltip("Object switched on for the duration of the misfire.")]
+        [Tooltip("Object powered for the duration of the misfire. Needs a PoweredProp component.")]
         public GameObject prop;
 
         [Tooltip("Caption, e.g. \"DESK FAN: OPERATIONAL\".")]
@@ -45,12 +48,9 @@ public class GeneratorMisfire : MonoBehaviour
             puzzle = GetComponentInParent<GeneratorPuzzle>();
         }
 
-        SetAllPropsActive(false);
-
-        if (verificationComputer != null)
-        {
-            verificationComputer.SetActive(false);
-        }
+        SetAllPropsPowered(false);
+        SetPowered(verificationComputer, false);
+        SetCaption(string.Empty);
     }
 
     private void OnEnable()
@@ -88,26 +88,18 @@ public class GeneratorMisfire : MonoBehaviour
 
     private void HandleGeneratorsReset()
     {
-        SetAllPropsActive(false);
-
-        if (verificationComputer != null)
-        {
-            verificationComputer.SetActive(false);
-        }
-
+        SetAllPropsPowered(false);
+        SetPowered(verificationComputer, false);
         SetCaption(string.Empty);
     }
 
     private void PowerVerificationComputer()
     {
-        SetAllPropsActive(false);
-
-        if (verificationComputer != null)
-        {
-            verificationComputer.SetActive(true);
-        }
-
+        SetAllPropsPowered(false);
+        SetPowered(verificationComputer, true);
         SetCaption("VERIFICATION SYSTEM ONLINE");
+
+        Debug.Log("[Generator] Verification computer powered up.", this);
     }
 
     private async UniTaskVoid PlayNextMisfireAsync(CancellationToken token)
@@ -125,8 +117,10 @@ public class GeneratorMisfire : MonoBehaviour
             return;
         }
 
-        entry.prop.SetActive(true);
+        SetPowered(entry.prop, true);
         SetCaption(entry.caption);
+
+        Debug.Log($"[Generator] MISFIRE - powered \"{entry.prop.name}\" for {misfireSeconds:0.#}s.", this);
 
         try
         {
@@ -140,11 +134,11 @@ public class GeneratorMisfire : MonoBehaviour
             return;
         }
 
-        entry.prop.SetActive(false);
+        SetPowered(entry.prop, false);
         SetCaption(string.Empty);
     }
 
-    private void SetAllPropsActive(bool isActive)
+    private void SetAllPropsPowered(bool isPowered)
     {
         foreach (var entry in props)
         {
@@ -153,8 +147,28 @@ public class GeneratorMisfire : MonoBehaviour
                 continue;
             }
 
-            entry.prop.SetActive(isActive);
+            SetPowered(entry.prop, isPowered);
         }
+    }
+
+    private static void SetPowered(GameObject target, bool isPowered)
+    {
+        if (target == null)
+        {
+            return;
+        }
+
+        var powered = target.GetComponent<PoweredProp>();
+
+        if (powered == null)
+        {
+            // Deliberately does not fall back to SetActive: hiding the object is the
+            // behaviour this component exists to avoid.
+            Debug.LogWarning($"[Generator] '{target.name}' has no PoweredProp, so its power state cannot be shown.", target);
+            return;
+        }
+
+        powered.SetPowered(isPowered);
     }
 
     private void SetCaption(string caption)

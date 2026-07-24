@@ -111,3 +111,7 @@ InitTestScene*.unity*
 ._*
 .Spotlight-V100
 .Trashes
+
+# MCP/debug screenshots
+/[Aa]ssets/Screenshots/
+/[Aa]ssets/Screenshots.meta

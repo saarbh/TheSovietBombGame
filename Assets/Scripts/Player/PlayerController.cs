@@ -8,9 +8,10 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private PlayerMovement movementSystem;
+    [SerializeField] private CameraController cameraSystem;
     [SerializeField] private PlayerInteraction interactionSystem;
 
-    // TODO: CameraController and WorldWatchView are not written yet (Modules 1/2).
+    // TODO: WorldWatchView is not written yet (Module 2).
     // OnWatchInput raises OnWatchToggled so the watch view can subscribe once it exists.
 
     /// <summary>One-way flag set by ControlRoomTrigger. Once departed, never unset.</summary>
@@ -30,6 +31,11 @@ public class PlayerController : MonoBehaviour
         if (movementSystem == null)
         {
             movementSystem = GetComponentInChildren<PlayerMovement>();
+        }
+
+        if (cameraSystem == null)
+        {
+            cameraSystem = GetComponentInChildren<CameraController>();
         }
 
         if (interactionSystem == null)
@@ -88,6 +94,17 @@ public class PlayerController : MonoBehaviour
         movementSystem?.ProcessMovement(moveInput);
     }
 
+    /// <summary>Feed the look delta (mouse/stick). Hook to your input callback.</summary>
+    public void OnLookInput(Vector2 lookInput)
+    {
+        if (!IsInputEnabled)
+        {
+            return;
+        }
+
+        cameraSystem?.ProcessMouseLook(lookInput);
+    }
+
     public void OnInteractInput()
     {
         if (!IsInputEnabled)
@@ -106,6 +123,7 @@ public class PlayerController : MonoBehaviour
         }
 
         isWatchRaised = !isWatchRaised;
+        cameraSystem?.SetWatchViewPose(isWatchRaised);
         OnWatchToggled?.Invoke(isWatchRaised);
     }
 

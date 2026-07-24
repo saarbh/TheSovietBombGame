@@ -21,6 +21,9 @@ public class GameManager : MonoBehaviour
     public bool IsGameOver { get; private set; }
     public EndingType? FinalEnding { get; private set; }
 
+    /// <summary>The active game watch and countdown manager.</summary>
+    public WatchManager WatchManager { get; private set; }
+
     /// <summary>Set by <c>ControlRoomTrigger</c> the first time the player leaves the control room.</summary>
     public bool HasLeftControlRoom { get; private set; }
 
@@ -42,6 +45,13 @@ public class GameManager : MonoBehaviour
         }
 
         Instance = this;
+        WatchManager = new WatchManager();
+        WatchManager.OnTimeExpired += OnTimeExpiredHandler;
+    }
+
+    private void Start()
+    {
+        StartGame();
     }
 
     private void OnDestroy()
@@ -49,6 +59,11 @@ public class GameManager : MonoBehaviour
         if (Instance == this)
         {
             Instance = null;
+        }
+
+        if (WatchManager is not null)
+        {
+            WatchManager.OnTimeExpired -= OnTimeExpiredHandler;
         }
     }
 
@@ -60,6 +75,11 @@ public class GameManager : MonoBehaviour
         CallChoice = PhoneCallChoice.NoCallMade;
 
         OnGameStarted?.Invoke();
+
+        if (WatchManager is not null)
+        {
+            WatchManager.StartCountdownAsync(this.GetCancellationTokenOnDestroy()).Forget();
+        }
     }
 
     public void EndGame(EndingType ending)
@@ -73,6 +93,11 @@ public class GameManager : MonoBehaviour
 
         IsGameOver = true;
         FinalEnding = ending;
+
+        if (WatchManager is not null)
+        {
+            WatchManager.StopCountdown();
+        }
 
         OnGameEnded?.Invoke(ending);
         SettleEndingAsync(ending).Forget();

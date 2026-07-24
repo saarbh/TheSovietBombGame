@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// Scene facade for the player. Owns the per-frame order of operations for its
@@ -10,20 +11,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PlayerMovement movementSystem;
     [SerializeField] private PlayerInteraction interactionSystem;
 
-    // TODO: CameraController and WorldWatchView are not written yet (Modules 1/2).
-    // OnWatchInput raises OnWatchToggled so the watch view can subscribe once it exists.
-
     /// <summary>One-way flag set by ControlRoomTrigger. Once departed, never unset.</summary>
     public bool IsControlRoomDeparted { get; private set; }
 
     public bool IsInputEnabled { get; private set; } = true;
 
     public PlayerInteraction InteractionSystem => interactionSystem;
-
-    /// <summary>Raised when the player raises/lowers the wrist watch.</summary>
-    public event Action<bool> OnWatchToggled;
-
-    private bool isWatchRaised;
 
     private void Awake()
     {
@@ -58,7 +51,6 @@ public class PlayerController : MonoBehaviour
     public void InitializePlayer()
     {
         IsControlRoomDeparted = false;
-        isWatchRaised = false;
         SetInputEnabled(true);
     }
 
@@ -98,16 +90,6 @@ public class PlayerController : MonoBehaviour
         interactionSystem?.ExecuteInteraction(this);
     }
 
-    public void OnWatchInput()
-    {
-        if (!IsInputEnabled)
-        {
-            return;
-        }
-
-        isWatchRaised = !isWatchRaised;
-        OnWatchToggled?.Invoke(isWatchRaised);
-    }
 
     /// <summary>Called by ControlRoomTrigger on exit. Idempotent.</summary>
     public void MarkControlRoomDeparted()

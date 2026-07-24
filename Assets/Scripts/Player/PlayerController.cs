@@ -72,6 +72,13 @@ public class PlayerController : MonoBehaviour
     {
         IsInputEnabled = isEnabled;
 
+        // Gamepad look is polled inside CameraController, so it must be gated here
+        // too - otherwise the right stick could still turn the view while frozen.
+        if (cameraSystem != null)
+        {
+            cameraSystem.LookEnabled = isEnabled;
+        }
+
         if (isEnabled)
         {
             return;

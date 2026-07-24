@@ -224,20 +224,16 @@ public class GeneratorPuzzle : BasePuzzle<bool>
             return new GeneratorResult("CONFIRMATION", wasCorrect ? '9' : '?', string.Empty, wasCorrect);
         }
 
-        var evidence = wasCorrect ? puzzleConfig.CorrectEvidence : puzzleConfig.MisleadingEvidence;
-
-        // A failed room must hand out a DIFFERENT character, not just different prose.
-        // Emitting the correct digit either way would make the final assembled code
-        // correct no matter how badly the player played, which removes the point of
-        // the central decoder.
-        var character = wasCorrect
-            ? puzzleConfig.CodeCharacter
-            : puzzleConfig.IncorrectCodeCharacter;
+        // OutputFor keeps the correct/wrong split in one place: a failed room hands out a
+        // DIFFERENT character, not just different prose. Emitting the correct digit either
+        // way would make the assembled final code right no matter how badly the player
+        // played, which removes the point of the central decoder.
+        var output = puzzleConfig.OutputFor(wasCorrect);
 
         return new GeneratorResult(
             puzzleConfig.StageLabel,
-            character,
-            evidence,
+            output.CodeCharacter,
+            output.Evidence,
             wasCorrect);
     }
 }

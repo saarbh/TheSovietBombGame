@@ -16,9 +16,11 @@ MonoBehaviour:
   puzzleName: Emergency Generator Room
   preserveProgressOnExit: 1
   stageLabel: CONFIRMATION
-  codeCharacter: 9
-  incorrectCodeCharacter: 4
-  correctEvidence: The original launch warning was issued while this verification
-    system had no power. The launch was never independently confirmed.
-  misleadingEvidence: Verification system reports nominal. Independent confirmation
-    of the launch warning is on record.
+  correctOutput:
+    codeCharacter: 9
+    evidence: The original launch warning was issued while this verification system
+      had no power. The launch was never independently confirmed.
+  incorrectOutput:
+    codeCharacter: 4
+    evidence: Verification system reports nominal. Independent confirmation of the
+      launch warning is on record.

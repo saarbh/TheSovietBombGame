@@ -61,7 +61,7 @@ public class DoorComboLock : MonoBehaviour, IInteractable
 
     public void Interact(PlayerController player)
     {
-        if (IsUnlocked)
+        if (!enabled || IsUnlocked)
         {
             return;
         }

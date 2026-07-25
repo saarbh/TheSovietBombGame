@@ -40,6 +40,13 @@ public class PlayerInteraction : MonoBehaviour
     /// </summary>
     public event Action<IInteractable> OnInteractableTargetChanged;
 
+    /// <summary>
+    /// Fires after an interaction actually runs, carrying what was used. Distinct from the
+    /// target-changed event, which also fires for merely looking at something. Audio hangs off
+    /// this so every interactable makes a noise without each one having to remember to.
+    /// </summary>
+    public event Action<IInteractable> OnInteractionExecuted;
+
     private void Awake()
     {
         EnsureRayOrigin();
@@ -79,7 +86,17 @@ public class PlayerInteraction : MonoBehaviour
     /// </summary>
     public void ExecuteInteraction(PlayerController player)
     {
-        currentTarget?.Interact(player);
+        if (currentTarget == null)
+        {
+            return;
+        }
+
+        // Captured first: an interaction that seals a panel can change the target from under
+        // us, and listeners must be told what was used, not what replaced it.
+        var used = currentTarget;
+
+        used.Interact(player);
+        OnInteractionExecuted?.Invoke(used);
     }
 
     /// <summary>Prompt for the current target, or empty when nothing is targeted.</summary>

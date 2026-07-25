@@ -84,11 +84,6 @@ public class GameManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (Instance == this)
-        {
-            Instance = null;
-        }
-
         if (WatchManager is not null)
         {
             WatchManager.OnTimeExpired -= OnTimeExpiredHandler;

@@ -1,0 +1,40 @@
+newmtl f2122d67-3f42-4564-adc3-d5f4c97a47f5
+Kd 1.000 1.000 1.000
+Ks 0.059 0.059 0.059
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/soviet_gunner_body_d.jpg
+map_Ks textures/soviet_gunner_body_n_s.jpg
+map_normal textures/soviet_gunner_body_n_n.jpg
+map_ao textures/soviet_gunner_body_n_ao.jpg
+
+newmtl 031fc55a-68f8-493e-8211-cac5829bc33a
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/soviet_gunner_officer_items_d.jpg
+map_Ks textures/soviet_gunner_officer_items_n_s.jpg
+map_normal textures/soviet_gunner_officer_items_n_n.jpg
+map_ao textures/soviet_gunner_officer_items_n_ao.jpg
+
+newmtl b4cabdb3-f298-45f1-babe-5d3f3a61ef53
+Kd 1.000 1.000 1.000
+Ks 0.176 0.176 0.176
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/soviet_gunner_head_05_d.jpg
+map_Ks textures/soviet_gunner_head_05_n_s.jpg
+map_normal textures/soviet_gunner_head_05_n_n.jpg
+map_ao textures/soviet_gunner_head_05_n_ao.jpg
+
+newmtl 5e07af4a-0921-4490-bd8b-8744079efbd7
+Kd 1.000 1.000 1.000
+Ks 0.502 0.502 0.502
+Ns 30
+Ke 0.000 0.000 0.000
+map_Kd textures/us_gunner_heads_d.jpg
+map_Ks textures/us_gunner_heads_n_s.jpg
+map_normal textures/us_gunner_heads_n_n.jpg
+map_ao textures/us_gunner_heads_n_ao.jpg
+

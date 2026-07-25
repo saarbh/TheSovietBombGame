@@ -16,6 +16,9 @@ public class LockManager : MonoBehaviour
 
     public IReadOnlyList<DoorLockController> Locks => locks;
 
+    private KeypadPopupUI keypadPopup;
+    private PlayerController playerController;
+
     private void OnEnable()
     {
         SubscribeToEvents();
@@ -28,6 +31,8 @@ public class LockManager : MonoBehaviour
 
     private void Start()
     {
+        keypadPopup = FindObjectOfType<KeypadPopupUI>();
+        playerController = FindObjectOfType<PlayerController>();
         EvaluateLocks();
     }
 
@@ -126,6 +131,11 @@ public class LockManager : MonoBehaviour
 #if UNITY_EDITOR
     private void Update()
     {
+        if ((keypadPopup != null && keypadPopup.IsOpen) || (playerController != null && !playerController.IsInputEnabled))
+        {
+            return;
+        }
+
         var keyboard = Keyboard.current;
 
         if (keyboard == null)

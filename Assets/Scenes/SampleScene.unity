@@ -7108,6 +7108,7 @@ GameObject:
   - component: {fileID: 662726044}
   - component: {fileID: 662726043}
   - component: {fileID: 662726042}
+  - component: {fileID: 662726041}
   m_Layer: 0
   m_Name: ComboDoor1
   m_TagString: Untagged
@@ -8469,6 +8470,7 @@ GameObject:
   - component: {fileID: 792725750}
   - component: {fileID: 792725749}
   - component: {fileID: 792725748}
+  - component: {fileID: 792725747}
   m_Layer: 0
   m_Name: ComboDoor2
   m_TagString: Untagged
@@ -9096,6 +9098,7 @@ GameObject:
   - component: {fileID: 849287183}
   - component: {fileID: 849287182}
   - component: {fileID: 849287181}
+  - component: {fileID: 849287180}
   m_Layer: 0
   m_Name: ComboDoor3
   m_TagString: Untagged
@@ -9588,7 +9591,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c03ae205446c2de44829316b95a89c6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ControlRoomTrigger
-  progression: {fileID: 1594442753}
   markControlRoomDeparted: 1
 --- !u!65 &899830558
 BoxCollider:
@@ -9985,6 +9987,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 571589275}
     m_Modifications:
+    - target: {fileID: 2584087232721114113, guid: 15519db14785b6446865806641928945, type: 3}
+      propertyPath: m_text
+      value: 'Room3 Code: 3821
+
+
+        Opens at 3'
+      objectReference: {fileID: 0}
     - target: {fileID: 2714590713706598003, guid: 15519db14785b6446865806641928945, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.128
@@ -10025,14 +10034,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8748381066038136062, guid: 15519db14785b6446865806641928945, type: 3}
-      propertyPath: m_Name
-      value: Card (1)
-      objectReference: {fileID: 0}
     - target: {fileID: 7831194108893487768, guid: 15519db14785b6446865806641928945, type: 3}
       propertyPath: roomConfig
       value: 
       objectReference: {fileID: 11400000, guid: 263d8a2b7a6cf99489546e242b612af4, type: 2}
+    - target: {fileID: 8748381066038136062, guid: 15519db14785b6446865806641928945, type: 3}
+      propertyPath: m_Name
+      value: Card (1)
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10205,6 +10214,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 571589275}
     m_Modifications:
+    - target: {fileID: 2584087232721114113, guid: 15519db14785b6446865806641928945, type: 3}
+      propertyPath: m_text
+      value: 'Room2 Code: 2589
+
+
+        Opens at 5'
+      objectReference: {fileID: 0}
     - target: {fileID: 2714590713706598003, guid: 15519db14785b6446865806641928945, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.536
@@ -10245,14 +10261,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8748381066038136062, guid: 15519db14785b6446865806641928945, type: 3}
-      propertyPath: m_Name
-      value: Card (2)
-      objectReference: {fileID: 0}
     - target: {fileID: 7831194108893487768, guid: 15519db14785b6446865806641928945, type: 3}
       propertyPath: roomConfig
       value: 
       objectReference: {fileID: 11400000, guid: 2965be45954d42748ace7ea0e2fb88f3, type: 2}
+    - target: {fileID: 8748381066038136062, guid: 15519db14785b6446865806641928945, type: 3}
+      propertyPath: m_Name
+      value: Card (2)
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12702,25 +12718,6 @@ MonoBehaviour:
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
   m_PresetInfoIsWorld: 0
---- !u!114 &1267218537
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1267218532}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a02f49004d201d34688378a075d0d85c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::KeypadPopupUI
-  keypadPanel: {fileID: 0}
-  codeDisplay: {fileID: 0}
-  statusText: {fileID: 0}
-  maxCodeLength: 6
-  defaultStatusPrompt: ENTER PASSCODE
-  successStatusMessage: ACCESS GRANTED
-  errorStatusMessage: INVALID CODE
 --- !u!223 &1267218535
 Canvas:
   m_ObjectHideFlags: 0
@@ -12764,6 +12761,25 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1267218537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1267218532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a02f49004d201d34688378a075d0d85c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KeypadPopupUI
+  keypadPanel: {fileID: 0}
+  codeDisplay: {fileID: 0}
+  statusText: {fileID: 0}
+  maxCodeLength: 6
+  defaultStatusPrompt: ENTER PASSCODE
+  successStatusMessage: ACCESS GRANTED
+  errorStatusMessage: INVALID CODE
 --- !u!4 &1276752498 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b2aa35a54be629b4dbab9de2048fad2b, type: 3}
@@ -16660,6 +16676,9 @@ MonoBehaviour:
   rayOrigin: {fileID: 330585546}
   detectTriggers: 1
   interactCrosshair: {fileID: 612071274}
+  highlightColor: {r: 0.2, g: 1, b: 0.2, a: 1}
+  highlightIntensity: 1.5
+  tintColor: {r: 0.05, g: 0.05, b: 0.05, a: 0}
 --- !u!114 &1802330407
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18312,6 +18331,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 571589275}
     m_Modifications:
+    - target: {fileID: 2584087232721114113, guid: 15519db14785b6446865806641928945, type: 3}
+      propertyPath: m_text
+      value: 'Room1 Code: 1492
+
+
+        Opens at 1'
+      objectReference: {fileID: 0}
     - target: {fileID: 2714590713706598003, guid: 15519db14785b6446865806641928945, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.885
@@ -18352,14 +18378,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8748381066038136062, guid: 15519db14785b6446865806641928945, type: 3}
-      propertyPath: m_Name
-      value: Card (3)
-      objectReference: {fileID: 0}
     - target: {fileID: 7831194108893487768, guid: 15519db14785b6446865806641928945, type: 3}
       propertyPath: roomConfig
       value: 
       objectReference: {fileID: 11400000, guid: 08a06877fce5d5043b92885f1b8aac40, type: 2}
+    - target: {fileID: 8748381066038136062, guid: 15519db14785b6446865806641928945, type: 3}
+      propertyPath: m_Name
+      value: Card (3)
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -19936,6 +19962,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 571589275}
     m_Modifications:
+    - target: {fileID: 2584087232721114113, guid: 15519db14785b6446865806641928945, type: 3}
+      propertyPath: m_text
+      value: 'Room4 Code: 4710
+
+
+        Opens at 4'
+      objectReference: {fileID: 0}
     - target: {fileID: 2714590713706598003, guid: 15519db14785b6446865806641928945, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.375
@@ -19976,14 +20009,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8748381066038136062, guid: 15519db14785b6446865806641928945, type: 3}
-      propertyPath: m_Name
-      value: Card
-      objectReference: {fileID: 0}
     - target: {fileID: 7831194108893487768, guid: 15519db14785b6446865806641928945, type: 3}
       propertyPath: roomConfig
       value: 
       objectReference: {fileID: 11400000, guid: cb5949e19e7f13940a040b53388845ad, type: 2}
+    - target: {fileID: 8748381066038136062, guid: 15519db14785b6446865806641928945, type: 3}
+      propertyPath: m_Name
+      value: Card
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

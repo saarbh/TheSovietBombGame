@@ -38,6 +38,9 @@ public class DoorLockController : MonoBehaviour, IInteractable
 
     private void Awake()
     {
+        isUnlocked = false;
+        isInteractable = false;
+
         if (config == null)
         {
             Debug.LogWarning($"[{nameof(DoorLockController)}] '{name}' has no RoomConfig assigned.", this);
@@ -84,7 +87,7 @@ public class DoorLockController : MonoBehaviour, IInteractable
 
     public void Interact(PlayerController player)
     {
-        if (!enabled || IsUnlocked)
+        if (!enabled || IsUnlocked || !isInteractable)
         {
             return;
         }

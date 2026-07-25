@@ -89,6 +89,9 @@ public class KeypadPopupUI : MonoBehaviour
         {
             focusedPlayer.SetInputEnabled(false);
         }
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public void CloseKeypad()
@@ -105,6 +108,9 @@ public class KeypadPopupUI : MonoBehaviour
         {
             focusedPlayer.SetInputEnabled(true);
         }
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
 
         currentLock = null;
         focusedPlayer = null;

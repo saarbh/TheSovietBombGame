@@ -13,7 +13,14 @@ using UnityEngine.InputSystem;
 public class PlayerInputHandler : MonoBehaviour
 {
     [SerializeField] private PlayerController playerController;
+
+    [Header("Cursor")]
     [SerializeField] private bool lockCursorOnStart = true;
+
+    [Tooltip("Click in the Game view to take the mouse back after Esc freed it. Without this the "
+             + "cursor never re-locks, so OnLook keeps discarding input and the camera stays dead "
+             + "until the scene reloads.")]
+    [SerializeField] private bool recaptureCursorOnClick = true;
 
     private void Awake()
     {
@@ -26,6 +33,39 @@ public class PlayerInputHandler : MonoBehaviour
     private void Start()
     {
         if (lockCursorOnStart)
+        {
+            SetCursorLocked(true);
+        }
+    }
+
+    /// <summary>
+    /// Takes the mouse back when the player clicks into the game after Esc released it.
+    /// Esc is the only way to reach the Editor UI mid-play, and both this handler's
+    /// <see cref="OnCancel"/> and the Editor itself free the cursor - but nothing used to
+    /// re-lock it, which left <see cref="OnLook"/> permanently ignoring look input.
+    /// </summary>
+    private void Update()
+    {
+        if (!recaptureCursorOnClick)
+        {
+            return;
+        }
+
+        // Already ours - nothing to take back.
+        if (Cursor.lockState == CursorLockMode.Locked)
+        {
+            return;
+        }
+
+        // A paused menu owns the pointer; stealing it would make the UI unclickable.
+        if (Time.timeScale == 0f)
+        {
+            return;
+        }
+
+        var mouse = Mouse.current;
+
+        if (mouse != null && mouse.leftButton.wasPressedThisFrame)
         {
             SetCursorLocked(true);
         }

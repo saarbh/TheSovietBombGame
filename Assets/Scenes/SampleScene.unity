@@ -1187,8 +1187,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 193424553}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.2825415, y: -0.047843087, z: 0.01411311, w: -0.9579573}
-  m_LocalPosition: {x: -0.3632264, y: 10.173256, z: -2.3551626}
+  m_LocalRotation: {x: -0.027047427, y: 0.95475805, z: -0.2815978, w: -0.09169692}
+  m_LocalPosition: {x: 0.14424711, y: 10.129256, z: -4.886875}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4693,7 +4693,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 52f7bf1597bf3d7428bbe36460e0a84a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.60353863
+      value: -0.624
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 52f7bf1597bf3d7428bbe36460e0a84a, type: 3}
       propertyPath: m_LocalPosition.y
@@ -4701,7 +4701,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 52f7bf1597bf3d7428bbe36460e0a84a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -4.750159
+      value: -4.773
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 52f7bf1597bf3d7428bbe36460e0a84a, type: 3}
       propertyPath: m_LocalRotation.w
@@ -8896,7 +8896,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1485471327
 Transform:
   m_ObjectHideFlags: 0
@@ -9640,90 +9640,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1623455850}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1635173558
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1635173560}
-  - component: {fileID: 1635173561}
-  m_Layer: 0
-  m_Name: LevelBuilder
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1635173560
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1635173558}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.99193, y: 2.03158, z: -5.41404}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1635173561
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1635173558}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac380089fec558642bd8ccb7aa5cdd04, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TheHotWar.HotWarLevelKit
-  rooms:
-  - name: Room 1
-    size: {x: 10, y: 10}
-    shape: 1
-    notchScale: 0.379
-    feature: 1
-    side: 0
-    extraGapBefore: 0
-    plateText: 'Room One
-
-'
-    doorSlab: 1
-    accent: {r: 0, g: 0, b: 0, a: 0}
-  lastRoomCapsCorridor: 0
-  startRoomName: CONTROL ROOM
-  startRoomSize: {x: 10, y: 5}
-  startRoomLabel: 'DUTY STATION 07
-
-'
-  corridorWidth: 4
-  startGap: 2
-  roomSpacing: 1
-  endGap: 10
-  wallHeight: 4.3
-  platformHeight: 2
-  basementDepth: 5
-  buildCeilings: 1
-  autoRebuild: 0
-  rebuildDelay: 0.35
-  totalTime: 420
-  realUnlockElapsed:
-  - 1
-  - 2
-  - 3
-  - 4
-  shownUnlockElapsed:
-  - 2
-  - 4
-  - 6
-  - 8
 --- !u!1 &1648145160
 GameObject:
   m_ObjectHideFlags: 0
@@ -10399,7 +10315,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 48d1b3c00d6a1da42b9d6d3ccd3a6168, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -4.764
+      value: -4.6886
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 48d1b3c00d6a1da42b9d6d3ccd3a6168, type: 3}
       propertyPath: m_LocalRotation.w
@@ -12130,6 +12046,7 @@ PrefabInstance:
     - {fileID: 8229936081991799947, guid: eba8e0f875a995a4382f0e1d6361f3a8, type: 3}
     - {fileID: 5924853177483358072, guid: eba8e0f875a995a4382f0e1d6361f3a8, type: 3}
     - {fileID: -1557124541502685182, guid: eba8e0f875a995a4382f0e1d6361f3a8, type: 3}
+    - {fileID: -2845779275431937956, guid: eba8e0f875a995a4382f0e1d6361f3a8, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: eba8e0f875a995a4382f0e1d6361f3a8, type: 3}
       insertIndex: 1
@@ -12603,19 +12520,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3421392770675654712, guid: f38cca12d5697c644ae0a5e0b30a6b1b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.2278842
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3421392770675654712, guid: f38cca12d5697c644ae0a5e0b30a6b1b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.0799999
+      value: 1.036
       objectReference: {fileID: 0}
     - target: {fileID: 3421392770675654712, guid: f38cca12d5697c644ae0a5e0b30a6b1b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -7.208299
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3421392770675654712, guid: f38cca12d5697c644ae0a5e0b30a6b1b, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.045830954
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3421392770675654712, guid: f38cca12d5697c644ae0a5e0b30a6b1b, type: 3}
       propertyPath: m_LocalRotation.x
@@ -12623,7 +12540,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3421392770675654712, guid: f38cca12d5697c644ae0a5e0b30a6b1b, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.9989492
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3421392770675654712, guid: f38cca12d5697c644ae0a5e0b30a6b1b, type: 3}
       propertyPath: m_LocalRotation.z
@@ -12913,7 +12830,6 @@ SceneRoots:
   m_Roots:
   - {fileID: 410087041}
   - {fileID: 832575519}
-  - {fileID: 1635173560}
   - {fileID: 242720027}
   - {fileID: 4020064285078755503}
   - {fileID: 1648145162}

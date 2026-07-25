@@ -89,10 +89,20 @@ public class PlayerInputHandler : MonoBehaviour
 
     public void OnInteract(InputValue value)
     {
-        if (value.isPressed)
+        if (!value.isPressed)
         {
-            playerController.OnInteractInput();
+            return;
         }
+
+        // Interact is bound to left click as well as E. While the cursor is free the game
+        // does not own the mouse, so the click that takes it back (see Update) must not also
+        // press whatever the crosshair happens to be resting on. Mirrors the OnLook guard.
+        if (Cursor.lockState != CursorLockMode.Locked)
+        {
+            return;
+        }
+
+        playerController.OnInteractInput();
     }
 
     public void OnWatch(InputValue value)

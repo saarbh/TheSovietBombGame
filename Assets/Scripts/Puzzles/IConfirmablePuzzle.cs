@@ -22,8 +22,15 @@ public interface IConfirmablePuzzle
     /// </summary>
     string ConfirmBlockedReason { get; }
 
-    /// <summary>Files the answer and returns the printed card. Always produces a card.</summary>
-    PuzzleCard Confirm();
+    /// <summary>
+    /// Judges the attempt. Returns the printed card when the answer was filed, or <c>null</c>
+    /// when the room refused it - either because the attempt was not fileable, or because the
+    /// room rejects wrong answers and is handing this one back for another go.
+    ///
+    /// Nullable rather than always-a-card: a refused attempt must not print, and a sentinel
+    /// card would be indistinguishable from a filed one at the call site.
+    /// </summary>
+    PuzzleCard? Confirm();
 
     /// <summary>True while the player may still scrap the attempt and retry for free.</summary>
     bool CanReset { get; }

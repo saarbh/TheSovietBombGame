@@ -31,6 +31,13 @@ public class RoomDoor : MonoBehaviour
     /// <summary>Raised once the swing finishes, with the resulting open state.</summary>
     public event Action<bool> OnSwingCompleted;
 
+    /// <summary>
+    /// Raised as the swing begins, with the state being moved towards. Audio needs this rather
+    /// than the completed event: a hinge creak has to start with the movement, and playing it
+    /// at the end lands it a full swing late.
+    /// </summary>
+    public event Action<bool> OnSwingStarted;
+
     // World-space poses cached at Awake (doors are static once placed).
     private Vector3 closedPosition;
     private Quaternion closedRotation;
@@ -101,6 +108,8 @@ public class RoomDoor : MonoBehaviour
         var token = swingCts.Token;
         var fromOpen = isOpen ? 1f : 0f;
         var toOpen = open ? 1f : 0f;
+
+        OnSwingStarted?.Invoke(open);
 
         try
         {

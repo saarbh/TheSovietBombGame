@@ -71,7 +71,18 @@ public class ConfirmLever : MonoBehaviour, IInteractable
         }
 
         Debug.Log($"[Interact] {confirmVerb} lever pulled.", this);
-        PrintCard(puzzle.Confirm());
+
+        var card = puzzle.Confirm();
+
+        // Null means the room refused the attempt - a wrong reading handed back for another go.
+        // Nothing was filed, so nothing prints; the puzzle's own display explains the refusal.
+        if (!card.HasValue)
+        {
+            Debug.Log($"[Interact] {confirmVerb} produced no card - the room refused the attempt.", this);
+            return;
+        }
+
+        PrintCard(card.Value);
     }
 
     public string GetPrompt()

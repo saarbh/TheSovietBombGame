@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -24,6 +25,16 @@ public class PoweredProp : MonoBehaviour
 
     public bool IsPowered { get; private set; }
 
+    /// <summary>
+    /// Raised only when the power state actually changes, for audio and VFX. The misfire calls
+    /// <see cref="SetPowered"/> with false across every prop on each reset, and firing on those
+    /// no-ops would power four props down audibly when none of them were on.
+    ///
+    /// Nothing is raised for the authored starting state, which is applied in Awake before any
+    /// listener has subscribed - read <see cref="IsPowered"/> in OnEnable to seed from it.
+    /// </summary>
+    public event Action<bool> OnPowerChanged;
+
     private void Awake()
     {
         if (targetRenderer == null)
@@ -38,6 +49,8 @@ public class PoweredProp : MonoBehaviour
     /// <summary>Tints the prop to its powered or unpowered colour. Never hides the object.</summary>
     public void SetPowered(bool isPowered)
     {
+        var hasChanged = IsPowered != isPowered;
+
         IsPowered = isPowered;
 
         if (poweredOnlyVisual != null)
@@ -45,18 +58,21 @@ public class PoweredProp : MonoBehaviour
             poweredOnlyVisual.SetActive(isPowered);
         }
 
-        if (targetRenderer == null)
+        if (targetRenderer != null)
         {
-            return;
+            var color = isPowered ? poweredColor : unpoweredColor;
+
+            // MaterialPropertyBlock rather than .material, which would instantiate and leak
+            // a fresh material per prop.
+            targetRenderer.GetPropertyBlock(propertyBlock);
+            propertyBlock.SetColor("_BaseColor", color);
+            propertyBlock.SetColor("_Color", color);
+            targetRenderer.SetPropertyBlock(propertyBlock);
         }
 
-        var color = isPowered ? poweredColor : unpoweredColor;
-
-        // MaterialPropertyBlock rather than .material, which would instantiate and leak
-        // a fresh material per prop.
-        targetRenderer.GetPropertyBlock(propertyBlock);
-        propertyBlock.SetColor("_BaseColor", color);
-        propertyBlock.SetColor("_Color", color);
-        targetRenderer.SetPropertyBlock(propertyBlock);
+        if (hasChanged)
+        {
+            OnPowerChanged?.Invoke(isPowered);
+        }
     }
 }

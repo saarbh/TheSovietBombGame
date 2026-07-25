@@ -5235,6 +5235,89 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 424733214}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &425862610
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2764713351487330779, guid: a5d78d91416854843ba3a11d8a728f11, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 2764713351487330779, guid: a5d78d91416854843ba3a11d8a728f11, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2764713351487330779, guid: a5d78d91416854843ba3a11d8a728f11, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 16.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2764713351487330779, guid: a5d78d91416854843ba3a11d8a728f11, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 2764713351487330779, guid: a5d78d91416854843ba3a11d8a728f11, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2764713351487330779, guid: a5d78d91416854843ba3a11d8a728f11, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 2764713351487330779, guid: a5d78d91416854843ba3a11d8a728f11, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2764713351487330779, guid: a5d78d91416854843ba3a11d8a728f11, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2764713351487330779, guid: a5d78d91416854843ba3a11d8a728f11, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2764713351487330779, guid: a5d78d91416854843ba3a11d8a728f11, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5395167871559167250, guid: a5d78d91416854843ba3a11d8a728f11, type: 3}
+      propertyPath: m_Name
+      value: RadarPuzzleRoom
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6460536745773575820, guid: a5d78d91416854843ba3a11d8a728f11, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 7798366322233297807, guid: a5d78d91416854843ba3a11d8a728f11, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 915073754947006044, guid: a5d78d91416854843ba3a11d8a728f11, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 4812299659615202673, guid: a5d78d91416854843ba3a11d8a728f11, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 3591317732365518460, guid: a5d78d91416854843ba3a11d8a728f11, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 7577609582958414697, guid: a5d78d91416854843ba3a11d8a728f11, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 5615824188693953917, guid: a5d78d91416854843ba3a11d8a728f11, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+  m_SourcePrefab: {fileID: 100100000, guid: a5d78d91416854843ba3a11d8a728f11, type: 3}
+--- !u!1 &425862611 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5395167871559167250, guid: a5d78d91416854843ba3a11d8a728f11, type: 3}
+  m_PrefabInstance: {fileID: 425862610}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &437111870
 GameObject:
   m_ObjectHideFlags: 0
@@ -16115,6 +16198,8 @@ MonoBehaviour:
   stages:
   - door: {fileID: 662726042}
     puzzleObject: {fileID: 15338539}
+  - door: {fileID: 792725748}
+    puzzleObject: {fileID: 425862611}
   - door: {fileID: 849287181}
     puzzleObject: {fileID: 1365603829}
 --- !u!4 &1594442754
@@ -21825,3 +21910,4 @@ SceneRoots:
   - {fileID: 1365603828}
   - {fileID: 1594442754}
   - {fileID: 899830559}
+  - {fileID: 425862610}

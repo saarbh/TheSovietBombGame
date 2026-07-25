@@ -56,10 +56,12 @@
     <Compile Include="Assets\Scripts\Puzzles\IPuzzleResolution.cs" />
     <Compile Include="Assets\Scripts\UI\PuzzleCardInventoryView.cs" />
     <Compile Include="Assets\assets\HotWarLevelKit.cs" />
+    <Compile Include="Assets\Scripts\Puzzles\Radar\RadarPuzzle.cs" />
     <Compile Include="Assets\Scripts\Puzzles\SlidingDoor.cs" />
     <Compile Include="Assets\Scripts\Puzzles\Generator\PoweredProp.cs" />
     <Compile Include="Assets\Scripts\Puzzles\PuzzleConfig.cs" />
     <Compile Include="Assets\Scripts\Doors\RoomConfig.cs" />
+    <Compile Include="Assets\Scripts\Puzzles\SwitchComboPuzzle.cs" />
     <Compile Include="Assets\Scripts\Puzzles\IConfirmablePuzzle.cs" />
     <Compile Include="Assets\Scripts\Puzzles\Identification\IdentificationPuzzle.cs" />
     <Compile Include="Assets\Scripts\Puzzles\Generator\GeneratorMisfire.cs" />

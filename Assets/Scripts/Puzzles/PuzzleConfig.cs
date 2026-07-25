@@ -44,7 +44,10 @@ public class PuzzleConfig : ScriptableObject
     [SerializeField] private bool preserveProgressOnExit = true;
 
     [Header("Output card")]
-    [Tooltip("Verification stage this room satisfies, e.g. CONFIRMATION. Printed on both cards.")]
+    [Tooltip("Where this room sits in the verification procedure. Decides the card's slot in the final code.")]
+    [SerializeField] private VerificationStage stage = VerificationStage.Detect;
+
+    [Tooltip("Printed noun for the stage, e.g. CONFIRMATION. Leave empty to use the stage's default label.")]
     [SerializeField] private string stageLabel;
 
     [Tooltip("Printed when the player solves the room.")]
@@ -56,10 +59,35 @@ public class PuzzleConfig : ScriptableObject
     public string PuzzleId => puzzleId;
     public string PuzzleName => puzzleName;
     public bool PreserveProgressOnExit => preserveProgressOnExit;
-    public string StageLabel => stageLabel;
+
+    /// <summary>Procedural stage this room satisfies. Sorts the card into the final code.</summary>
+    public VerificationStage Stage => stage;
+
+    /// <summary>The stage's printed noun, falling back to the stage default when unauthored.</summary>
+    public string StageLabel => string.IsNullOrEmpty(stageLabel)
+        ? VerificationStages.DisplayLabel(stage)
+        : stageLabel;
 
     public PuzzleCardOutput CorrectOutput => correctOutput;
     public PuzzleCardOutput IncorrectOutput => incorrectOutput;
+
+    /// <summary>
+    /// The finished card for the attempt a room just judged. Every room builds its card
+    /// here so the correct/wrong split, the stage and the label are applied identically
+    /// everywhere - a room that assembled its own card would be free to get it wrong.
+    /// </summary>
+    public PuzzleCard BuildCard(bool wasCorrect)
+    {
+        var output = OutputFor(wasCorrect);
+
+        return new PuzzleCard(
+            stage,
+            StageLabel,
+            output.CodeCharacter,
+            output.Evidence,
+            wasCorrect,
+            string.IsNullOrEmpty(puzzleId) ? name : puzzleId);
+    }
 
     /// <summary>
     /// The card a room should print for the attempt it just judged. Rooms should call
@@ -82,6 +110,19 @@ public class PuzzleConfig : ScriptableObject
             Debug.LogWarning(
                 $"[PuzzleConfig] '{name}' uses '{correctOutput.CodeCharacter}' for both the correct and incorrect "
                 + "outcome. A failed room must emit a different character, or the assembled final code is always right.",
+                this);
+        }
+
+        // The stage enum arrived after stageLabel did, so any asset authored before it
+        // silently defaults to Detect while still displaying its old noun. That mismatch
+        // would put the card in the wrong slot of the final code with nothing to show for it.
+        if (!string.IsNullOrEmpty(stageLabel)
+            && !string.Equals(stageLabel, VerificationStages.DisplayLabel(stage), StringComparison.OrdinalIgnoreCase))
+        {
+            Debug.LogWarning(
+                $"[PuzzleConfig] '{name}' is labelled '{stageLabel}' but its stage is {stage} "
+                + $"({VerificationStages.DisplayLabel(stage)}). Check the Stage field - the label is only "
+                + "cosmetic, the stage is what orders the final code.",
                 this);
         }
 

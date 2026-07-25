@@ -10,7 +10,7 @@ using UnityEngine;
 /// reset and retry freely. Confirming always produces a card; only a correctly synced
 /// run produces the truthful one.
 /// </summary>
-public class GeneratorPuzzle : BasePuzzle<bool>
+public class GeneratorPuzzle : BasePuzzle<bool>, IConfirmablePuzzle
 {
     [Header("Generators")]
     [Tooltip("All generators that must land together. The doc uses three: 8s, 5s and 3s.")]
@@ -36,6 +36,29 @@ public class GeneratorPuzzle : BasePuzzle<bool>
     /// </summary>
     public bool CanConfirm => !IsConfirmed && AreAllGeneratorsAtFullPower();
 
+    /// <summary>Why CONFIRM is refused, for the lever's prompt. Null when it is available.</summary>
+    public string ConfirmBlockedReason
+    {
+        get
+        {
+            if (IsConfirmed)
+            {
+                return "Result already filed";
+            }
+
+            return AreAllGeneratorsAtFullPower() ? null : "Generators not ready";
+        }
+    }
+
+    /// <summary>The panel seals on CONFIRM; until then a retry costs nothing.</summary>
+    public bool CanReset => !IsConfirmed;
+
+    /// <summary><see cref="IConfirmablePuzzle"/> name for <see cref="ResetGenerators"/>.</summary>
+    public void ResetAttempt()
+    {
+        ResetGenerators();
+    }
+
     /// <summary>
     /// Raised when the final generator lands, with whether the three landed inside tolerance.
     /// Drives the "verification system online" hum or the comedy misfire.
@@ -43,7 +66,7 @@ public class GeneratorPuzzle : BasePuzzle<bool>
     public event Action<bool> OnSyncEvaluated;
 
     /// <summary>Raised when CONFIRM is pulled, carrying the printed card.</summary>
-    public event Action<GeneratorResult> OnConfirmed;
+    public event Action<PuzzleCard> OnConfirmed;
 
     /// <summary>Raised when the generators are returned to idle.</summary>
     public event Action OnGeneratorsReset;
@@ -114,11 +137,11 @@ public class GeneratorPuzzle : BasePuzzle<bool>
     /// Locks in the player's attempt and prints the room's card. Always produces a result:
     /// a wrong run still yields a code character, with misleading evidence attached.
     /// </summary>
-    public GeneratorResult Confirm()
+    public PuzzleCard Confirm()
     {
         if (IsConfirmed)
         {
-            return BuildResult();
+            return FiledCard ?? BuildCard(IsSolved);
         }
 
         if (!AreAllGeneratorsAtFullPower())
@@ -126,7 +149,7 @@ public class GeneratorPuzzle : BasePuzzle<bool>
             // Guarded rather than silently filed: sealing the room before the player
             // has run the generators would leave them with a dead puzzle and no reset.
             Debug.LogWarning("[Generator] CONFIRM refused - not every generator is at full power yet.", this);
-            return BuildResult();
+            return BuildCard(false);
         }
 
         IsConfirmed = true;
@@ -137,18 +160,19 @@ public class GeneratorPuzzle : BasePuzzle<bool>
         currentState = areGeneratorsSynced;
         CheckSolve();
 
-        var result = BuildResult();
-
-        Debug.Log($"[Generator] CONFIRM filed - spread {LastSyncSpread:0.00}s, correct={result.WasCorrect}, "
-                  + $"card \"{result.ToPrintedLine()}\". Room is now sealed.", this);
-
-        OnConfirmed?.Invoke(result);
-
         // Resolved regardless of correctness - the room is done with the player either way,
-        // which is what the exit door keys off.
-        MarkResolved(result.WasCorrect);
+        // which is what the exit door keys off. This also files the card into the inventory,
+        // so FiledCard is the authoritative copy from here on.
+        MarkResolved(IsSolved);
 
-        return result;
+        var card = FiledCard.Value;
+
+        Debug.Log($"[Generator] CONFIRM filed - spread {LastSyncSpread:0.00}s, correct={card.WasCorrect}, "
+                  + $"card \"{card.ToPrintedLine()}\". Room is now sealed.", this);
+
+        OnConfirmed?.Invoke(card);
+
+        return card;
     }
 
     public override void ResetPuzzle()
@@ -215,29 +239,5 @@ public class GeneratorPuzzle : BasePuzzle<bool>
         }
 
         return latest - earliest;
-    }
-
-    private GeneratorResult BuildResult()
-    {
-        var wasCorrect = IsSolved;
-
-        if (puzzleConfig == null)
-        {
-            // Config is authoring data; a missing asset must not stop the room from
-            // emitting a card, since the finale depends on every room producing one.
-            return new GeneratorResult("CONFIRMATION", wasCorrect ? '9' : '?', string.Empty, wasCorrect);
-        }
-
-        // OutputFor keeps the correct/wrong split in one place: a failed room hands out a
-        // DIFFERENT character, not just different prose. Emitting the correct digit either
-        // way would make the assembled final code right no matter how badly the player
-        // played, which removes the point of the central decoder.
-        var output = puzzleConfig.OutputFor(wasCorrect);
-
-        return new GeneratorResult(
-            puzzleConfig.StageLabel,
-            output.CodeCharacter,
-            output.Evidence,
-            wasCorrect);
     }
 }

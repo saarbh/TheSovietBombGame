@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 12766d1b5b9700240b724b49260cc091, type: 3}
-  m_Name: GeneratorRoomConfig
+  m_Name: IdentificationRoomConfig
   m_EditorClassIdentifier: Assembly-CSharp::PuzzleConfig
-  puzzleId: generator_room
-  puzzleName: Emergency Generator Room
+  puzzleId: identification_room
+  puzzleName: Identification Room
   preserveProgressOnExit: 1
-  stage: 1
-  stageLabel: CONFIRMATION
+  stage: 2
+  stageLabel: CLASSIFICATION
   correctOutput:
-    codeCharacter: 9
-    evidence: The original launch warning was issued while this verification system
-      had no power. The launch was never independently confirmed.
+    codeCharacter: 2
+    evidence: The object is travelling far too slowly to be a missile, and gives
+      off no heat. Probable meteorological object.
   incorrectOutput:
-    codeCharacter: 4
-    evidence: Verification system reports nominal. Independent confirmation of the
-      launch warning is on record.
+    codeCharacter: 6
+    evidence: Object classified as a powered high-speed vehicle. Profile consistent
+      with the launch warning.

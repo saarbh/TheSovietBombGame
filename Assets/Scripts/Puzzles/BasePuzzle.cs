@@ -32,6 +32,12 @@ public abstract class BasePuzzle<T> : MonoBehaviour, IPuzzle, IPuzzleResolution
 
     public PuzzleConfig Config => puzzleConfig;
 
+    /// <summary>
+    /// The card this room filed, or null while it is unresolved. A nullable struct, not a
+    /// sentinel value, so "no answer yet" can never be confused with a blank card.
+    /// </summary>
+    public PuzzleCard? FiledCard { get; private set; }
+
     /// <summary>Raised once, the moment the puzzle transitions to solved.</summary>
     public event Action OnPuzzleSolved;
 
@@ -83,8 +89,9 @@ public abstract class BasePuzzle<T> : MonoBehaviour, IPuzzle, IPuzzleResolution
     }
 
     /// <summary>
-    /// Marks the room as finished with, right or wrong, and raises <see cref="OnResolved"/>
-    /// exactly once. Subclasses call this when the player commits an answer.
+    /// Marks the room as finished with, right or wrong, files its card into the player's
+    /// inventory and raises <see cref="OnResolved"/> exactly once. Subclasses call this
+    /// when the player commits an answer.
     /// </summary>
     protected void MarkResolved(bool wasCorrect)
     {
@@ -94,7 +101,32 @@ public abstract class BasePuzzle<T> : MonoBehaviour, IPuzzle, IPuzzleResolution
         }
 
         IsResolved = true;
+
+        // Filed before OnResolved fires, so every listener - doors, printers, the evidence
+        // panel - sees an inventory that already contains this room's card.
+        FileCardForAttempt(wasCorrect);
+
         OnResolved?.Invoke(wasCorrect);
+    }
+
+    /// <summary>
+    /// The card for the attempt just judged. Override only for a room whose card is not
+    /// fully described by its <see cref="PuzzleConfig"/>.
+    /// </summary>
+    protected virtual PuzzleCard BuildCard(bool wasCorrect)
+    {
+        if (puzzleConfig == null)
+        {
+            // Config is authoring data; a missing asset must not stop the room emitting a
+            // card, since the finale depends on every room producing one. The placeholder
+            // is loud on purpose - a '?' in the final code is easier to trace than a digit
+            // that happens to be plausible.
+            Debug.LogWarning($"[{name}] resolved with no PuzzleConfig assigned; filing a placeholder card.", this);
+
+            return new PuzzleCard(VerificationStage.Detect, "UNCONFIGURED", '?', string.Empty, wasCorrect, name);
+        }
+
+        return puzzleConfig.BuildCard(wasCorrect);
     }
 
     /// <summary>
@@ -106,6 +138,42 @@ public abstract class BasePuzzle<T> : MonoBehaviour, IPuzzle, IPuzzleResolution
         isSolved = false;
         IsResolved = false;
         currentState = default;
+
+        WithdrawFiledCard();
+    }
+
+    private void FileCardForAttempt(bool wasCorrect)
+    {
+        var card = BuildCard(wasCorrect);
+        FiledCard = card;
+
+        // Standalone single-room test scenes have no GameManager, and that is a supported
+        // setup: the room still resolves and still prints, the card just has nowhere to go.
+        if (GameManager.Instance == null)
+        {
+            return;
+        }
+
+        GameManager.Instance.CardInventory.FileCard(card);
+    }
+
+    /// <summary>
+    /// Takes this room's card back out of the inventory on reset, so a re-solve files a
+    /// fresh one rather than being refused as a duplicate stage.
+    /// </summary>
+    private void WithdrawFiledCard()
+    {
+        if (!FiledCard.HasValue)
+        {
+            return;
+        }
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.CardInventory.WithdrawCard(FiledCard.Value.Stage);
+        }
+
+        FiledCard = null;
     }
 
     private void RegisterWithTracker()

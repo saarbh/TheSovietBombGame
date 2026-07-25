@@ -388,7 +388,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c138bac527de5c4d8d4cb8d03670eba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ResetLever
-  puzzle: {fileID: 6871539905813053415}
+  puzzleObject: {fileID: 1462239344048343812}
+  resetNoun: generators
 --- !u!1 &1182995057671512052
 GameObject:
   m_ObjectHideFlags: 0
@@ -1806,7 +1807,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54e3e634e2f3e2c49965d6f3e88b2d95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ConfirmLever
-  puzzle: {fileID: 6871539905813053415}
+  puzzleObject: {fileID: 1462239344048343812}
+  confirmVerb: Confirm
   printoutDisplay: {fileID: 3568650316531776237}
   printedCard: {fileID: 0}
 --- !u!1 &6937490111765551303

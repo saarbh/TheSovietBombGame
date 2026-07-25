@@ -3,7 +3,17 @@ guid: dcfb41f631ea1c34a8934414d2e9b741
 ModelImporter:
   serializedVersion: 24300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Sov_LCD_Body
+    second: {fileID: 2100000, guid: 6c215f6ec86890c47ab831b6abb8cabf, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Sov_LCD_Screen
+    second: {fileID: 2100000, guid: 3b12b5044b5c17e40afd09503b30923b, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

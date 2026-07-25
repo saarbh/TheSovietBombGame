@@ -59,6 +59,8 @@ public class GameManager : MonoBehaviour
     /// <summary>Raised when the run resolves. Cutscenes and UI listen here rather than being called directly.</summary>
     public event Action<EndingType> OnGameEnded;
 
+    private VictoryLoseManager victoryLoseManager;
+
     private void Awake()
     {
         // Scene singleton, not persistent: a reloaded scene gets a fresh manager.
@@ -75,6 +77,8 @@ public class GameManager : MonoBehaviour
         // Declared in Awake so a puzzle that somehow resolves on the first frame still
         // files against a fully configured inventory.
         cardInventory.SetRequiredStages(requiredStages);
+
+        victoryLoseManager = new VictoryLoseManager(this);
     }
 
     private void Start()
@@ -82,11 +86,33 @@ public class GameManager : MonoBehaviour
         StartGame();
     }
 
+    private void Update()
+    {
+        if (victoryLoseManager != null)
+        {
+            victoryLoseManager.Update();
+        }
+    }
+
+    private void OnGUI()
+    {
+        if (victoryLoseManager != null)
+        {
+            victoryLoseManager.DrawGUI();
+        }
+    }
+
     private void OnDestroy()
     {
         if (WatchManager is not null)
         {
             WatchManager.OnTimeExpired -= OnTimeExpiredHandler;
+        }
+
+        if (victoryLoseManager != null)
+        {
+            victoryLoseManager.Cleanup();
+            victoryLoseManager = null;
         }
     }
 
@@ -176,26 +202,11 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public EndingType EvaluateEnding(bool leftControlRoom, PhoneCallChoice callChoice)
     {
-        var allPuzzlesSolved = AreAllPuzzlesSolved();
-
-        switch (callChoice)
+        if (victoryLoseManager != null)
         {
-            case PhoneCallChoice.ReportIncomingNuke:
-                return EndingType.NuclearWar;
-
-            case PhoneCallChoice.ReportFalseAlarm:
-                // PhoneInteractable only offers this option once every puzzle is
-                // solved; the guard keeps the rule true even if that gate changes.
-                return allPuzzlesSolved ? EndingType.WorldSaved : EndingType.NuclearWar;
-
-            case PhoneCallChoice.NoCallMade:
-            default:
-                // Never leaving the post, or leaving but having pieced the truth
-                // together, both count as not escalating a false alarm.
-                return (!leftControlRoom || allPuzzlesSolved)
-                    ? EndingType.WorldSaved
-                    : EndingType.NuclearWar;
+            return victoryLoseManager.EvaluateEnding(leftControlRoom, callChoice, AreAllPuzzlesSolved());
         }
+        return EndingType.NuclearWar;
     }
 
     /// <summary>

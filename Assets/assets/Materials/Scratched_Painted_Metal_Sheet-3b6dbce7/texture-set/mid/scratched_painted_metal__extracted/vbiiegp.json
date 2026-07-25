@@ -1,0 +1,660 @@
+{
+    "assetCategories": {
+        "surface": {
+            "metal": {
+                "painted": {},
+                "sheet": {}
+            }
+        }
+    },
+    "averageColor": "#000000",
+    "categories": [
+        "surface",
+        "metal",
+        "sheet"
+    ],
+    "comp_version": 1,
+    "displacementBias": 0.864685,
+    "displacementCalibrationAccuracy": 0.999833,
+    "displacementScale": 0.015412,
+    "environment": {
+        "biome": "industrial",
+        "region": "Asia"
+    },
+    "highest_available_res": 8192,
+    "id": "vbiiegp",
+    "json": {
+        "contentLength": 31109,
+        "uri": "vbiiegp/vbiiegp.json"
+    },
+    "maps": [
+        {
+            "bitDepth": 32,
+            "colorspace": "linear",
+            "contentLength": 85012624,
+            "mimeType": "image/x-exr",
+            "name": "Ao",
+            "resolution": "8192x4096",
+            "tier": 0,
+            "type": "ao",
+            "uri": "vbiiegp_8K_AO.exr"
+        },
+        {
+            "bitDepth": 8,
+            "colorspace": "linear",
+            "contentLength": 4429397,
+            "mimeType": "image/jpeg",
+            "name": "Ao",
+            "resolution": "8192x4096",
+            "tier": 0,
+            "type": "ao",
+            "uri": "vbiiegp_8K_AO.jpg"
+        },
+        {
+            "bitDepth": 16,
+            "colorspace": "sRGB",
+            "contentLength": 87474060,
+            "mimeType": "image/x-exr",
+            "name": "Basecolor",
+            "resolution": "8192x4096",
+            "tier": 0,
+            "type": "basecolor",
+            "uri": "vbiiegp_8K_Basecolor.exr"
+        },
+        {
+            "bitDepth": 8,
+            "colorspace": "sRGB",
+            "contentLength": 8515796,
+            "mimeType": "image/jpeg",
+            "name": "Basecolor",
+            "resolution": "8192x4096",
+            "tier": 0,
+            "type": "basecolor",
+            "uri": "vbiiegp_8K_Basecolor.jpg"
+        },
+        {
+            "bitDepth": 32,
+            "colorspace": "linear",
+            "contentLength": 102909069,
+            "mimeType": "image/x-exr",
+            "name": "Bump",
+            "resolution": "8192x4096",
+            "tier": 0,
+            "type": "bump",
+            "uri": "vbiiegp_8K_Bump.exr"
+        },
+        {
+            "bitDepth": 8,
+            "colorspace": "linear",
+            "contentLength": 11780234,
+            "mimeType": "image/jpeg",
+            "name": "Bump",
+            "resolution": "8192x4096",
+            "tier": 0,
+            "type": "bump",
+            "uri": "vbiiegp_8K_Bump.jpg"
+        },
+        {
+            "bitDepth": 32,
+            "colorspace": "linear",
+            "contentLength": 97452873,
+            "mimeType": "image/x-exr",
+            "name": "Cavity",
+            "resolution": "8192x4096",
+            "tier": 0,
+            "type": "cavity",
+            "uri": "vbiiegp_8K_Cavity.exr"
+        },
+        {
+            "bitDepth": 8,
+            "colorspace": "linear",
+            "contentLength": 9228196,
+            "mimeType": "image/jpeg",
+            "name": "Cavity",
+            "resolution": "8192x4096",
+            "tier": 0,
+            "type": "cavity",
+            "uri": "vbiiegp_8K_Cavity.jpg"
+        },
+        {
+            "bitDepth": 16,
+            "colorspace": "sRGB",
+            "contentLength": 84298972,
+            "mimeType": "image/x-exr",
+            "name": "Diffuse",
+            "resolution": "8192x4096",
+            "tier": 0,
+            "type": "diffuse",
+            "uri": "vbiiegp_8K_Diffuse.exr"
+        },
+        {
+            "bitDepth": 8,
+            "colorspace": "sRGB",
+            "contentLength": 7767210,
+            "mimeType": "image/jpeg",
+            "name": "Diffuse",
+            "resolution": "8192x4096",
+            "tier": 0,
+            "type": "diffuse",
+            "uri": "vbiiegp_8K_Diffuse.jpg"
+        },
+        {
+            "bias": 0.0,
+            "bitDepth": 32,
+            "colorspace": "linear",
+            "contentLength": 121673002,
+            "mimeType": "image/x-exr",
+            "name": "Displacement",
+            "resolution": "8192x4096",
+            "scale": 1.0,
+            "tier": 0,
+            "type": "displacement",
+            "uri": "vbiiegp_8K_Displacement.exr"
+        },
+        {
+            "bias": null,
+            "bitDepth": 8,
+            "colorspace": "linear",
+            "contentLength": 4290629,
+            "mimeType": "image/jpeg",
+            "name": "Displacement",
+            "resolution": "8192x4096",
+            "scale": null,
+            "tier": 0,
+            "type": "displacement",
+            "uri": "vbiiegp_8K_Displacement.jpg"
+        },
+        {
+            "bitDepth": 16,
+            "colorspace": "linear",
+            "contentLength": 74570101,
+            "mimeType": "image/x-exr",
+            "name": "Gloss",
+            "resolution": "8192x4096",
+            "tier": 0,
+            "type": "gloss",
+            "uri": "vbiiegp_8K_Gloss.exr"
+        },
+        {
+            "bitDepth": 8,
+            "colorspace": "linear",
+            "contentLength": 10937079,
+            "mimeType": "image/jpeg",
+            "name": "Gloss",
+            "resolution": "8192x4096",
+            "tier": 0,
+            "type": "gloss",
+            "uri": "vbiiegp_8K_Gloss.jpg"
+        },
+        {
+            "bitDepth": 8,
+            "colorspace": "linear",
+            "contentLength": 37606765,
+            "mimeType": "image/x-exr",
+            "name": "Metalness",
+            "resolution": "8192x4096",
+            "tier": 0,
+            "type": "metalness",
+            "uri": "vbiiegp_8K_Metalness.exr"
+        },
+        {
+            "bitDepth": 8,
+            "colorspace": "linear",
+            "contentLength": 7865907,
+            "mimeType": "image/jpeg",
+            "name": "Metalness",
+            "resolution": "8192x4096",
+            "tier": 0,
+            "type": "metalness",
+            "uri": "vbiiegp_8K_Metalness.jpg"
+        },
+        {
+            "bitDepth": 16,
+            "colorspace": "linear",
+            "contentLength": 51215684,
+            "mimeType": "image/x-exr",
+            "name": "Normal",
+            "resolution": "8192x4096",
+            "tier": 0,
+            "type": "normal",
+            "uri": "vbiiegp_8K_Normal.exr"
+        },
+        {
+            "bitDepth": 8,
+            "colorspace": "linear",
+            "contentLength": 7388716,
+            "mimeType": "image/jpeg",
+            "name": "Normal",
+            "resolution": "8192x4096",
+            "tier": 0,
+            "type": "normal",
+            "uri": "vbiiegp_8K_Normal.jpg"
+        },
+        {
+            "bitDepth": 16,
+            "colorspace": "linear",
+            "contentLength": 82560966,
+            "mimeType": "image/x-exr",
+            "name": "Roughness",
+            "resolution": "8192x4096",
+            "tier": 0,
+            "type": "roughness",
+            "uri": "vbiiegp_8K_Roughness.exr"
+        },
+        {
+            "bitDepth": 8,
+            "colorspace": "linear",
+            "contentLength": 11615731,
+            "mimeType": "image/jpeg",
+            "name": "Roughness",
+            "resolution": "8192x4096",
+            "tier": 0,
+            "type": "roughness",
+            "uri": "vbiiegp_8K_Roughness.jpg"
+        },
+        {
+            "bitDepth": 16,
+            "colorspace": "linear",
+            "contentLength": 101493197,
+            "mimeType": "image/x-exr",
+            "name": "Specular",
+            "resolution": "8192x4096",
+            "tier": 0,
+            "type": "specular",
+            "uri": "vbiiegp_8K_Specular.exr"
+        },
+        {
+            "bitDepth": 8,
+            "colorspace": "linear",
+            "contentLength": 10049296,
+            "mimeType": "image/jpeg",
+            "name": "Specular",
+            "resolution": "8192x4096",
+            "tier": 0,
+            "type": "specular",
+            "uri": "vbiiegp_8K_Specular.jpg"
+        }
+    ],
+    "meta": [
+        {
+            "key": "scanArea",
+            "name": "Scan Area",
+            "value": "2x1 m"
+        },
+        {
+            "key": "height",
+            "name": "Height",
+            "value": "0.001 m"
+        },
+        {
+            "key": "tileable",
+            "name": "Tileable",
+            "value": true
+        },
+        {
+            "key": "tiling_directions",
+            "name": "Tiling Directions",
+            "value": [
+                "x",
+                "y"
+            ]
+        },
+        {
+            "key": "texelDensity",
+            "name": "Texel Density",
+            "value": "4096 px/m"
+        },
+        {
+            "key": "calibration",
+            "name": "Calibration",
+            "value": "GretagMacbeth ColorChecker Color Rendition Chart"
+        },
+        {
+            "key": "scanner",
+            "name": "Scanner",
+            "value": "MKX"
+        }
+    ],
+    "models": [],
+    "name": "Scratched Painted Metal Sheet",
+    "pack": {
+        "_id": "industrial-metals",
+        "name": "Industrial Metals"
+    },
+    "physicalSize": "2x1",
+    "points": 2,
+    "previews": {
+        "images": [
+            {
+                "contentLength": 917143,
+                "resolution": "840x840",
+                "tags": [
+                    "thumb"
+                ],
+                "uri": "vbiiegp_Grid_840.png"
+            },
+            {
+                "contentLength": 13095578,
+                "resolution": "3840x2160",
+                "tags": [
+                    "preview"
+                ],
+                "uri": "vbiiegp_Popup_3840.png"
+            }
+        ]
+    },
+    "process_date": "2024-10-04 16:40:51",
+    "properties": [],
+    "references": [],
+    "revised": false,
+    "revision": 0,
+    "semanticTags": {
+        "architectural_style": {},
+        "asset_type": "surface",
+        "city": "Islamabad",
+        "color": [
+            "Gray",
+            "White"
+        ],
+        "contains": [
+            "metal",
+            "scratches",
+            "paint",
+            "sheet"
+        ],
+        "country": "Pakistan",
+        "descriptive": [
+            "worn",
+            "scratched",
+            "damaged",
+            "thin",
+            "painted"
+        ],
+        "environment": [
+            "industrial",
+            "rural"
+        ],
+        "industry": [
+            "archviz",
+            "games",
+            "VFX"
+        ],
+        "interior_exterior": [
+            "exterior",
+            "interior"
+        ],
+        "locations": {
+            "Asia": {
+                "Pakistan": {
+                    "Islamabad": {}
+                }
+            }
+        },
+        "maxSize": 2,
+        "minSize": 1,
+        "name": "Scratched Painted Metal Sheet",
+        "orientation": [
+            "floor",
+            "wall"
+        ],
+        "region": "Asia",
+        "state": [
+            "old",
+            "damaged"
+        ],
+        "subject_matter": "manmade",
+        "theme": [
+            "industrial",
+            "exteriors",
+            "rural",
+            "urban",
+            "walls",
+            "Construction Site",
+            "roofing",
+            "fencing",
+            "partitioning"
+        ]
+    },
+    "tags": [
+        "red",
+        "industrial",
+        "exteriors",
+        "rural",
+        "urban",
+        "walls",
+        "construction site",
+        "roofing",
+        "fencing",
+        "partitioning",
+        "metal",
+        "scratches",
+        "paint",
+        "sheet",
+        "worn",
+        "scratched",
+        "damaged",
+        "thin",
+        "painted"
+    ],
+    "texelDensity": 4096,
+    "texture_type": "basic",
+    "uasset": [
+        {
+            "mimeType": "uasset",
+            "tier": 0,
+            "type": "material",
+            "ueVersion": "5.0.0",
+            "uri": "vbiiegp/UAsset/Tier0/MI_Scratched_Painted_Metal_Sheet_vbiiegp_8K.uasset"
+        },
+        {
+            "mimeType": "uasset",
+            "sub-type": "ard",
+            "tier": 0,
+            "type": "map",
+            "ueVersion": "5.0.0",
+            "uri": "vbiiegp/UAsset/Tier0/T_ScratchedPaintedMetalSheet_vbiiegp_8K_ORDp.uasset"
+        },
+        {
+            "mimeType": "uasset",
+            "sub-type": "albedo",
+            "tier": 0,
+            "type": "map",
+            "ueVersion": "5.0.0",
+            "uri": "vbiiegp/UAsset/Tier0/T_Scratched_Painted_Metal_Sheet_vbiiegp_8K_D.uasset"
+        },
+        {
+            "mimeType": "uasset",
+            "sub-type": "normal",
+            "tier": 0,
+            "type": "map",
+            "ueVersion": "5.0.0",
+            "uri": "vbiiegp/UAsset/Tier0/T_Scratched_Painted_Metal_Sheet_vbiiegp_8K_N.uasset"
+        },
+        {
+            "mimeType": "json",
+            "tier": 0,
+            "type": "meta",
+            "ueVersion": "5.0.0",
+            "uri": "vbiiegp/UAsset/Tier0/vbiiegp_0.json"
+        },
+        {
+            "mimeType": "uasset",
+            "tier": 1,
+            "type": "material",
+            "ueVersion": "5.0.0",
+            "uri": "vbiiegp/UAsset/Tier1/MI_Scratched_Painted_Metal_Sheet_vbiiegp_4K.uasset"
+        },
+        {
+            "mimeType": "uasset",
+            "sub-type": "ard",
+            "tier": 1,
+            "type": "map",
+            "ueVersion": "5.0.0",
+            "uri": "vbiiegp/UAsset/Tier1/T_ScratchedPaintedMetalSheet_vbiiegp_4K_ORDp.uasset"
+        },
+        {
+            "mimeType": "uasset",
+            "sub-type": "albedo",
+            "tier": 1,
+            "type": "map",
+            "ueVersion": "5.0.0",
+            "uri": "vbiiegp/UAsset/Tier1/T_Scratched_Painted_Metal_Sheet_vbiiegp_4K_D.uasset"
+        },
+        {
+            "mimeType": "uasset",
+            "sub-type": "normal",
+            "tier": 1,
+            "type": "map",
+            "ueVersion": "5.0.0",
+            "uri": "vbiiegp/UAsset/Tier1/T_Scratched_Painted_Metal_Sheet_vbiiegp_4K_N.uasset"
+        },
+        {
+            "mimeType": "json",
+            "tier": 1,
+            "type": "meta",
+            "ueVersion": "5.0.0",
+            "uri": "vbiiegp/UAsset/Tier1/vbiiegp_1.json"
+        },
+        {
+            "mimeType": "uasset",
+            "tier": 2,
+            "type": "material",
+            "ueVersion": "5.0.0",
+            "uri": "vbiiegp/UAsset/Tier2/MI_Scratched_Painted_Metal_Sheet_vbiiegp_2K.uasset"
+        },
+        {
+            "mimeType": "uasset",
+            "sub-type": "ard",
+            "tier": 2,
+            "type": "map",
+            "ueVersion": "5.0.0",
+            "uri": "vbiiegp/UAsset/Tier2/T_ScratchedPaintedMetalSheet_vbiiegp_2K_ORDp.uasset"
+        },
+        {
+            "mimeType": "uasset",
+            "sub-type": "albedo",
+            "tier": 2,
+            "type": "map",
+            "ueVersion": "5.0.0",
+            "uri": "vbiiegp/UAsset/Tier2/T_Scratched_Painted_Metal_Sheet_vbiiegp_2K_D.uasset"
+        },
+        {
+            "mimeType": "uasset",
+            "sub-type": "normal",
+            "tier": 2,
+            "type": "map",
+            "ueVersion": "5.0.0",
+            "uri": "vbiiegp/UAsset/Tier2/T_Scratched_Painted_Metal_Sheet_vbiiegp_2K_N.uasset"
+        },
+        {
+            "mimeType": "json",
+            "tier": 2,
+            "type": "meta",
+            "ueVersion": "5.0.0",
+            "uri": "vbiiegp/UAsset/Tier2/vbiiegp_2.json"
+        },
+        {
+            "mimeType": "uasset",
+            "tier": 3,
+            "type": "material",
+            "ueVersion": "5.0.0",
+            "uri": "vbiiegp/UAsset/Tier3/MI_Scratched_Painted_Metal_Sheet_vbiiegp_1K.uasset"
+        },
+        {
+            "mimeType": "uasset",
+            "sub-type": "ard",
+            "tier": 3,
+            "type": "map",
+            "ueVersion": "5.0.0",
+            "uri": "vbiiegp/UAsset/Tier3/T_ScratchedPaintedMetalSheet_vbiiegp_1K_ORDp.uasset"
+        },
+        {
+            "mimeType": "uasset",
+            "sub-type": "albedo",
+            "tier": 3,
+            "type": "map",
+            "ueVersion": "5.0.0",
+            "uri": "vbiiegp/UAsset/Tier3/T_Scratched_Painted_Metal_Sheet_vbiiegp_1K_D.uasset"
+        },
+        {
+            "mimeType": "uasset",
+            "sub-type": "normal",
+            "tier": 3,
+            "type": "map",
+            "ueVersion": "5.0.0",
+            "uri": "vbiiegp/UAsset/Tier3/T_Scratched_Painted_Metal_Sheet_vbiiegp_1K_N.uasset"
+        },
+        {
+            "mimeType": "json",
+            "tier": 3,
+            "type": "meta",
+            "ueVersion": "5.0.0",
+            "uri": "vbiiegp/UAsset/Tier3/vbiiegp_3.json"
+        },
+        {
+            "mimeType": "uasset",
+            "tier": 4,
+            "type": "material",
+            "ueVersion": "5.0.0",
+            "uri": "vbiiegp/UAsset/Tier4/MI_Scratched_Painted_Metal_Sheet_vbiiegp_1K.uasset"
+        },
+        {
+            "mimeType": "uasset",
+            "sub-type": "albedo",
+            "tier": 4,
+            "type": "map",
+            "ueVersion": "5.0.0",
+            "uri": "vbiiegp/UAsset/Tier4/T_Scratched_Painted_Metal_Sheet_vbiiegp_1K_D.uasset"
+        },
+        {
+            "mimeType": "uasset",
+            "sub-type": "normal",
+            "tier": 4,
+            "type": "map",
+            "ueVersion": "5.0.0",
+            "uri": "vbiiegp/UAsset/Tier4/T_Scratched_Painted_Metal_Sheet_vbiiegp_1K_N.uasset"
+        },
+        {
+            "mimeType": "json",
+            "tier": 4,
+            "type": "meta",
+            "ueVersion": "5.0.0",
+            "uri": "vbiiegp/UAsset/Tier4/vbiiegp_4.json"
+        }
+    ],
+    "ue_plugin_archives": [
+        {
+            "contentLength": 96661747,
+            "gltfVersion": "2.0",
+            "tier": 0,
+            "type": "gltf",
+            "uri": "ue_plugin_archives/tier_0/vbiiegp_tier_0.zip",
+            "version": 1
+        },
+        {
+            "contentLength": 27845515,
+            "gltfVersion": "2.0",
+            "tier": 1,
+            "type": "gltf",
+            "uri": "ue_plugin_archives/tier_1/vbiiegp_tier_1.zip",
+            "version": 1
+        },
+        {
+            "contentLength": 5876169,
+            "gltfVersion": "2.0",
+            "tier": 2,
+            "type": "gltf",
+            "uri": "ue_plugin_archives/tier_2/vbiiegp_tier_2.zip",
+            "version": 1
+        },
+        {
+            "contentLength": 1387385,
+            "gltfVersion": "2.0",
+            "tier": 3,
+            "type": "gltf",
+            "uri": "ue_plugin_archives/tier_3/vbiiegp_tier_3.zip",
+            "version": 1
+        }
+    ],
+    "version": 2
+}

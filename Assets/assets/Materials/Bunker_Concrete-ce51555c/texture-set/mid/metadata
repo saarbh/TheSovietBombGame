@@ -1,0 +1,117 @@
+{
+	"assetNamespace": "fab",
+	"listing":
+	{
+		"averageRating": 0,
+		"createdAt": "",
+		"description": "<p><strong>Texel density:</strong> 4096 px/m</p><p><strong>Scan Area:</strong> 2x2 m</p><p><strong>Maps:</strong> Gloss Roughness Displacement AO Cavity Bump Specular Normal Basecolor</p>\n<p><span>Create high-quality 3D experiences and worlds with Quixel Megascans. Browse thousands of photorealistic assets and environments, including materials, 3D assets, plants, decals, and more available </span><a target=\"_blank\" href=\"https://www.fab.com/sellers/Quixel\" rel=\"noopener noreferrer nofollow\"><span><u>here</u></span></a><span> on Fab.</span></p><p></p><p><span>For any questions or support regarding Quixel content, please get in touch </span><a target=\"_blank\" href=\"https://support.fab.com/s/?ProductOrigin=1PC\" rel=\"noopener noreferrer nofollow\"><span><u>here</u></span></a><span>.</span></p>",
+		"isAiForbidden": true,
+		"isAiGenerated": false,
+		"lastUpdatedAt": "",
+		"listingType": "material",
+		"media": "https://media.fab.com/image_previews/gallery_images/00635a2d-7cf9-4586-97fb-d824acd47724/e3d69a40-7480-486f-a23c-165647a5ac79.jpeg",
+		"publishedAt": "2024-10-13T23:10:38.668914Z",
+		"reviewCount": 0,
+		"thumbnail": "https://media.fab.com/image_previews/gallery_images/6d459d1a-ee65-4423-958c-506c1c5e19a3/dfef3b64-d9ed-44ac-8037-20199f74ced4.jpeg",
+		"title": "Bunker Concrete",
+		"uid": "ce51555c-af03-4f6b-b100-5583792d8404",
+		"updatedAt": "",
+		"user":
+		{
+			"coverImageUrl": "https://cdn1.epicgames.com/fab/seller/o-cbf5bbfdb340d6a839b5520cb31328/cover/67dbdb8f.jpg",
+			"profileImageUrl": "https://cdn1.epicgames.com/fab/seller/o-cbf5bbfdb340d6a839b5520cb31328/profile/39e5dabd.png",
+			"sellerName": "Quixel Megascans",
+			"uid": "45ea3429-f62c-4f17-aa15-5bb9dfcd0079"
+		},
+		"tags": [
+			{
+				"name": "Cracked",
+				"slug": "cracked",
+				"uid": "1b840f32-d934-4e95-be9f-75d1e10331d7"
+			},
+			{
+				"name": "Chipped",
+				"slug": "chipped",
+				"uid": "584846fa-a876-49ac-b5b1-713514027c69"
+			},
+			{
+				"name": "Concrete",
+				"slug": "concrete",
+				"uid": "9626f858-b7f1-4677-bd48-369c43eebbd1"
+			},
+			{
+				"name": "Broken",
+				"slug": "broken",
+				"uid": "e351064a-b4ba-40f2-852c-cd62dbd7d512"
+			},
+			{
+				"name": "Bunker",
+				"slug": "bunker",
+				"uid": "f722e983-f280-4df6-95da-70c79adb1403"
+			}
+		],
+		"category":
+		{
+			"name": "Concrete",
+			"path": "building-human-made/concrete",
+			"slug": "building-human-made--concrete",
+			"uid": "0f1c4023-9a5c-4078-a73d-7f518ebc8c1b"
+		},
+		"assetFormats": [
+			{
+				"assetFormatType":
+				{
+					"name": "Texture Set",
+					"groupName": "Material Formats",
+					"code": "texture-set",
+					"icon": "cube",
+					"extensions": [
+						"zip"
+					]
+				}
+			},
+			{
+				"assetFormatType":
+				{
+					"name": "GLTF",
+					"groupName": "3D Exchange Formats",
+					"code": "gltf",
+					"icon": "cube",
+					"extensions": [
+						"gltf"
+					]
+				}
+			},
+			{
+				"assetFormatType":
+				{
+					"name": "Additional files",
+					"groupName": "Other Formats",
+					"code": "additional-files",
+					"icon": "file",
+					"extensions": [
+						"zip"
+					]
+				}
+			}
+		],
+		"_PluginMetas":
+		{
+			"apiDataVersion": "0.0.1",
+			"entitlementUid": "",
+			"cacheSize": 0,
+			"downloaded": []
+		}
+	},
+	"target": "",
+	"quality": "mid",
+	"format": "texture-set",
+	"fileId": "84e17536-70c4-461f-b46d-820272074cf7",
+	"platformIncluded": "",
+	"distributionPointBaseUrls": [],
+	"distributionMethod": "",
+	"entitlementUid": "",
+	"invertedNormal": false,
+	"isConverted": false,
+	"isQuixel": true
+}

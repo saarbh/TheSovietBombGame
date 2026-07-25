@@ -95,7 +95,7 @@ public class ThreatVolumePuzzle : BasePuzzle<string>, IConfirmablePuzzle
     /// <summary>
     /// Locks in the player's attempt and files the card into inventory.
     /// </summary>
-    public PuzzleCard Confirm()
+    public PuzzleCard? Confirm()
     {
         if (IsConfirmed)
         {
@@ -105,7 +105,7 @@ public class ThreatVolumePuzzle : BasePuzzle<string>, IConfirmablePuzzle
         if (!CanConfirm)
         {
             Debug.LogWarning("[ThreatVolume] CONFIRM refused - puzzle not ready or override code missing.", this);
-            return BuildCard(false);
+            return null;
         }
 
         IsConfirmed = true;

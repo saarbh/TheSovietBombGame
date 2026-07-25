@@ -76,6 +76,15 @@ public class ThreatVolumeTerminalUI : MonoBehaviour, IInteractable
 
         SetTerminalUIVisible(true);
         RefreshDisplay();
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        if (commandInputField != null)
+        {
+            commandInputField.Select();
+            commandInputField.ActivateInputField();
+        }
     }
 
     public void CloseTerminal()
@@ -102,6 +111,9 @@ public class ThreatVolumeTerminalUI : MonoBehaviour, IInteractable
                 player.SetInputEnabled(true);
             }
         }
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     private void SetTerminalUIVisible(bool visible)
@@ -387,6 +399,13 @@ public class ThreatVolumeTerminalUI : MonoBehaviour, IInteractable
             return;
         }
 
+        bool enterPressed = false;
+        if (Event.current.type == EventType.KeyDown && (Event.current.keyCode == KeyCode.Return || Event.current.keyCode == KeyCode.KeypadEnter))
+        {
+            enterPressed = true;
+            Event.current.Use();
+        }
+
         var windowWidth = 540f;
         var windowHeight = 480f;
         var rect = new Rect((Screen.width - windowWidth) / 2f, (Screen.height - windowHeight) / 2f, windowWidth, windowHeight);
@@ -413,7 +432,7 @@ public class ThreatVolumeTerminalUI : MonoBehaviour, IInteractable
         GUILayout.Label("Cmd:", GUILayout.Width(40));
         tempInput = GUILayout.TextField(tempInput);
 
-        if (GUILayout.Button("SEND", GUILayout.Width(60)) || (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.Return))
+        if (GUILayout.Button("SEND", GUILayout.Width(60)) || enterPressed)
         {
             if (!string.IsNullOrWhiteSpace(tempInput))
             {
@@ -452,7 +471,7 @@ public class ThreatVolumeTerminalUI : MonoBehaviour, IInteractable
         if (isHelpOpen && puzzle != null && puzzle.ThreatConfig != null)
         {
             GUILayout.Space(5);
-            GUILayout.Box($"<b>DOCTRINE HELP:</b>\n{puzzle.ThreatConfig.DoctrineHelpText}", GUILayout.Height(80));
+            GUILayout.Box($"<b>DOCTRINE HELP:</b>\n{puzzle.ThreatConfig.DoctrineHelpText}", GUILayout.MinHeight(120));
         }
 
         GUILayout.EndArea();

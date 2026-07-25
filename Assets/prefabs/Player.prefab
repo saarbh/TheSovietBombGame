@@ -96,7 +96,7 @@ MonoBehaviour:
   interactDistance: 5
   interactableMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 4294967039
   rayOrigin: {fileID: 4783142928487095559}
   detectTriggers: 1
   interactCrosshair: {fileID: 0}

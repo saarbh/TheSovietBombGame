@@ -100,6 +100,9 @@ MonoBehaviour:
   rayOrigin: {fileID: 4783142928487095559}
   detectTriggers: 1
   interactCrosshair: {fileID: 0}
+  highlightColor: {r: 0.2, g: 1, b: 0.2, a: 1}
+  highlightIntensity: 1.5
+  tintColor: {r: 0.05, g: 0.05, b: 0.05, a: 0}
 --- !u!114 &8321162149049581547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -130,6 +133,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInputHandler
   playerController: {fileID: 8321162149049581547}
   lockCursorOnStart: 1
+  recaptureCursorOnClick: 1
 --- !u!114 &4484877126585934391
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -354,7 +358,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b0d004ad315848d2b6b8a67c6351cb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
-  mouseSensitivity: 2
+  mouseSensitivity: 0.5
   gamepadLookSpeed: 220
   stickDeadzone: 0.15
   pitchLimits: {x: -80, y: 80}

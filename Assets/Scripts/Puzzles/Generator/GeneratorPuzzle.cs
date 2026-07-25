@@ -1,4 +1,6 @@
 using System;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 /// <summary>
@@ -7,8 +9,14 @@ using UnityEngine;
 /// slowest-first: C, then B, then A.
 ///
 /// Nothing is judged until the player pulls CONFIRM - up to that point they may start,
-/// reset and retry freely. Confirming always produces a card; only a correctly synced
-/// run produces the truthful one.
+/// reset and retry freely. A misfire is then <b>refused rather than filed</b>: the room says
+/// so, drops the generators back to idle, and the player runs them again. Only a correctly
+/// synced run produces a card, so a mistimed run cannot be carried forward into the finale.
+/// Turn <c>rejectWrongAnswers</c> off to go back to filing a misleading card and sealing the
+/// room.
+///
+/// The refusal costs a full respin, which is the most expensive retry in the game - keep the
+/// hold short, since the generators' own startup time is already the punishment.
 /// </summary>
 public class GeneratorPuzzle : BasePuzzle<bool>, IConfirmablePuzzle
 {
@@ -20,7 +28,17 @@ public class GeneratorPuzzle : BasePuzzle<bool>, IConfirmablePuzzle
     [Tooltip("Largest allowed spread between the first and last generator reaching full power.")]
     [SerializeField] private float syncToleranceSeconds = 0.75f;
 
+    [Header("Wrong answers")]
+    [Tooltip("On: a misfire is REFUSED - nothing is filed, the generators return to idle, and the "
+             + "player runs them again. Off: a misfire files a misleading card and seals the room.")]
+    [SerializeField] private bool rejectWrongAnswers = true;
+
+    [Tooltip("Beat between the refusal and the generators dropping to idle. Short on purpose - the "
+             + "respin is already the cost.")]
+    [SerializeField] private float rejectHoldSeconds = 1.5f;
+
     private bool areGeneratorsSynced;
+    private bool isHandingBack;
 
     /// <summary>True once CONFIRM has been pulled; the answer can no longer be changed.</summary>
     public bool IsConfirmed { get; private set; }
@@ -34,7 +52,7 @@ public class GeneratorPuzzle : BasePuzzle<bool>, IConfirmablePuzzle
     /// action, and letting it through permanently seals the room before the player has
     /// done anything.
     /// </summary>
-    public bool CanConfirm => !IsConfirmed && AreAllGeneratorsAtFullPower();
+    public bool CanConfirm => !IsConfirmed && !isHandingBack && AreAllGeneratorsAtFullPower();
 
     /// <summary>Why CONFIRM is refused, for the lever's prompt. Null when it is available.</summary>
     public string ConfirmBlockedReason
@@ -46,12 +64,20 @@ public class GeneratorPuzzle : BasePuzzle<bool>, IConfirmablePuzzle
                 return "Result already filed";
             }
 
+            if (isHandingBack)
+            {
+                return "Generators resetting";
+            }
+
             return AreAllGeneratorsAtFullPower() ? null : "Generators not ready";
         }
     }
 
     /// <summary>The panel seals on CONFIRM; until then a retry costs nothing.</summary>
-    public bool CanReset => !IsConfirmed;
+    public bool CanReset => !IsConfirmed && !isHandingBack;
+
+    /// <summary>How many misfires the player has had refused. Tuning telemetry.</summary>
+    public int RejectedAttempts { get; private set; }
 
     /// <summary><see cref="IConfirmablePuzzle"/> name for <see cref="ResetGenerators"/>.</summary>
     public void ResetAttempt()
@@ -137,32 +163,39 @@ public class GeneratorPuzzle : BasePuzzle<bool>, IConfirmablePuzzle
     /// Locks in the player's attempt and prints the room's card. Always produces a result:
     /// a wrong run still yields a code character, with misleading evidence attached.
     /// </summary>
-    public PuzzleCard Confirm()
+    public PuzzleCard? Confirm()
     {
         if (IsConfirmed)
         {
-            return FiledCard ?? BuildCard(IsSolved);
+            return FiledCard;
         }
 
         if (!AreAllGeneratorsAtFullPower())
         {
             // Guarded rather than silently filed: sealing the room before the player
             // has run the generators would leave them with a dead puzzle and no reset.
+            // Null, not a card - nothing was filed, so the lever must not print anything.
             Debug.LogWarning("[Generator] CONFIRM refused - not every generator is at full power yet.", this);
-            return BuildCard(false);
+            return null;
         }
-
-        IsConfirmed = true;
 
         // The solve is only evaluated here, never while the player is still experimenting.
         // Judging on the fly would let a lucky sync be counted even if the player then
         // reset the room and confirmed something wrong.
         currentState = areGeneratorsSynced;
-        CheckSolve();
+        var isCorrect = CheckSolve();
 
-        // Resolved regardless of correctness - the room is done with the player either way,
-        // which is what the exit door keys off. This also files the card into the inventory,
-        // so FiledCard is the authoritative copy from here on.
+        if (!isCorrect && rejectWrongAnswers)
+        {
+            RefuseAttempt();
+            return null;
+        }
+
+        IsConfirmed = true;
+
+        // Files the card into the inventory and resolves the room, which is what the exit door
+        // keys off. With rejectWrongAnswers on only a synced run gets this far, so FiledCard is
+        // always the truthful card from here on.
         MarkResolved(IsSolved);
 
         var card = FiledCard.Value;
@@ -175,6 +208,45 @@ public class GeneratorPuzzle : BasePuzzle<bool>, IConfirmablePuzzle
         return card;
     }
 
+    /// <summary>
+    /// Hands a misfire back instead of filing it. Nothing is committed, so the room stays open;
+    /// after a short beat the generators drop to idle and the player runs them again.
+    /// </summary>
+    private void RefuseAttempt()
+    {
+        RejectedAttempts++;
+        isHandingBack = true;
+
+        Debug.Log($"[Generator] CONFIRM REFUSED - spread {LastSyncSpread:0.00}s is outside the "
+                  + $"{syncToleranceSeconds:0.00}s tolerance (refusal {RejectedAttempts}). Nothing "
+                  + $"filed; the generators return to idle in {rejectHoldSeconds:0.0}s.", this);
+
+        RaiseAttemptRejected();
+        HandBackAttemptAsync(this.GetCancellationTokenOnDestroy()).Forget();
+    }
+
+    private async UniTaskVoid HandBackAttemptAsync(CancellationToken token)
+    {
+        try
+        {
+            // ignoreTimeScale: generators frozen mid-refusal would strand the room, and it has to
+            // stay usable while the clock runs.
+            await UniTask.Delay(
+                TimeSpan.FromSeconds(Mathf.Max(0f, rejectHoldSeconds)),
+                DelayType.UnscaledDeltaTime,
+                cancellationToken: token);
+        }
+        catch (OperationCanceledException)
+        {
+            // Room destroyed mid-hold. Nothing left to hand back to.
+            return;
+        }
+
+        // Cleared first: ResetGenerators is a no-op while the room considers itself busy.
+        isHandingBack = false;
+        ResetGenerators();
+    }
+
     public override void ResetPuzzle()
     {
         base.ResetPuzzle();
@@ -182,6 +254,8 @@ public class GeneratorPuzzle : BasePuzzle<bool>, IConfirmablePuzzle
         IsConfirmed = false;
         areGeneratorsSynced = false;
         LastSyncSpread = 0f;
+        isHandingBack = false;
+        RejectedAttempts = 0;
 
         ResetGenerators();
     }

@@ -1,12 +1,21 @@
 using System;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 
 /// <summary>
 /// A room solved by setting a row of <see cref="SelectorSwitch"/>es to one correct
 /// combination and pulling a confirm lever. The player reads some evidence in the room,
-/// dials the switches to match, and commits; the machine announces a result and prints the
-/// room's card - right or wrong.
+/// dials the switches to match, and commits.
+///
+/// By default the room <b>refuses to file a wrong answer</b>: the machine announces what it
+/// thinks it is looking at, the panel hands itself back, and the player tries again. Only a
+/// correct combination seals the room, prints a card and resolves it. This is what stops a
+/// player carrying a wrong reading forward into the finale - the pressure comes from the
+/// seven-minute clock, not from a permanent mistake. Turn <c>rejectWrongAnswers</c> off for
+/// the older behaviour, where a confirmed wrong answer files a misleading card and seals the
+/// room.
 ///
 /// This is the shared spine of the Identification and Radar rooms (and any future
 /// dial-a-combination room): they differ only in switch labels, the correct indices, and
@@ -40,7 +49,22 @@ public class SwitchComboPuzzle : BasePuzzle<int>, IConfirmablePuzzle
              + "cannot seal the room before they have read anything.")]
     [SerializeField] private bool requireAnyChange = true;
 
+    [Header("Wrong answers")]
+    [Tooltip("On: a wrong combination is REFUSED - the machine says what it thinks it sees, the "
+             + "panel resets, and the player tries again. Nothing is filed and the room stays "
+             + "open. Off: a wrong combination files a misleading card and seals the room.")]
+    [SerializeField] private bool rejectWrongAnswers = true;
+
+    [Tooltip("How long the refusal stays on the display before the panel hands itself back. "
+             + "Long enough to read, short enough not to cost real clock time.")]
+    [SerializeField] private float rejectHoldSeconds = 1.8f;
+
+    [Tooltip("How the refusal reads. {0} is the wrong verdict picked from the list above. Empty "
+             + "shows the bare verdict, which reads as an ANSWER rather than a refusal.")]
+    [SerializeField] private string rejectedVerdictFormat = "{0}\n- READING REJECTED -";
+
     private bool hasPlayerSetAnySwitch;
+    private bool isHandingBack;
 
     /// <summary>Console-log prefix. Subclasses override so each room logs under its own name.</summary>
     protected virtual string LogTag => "SwitchCombo";
@@ -48,7 +72,7 @@ public class SwitchComboPuzzle : BasePuzzle<int>, IConfirmablePuzzle
     /// <summary>True once the confirm lever has been pulled; the panel is sealed.</summary>
     public bool IsConfirmed { get; private set; }
 
-    public bool CanConfirm => !IsConfirmed && (!requireAnyChange || hasPlayerSetAnySwitch);
+    public bool CanConfirm => !IsConfirmed && !isHandingBack && (!requireAnyChange || hasPlayerSetAnySwitch);
 
     public string ConfirmBlockedReason
     {
@@ -59,11 +83,23 @@ public class SwitchComboPuzzle : BasePuzzle<int>, IConfirmablePuzzle
                 return "Result already filed";
             }
 
+            if (isHandingBack)
+            {
+                return "Panel resetting";
+            }
+
             return CanConfirm ? null : "Set the switches first";
         }
     }
 
-    public bool CanReset => !IsConfirmed;
+    /// <summary>
+    /// Refused while the panel is handing itself back, so a manual reset cannot land in the
+    /// middle of the automatic one and have the player's fresh input wiped a moment later.
+    /// </summary>
+    public bool CanReset => !IsConfirmed && !isHandingBack;
+
+    /// <summary>How many wrong combinations the player has had handed back. Tuning telemetry.</summary>
+    public int RejectedAttempts { get; private set; }
 
     /// <summary>Raised when the room is confirmed, carrying the printed card.</summary>
     public event Action<PuzzleCard> OnConfirmed;
@@ -103,17 +139,19 @@ public class SwitchComboPuzzle : BasePuzzle<int>, IConfirmablePuzzle
         // relative order of two Awakes is undefined.
         targetState = EncodeIndices(correctOptionIndices);
         hasPlayerSetAnySwitch = false;
+        isHandingBack = false;
     }
 
     /// <summary>
-    /// Locks in the player's reading and prints the room's card. Always produces a result:
-    /// a wrong panel still yields a code character, with a confidently wrong result attached.
+    /// Judges the player's reading. A correct panel seals the room and prints its card; a wrong
+    /// one is refused and handed back (see <c>rejectWrongAnswers</c>), returning null so the
+    /// lever knows there is nothing to print.
     /// </summary>
-    public PuzzleCard Confirm()
+    public PuzzleCard? Confirm()
     {
         if (IsConfirmed)
         {
-            return FiledCard ?? BuildCard(IsSolved);
+            return FiledCard;
         }
 
         if (!CanConfirm)
@@ -121,18 +159,28 @@ public class SwitchComboPuzzle : BasePuzzle<int>, IConfirmablePuzzle
             // Guarded rather than silently filed: sealing the room before the player has
             // touched anything leaves them a dead puzzle.
             Debug.LogWarning($"[{LogTag}] Confirm refused - {ConfirmBlockedReason}.", this);
-            return BuildCard(false);
+            return null;
+        }
+
+        // Read and judged before anything is committed, so a wrong panel can still be handed
+        // back. CheckSolve only ever latches on a match, so calling it on a wrong attempt
+        // costs nothing and leaves the room unsolved.
+        currentState = EncodeCurrentSelection();
+        var isCorrect = CheckSolve();
+
+        if (!isCorrect && rejectWrongAnswers)
+        {
+            RefuseAttempt();
+            return null;
         }
 
         IsConfirmed = true;
 
-        currentState = EncodeCurrentSelection();
-        CheckSolve();
-
         LockSwitches();
 
-        // Resolved regardless of correctness - the room is done with the player either way,
-        // which is what the exit door keys off. This also files the card.
+        // Files the card and resolves the room, which is what the exit door keys off. With
+        // rejectWrongAnswers on this is only ever reached by a correct panel, so resolution
+        // now means "solved" - a room that also files wrong answers is the opt-out.
         MarkResolved(IsSolved);
 
         var card = FiledCard.Value;
@@ -144,6 +192,52 @@ public class SwitchComboPuzzle : BasePuzzle<int>, IConfirmablePuzzle
         OnConfirmed?.Invoke(card);
 
         return card;
+    }
+
+    /// <summary>
+    /// Hands a wrong reading back instead of filing it. Nothing is committed: no card, no
+    /// resolution, no seal - the machine states what it thinks it is looking at, holds that on
+    /// the display long enough to be read, and then returns the panel to its starting position.
+    ///
+    /// The switches lock for the duration so input during the hold cannot be silently wiped by
+    /// the reset that follows.
+    /// </summary>
+    private void RefuseAttempt()
+    {
+        RejectedAttempts++;
+        isHandingBack = true;
+
+        LockSwitches();
+        ShowRefusal();
+
+        Debug.Log($"[{LogTag}] Attempt REFUSED - panel {DescribeSelection()} does not match the "
+                  + $"evidence (refusal {RejectedAttempts}). Nothing filed; the panel resets in "
+                  + $"{rejectHoldSeconds:0.0}s.", this);
+
+        RaiseAttemptRejected();
+        HandBackAttemptAsync(this.GetCancellationTokenOnDestroy()).Forget();
+    }
+
+    private async UniTaskVoid HandBackAttemptAsync(CancellationToken token)
+    {
+        try
+        {
+            // ignoreTimeScale: a panel frozen mid-refusal would be unrecoverable if anything
+            // pauses the game, and the room has to stay usable while the clock runs.
+            await UniTask.Delay(
+                TimeSpan.FromSeconds(Mathf.Max(0f, rejectHoldSeconds)),
+                DelayType.UnscaledDeltaTime,
+                cancellationToken: token);
+        }
+        catch (OperationCanceledException)
+        {
+            // Room destroyed mid-hold. There is nothing left to hand back to.
+            return;
+        }
+
+        // Cleared before the reset so ResetAttempt's own guards see a settled panel.
+        isHandingBack = false;
+        ResetAttempt();
     }
 
     /// <summary>Returns every switch to its starting position so the player can re-read the room.</summary>
@@ -173,6 +267,11 @@ public class SwitchComboPuzzle : BasePuzzle<int>, IConfirmablePuzzle
     public override void ResetPuzzle()
     {
         IsConfirmed = false;
+
+        // A full reset is a fresh room, so the refusal count goes with it. Any hold still in
+        // flight is harmless: it clears the same flag and resets an already-reset panel.
+        isHandingBack = false;
+        RejectedAttempts = 0;
 
         base.ResetPuzzle();
 
@@ -241,6 +340,25 @@ public class SwitchComboPuzzle : BasePuzzle<int>, IConfirmablePuzzle
         }
 
         verdictDisplay.text = wasCorrect ? correctVerdict : PickIncorrectVerdict();
+    }
+
+    /// <summary>
+    /// The refusal message. Wraps the wrong verdict in <c>rejectedVerdictFormat</c> so the
+    /// display reads as the machine turning the reading down rather than as its final answer -
+    /// a bare "WEATHER BALLOON" looks like a result the player just earned.
+    /// </summary>
+    private void ShowRefusal()
+    {
+        if (verdictDisplay == null)
+        {
+            return;
+        }
+
+        var verdict = PickIncorrectVerdict();
+
+        verdictDisplay.text = string.IsNullOrEmpty(rejectedVerdictFormat)
+            ? verdict
+            : string.Format(rejectedVerdictFormat, verdict);
     }
 
     private void ClearVerdict()

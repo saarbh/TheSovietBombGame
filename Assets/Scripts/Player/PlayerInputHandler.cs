@@ -63,6 +63,16 @@ public class PlayerInputHandler : MonoBehaviour
             return;
         }
 
+        // A modal that freezes the player owns the pointer just as much, and the
+        // keypad deliberately does not pause - the countdown has to keep running,
+        // so the timeScale check above never fires for it. Without this, the first
+        // click on a keypad button re-locks and hides the cursor, leaving the player
+        // unable to click anything while their input is still disabled.
+        if (playerController != null && !playerController.IsInputEnabled)
+        {
+            return;
+        }
+
         var mouse = Mouse.current;
 
         if (mouse != null && mouse.leftButton.wasPressedThisFrame)

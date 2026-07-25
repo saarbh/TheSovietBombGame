@@ -62,16 +62,29 @@ Per the design doc, a confirmed room's card "enters their inventory automaticall
 
 - `IConfirmablePuzzle` — `ConfirmLever` and `ResetLever` are shared by every room and are written once against this. A room implements it (`IsConfirmed`, `CanConfirm`, `ConfirmBlockedReason`, `Confirm`, `CanReset`, `ResetAttempt`) and the levers need no code. Serialize the puzzle's **GameObject** on the lever; both also fall back to `GetComponentInParent`, so a room authored before the field existed still resolves.
 - `SelectorSwitch` — a rotary selector with labelled positions, wrapping on each interact. Knows nothing about any puzzle; it reports its index and the room decides what that means. Intended for the Radar knobs, the Radio dial and the Trajectory overlays, not just Identification. `OnSelectionChanged` fires **only on player input**, never on init or reset, which is what lets a room tell an untouched panel from a chosen answer.
+- `RadarScopeDisplay` — authored clutter that the dials genuinely filter, so a knob visibly *does* something. Each contact declares which position of each dial reveals it; a dial may have one wildcard position that filters nothing (`CONTINUOUS` / `ALL` / `RAW`, all at index 0, all where the dials start — so the room opens showing full clutter and narrowing it reads as progress). It gates nothing: the answer still lives in the puzzle's combination, and the two are separate data, so use the `Log Contact Matrix` context menu to check the correct combination is one that isolates a single contact.
 - Guard the confirm lever so an idle pull can't seal a room the player hasn't attempted — the generators require full power, Identification requires at least one switch moved.
+- **Dial option order must match the order the room's chart or guide lists them.** Both the Identification `ALTITUDE` dial and its chart were reordered on 2026-07-26 for this reason: the player reads down the chart while clicking through the dial, and a mismatch makes a solvable room feel random.
 
 **World-space TMP faces its local −Z.** Any `TextMeshPro` a player reads while standing on the room's +Z side needs `localEulerAngles = (0, 180, 0)` or it renders mirrored. World font sizes are around 0.3–1.0, not the 20–40 of UI text.
+
+### Wrong answers are refused, not filed
+
+Changed 2026-07-26, and it reverses the earlier rule that a confirmed wrong answer sealed the room and printed a misleading card. **A player can no longer carry a wrong reading forward.** `SwitchComboPuzzle.rejectWrongAnswers` (default **on**) makes a wrong combination a refusal: the machine states what it thinks it is looking at, the panel locks for `rejectHoldSeconds`, then resets itself to its starting positions and the player tries again. The clock is the only cost.
+
+- **`Confirm()` returns `PuzzleCard?`.** Null means *nothing was filed* — a refusal, or an attempt that wasn't fileable. `ConfirmLever` prints only on a value. A sentinel card here would be indistinguishable from a real one.
+- **`OnResolved` no longer means "the player is done with this room"** for a rejecting room; it means solved. Anything that must react to a failure subscribes to the new `IPuzzleResolution.OnAttemptRejected` instead — `PuzzleResolutionAudio` does, or failing would be silent and silence reads as a broken lever.
+- **`requireAnyChange` still matters.** After a refusal the panel is back at its start position with `hasPlayerSetAnySwitch` cleared, so the player must actually move something before the lever will fire again.
+- **`PuzzleConfig.incorrectOutput` is dormant, not dead.** It is only reachable with `rejectWrongAnswers` off. Keep authoring it — it is the opt-out for a room that wants the wrong-card ending — but it no longer appears in normal play.
+- **Author the clues so only the right answer is reachable.** With refusals in play, an ambiguous room is no longer a wrong-but-plausible card, it is a player stuck at a lever burning clock. The evidence in the room must name every criterion the answer needs.
+- **Every room refuses now.** `GeneratorPuzzle` has its own `Confirm()` and its own copy of the flow (a misfire drops the generators to idle after `rejectHoldSeconds`, default 1.5s — shorter than the knob rooms, because the respin is already the cost). A new room built on `SwitchComboPuzzle` inherits it for free; a room with a bespoke `Confirm()` has to implement it, and the two existing ones are the pattern to copy.
 
 ### Doors: two mechanisms, pick by ownership
 
 - [SlidingDoor.cs](Assets/Scripts/Puzzles/SlidingDoor.cs) — the room owns its own panel. Slides along the panel's **own** local X (`transform.right`), not `localPosition.x`, which follows the parent's axes and ignores the panel's rotation.
 - [PuzzleDoorOpener.cs](Assets/Scripts/Puzzles/PuzzleDoorOpener.cs) — the doorway already has someone else's `RoomDoor`. Opens that instead of adding a second leaf.
 
-Both hang off `IPuzzleResolution.OnResolved`, which fires on a **filed answer, right or wrong** — a wrong answer still ends the player's business in the room, and sealing them in would be a dead end with the clock running.
+Both hang off `IPuzzleResolution.OnResolved`, which fires when an answer is **filed**. As of 2026-07-26 a wrong answer is no longer filed at all (see [Wrong answers are refused, not filed](#wrong-answers-are-refused-not-filed)), so for a room with `rejectWrongAnswers` on, resolution means *solved* and the door opens only on a correct reading. `PuzzleDoorOpener.requireCorrectAnswer` is therefore moot for those rooms — leave it off.
 
 ## Assembly definitions
 

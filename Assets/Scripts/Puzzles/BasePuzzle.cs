@@ -44,6 +44,13 @@ public abstract class BasePuzzle<T> : MonoBehaviour, IPuzzle, IPuzzleResolution
     /// <summary>Raised once the room is resolved. The flag is whether the answer was correct.</summary>
     public event Action<bool> OnResolved;
 
+    /// <summary>
+    /// Raised when the room judged an attempt wrong and handed it back instead of filing it.
+    /// Nothing is resolved and no card exists - this is the hook for the failure sting and any
+    /// "try again" presentation. Fires once per rejected attempt.
+    /// </summary>
+    public event Action OnAttemptRejected;
+
     protected virtual void Awake()
     {
         InitializePuzzle();
@@ -107,6 +114,16 @@ public abstract class BasePuzzle<T> : MonoBehaviour, IPuzzle, IPuzzleResolution
         FileCardForAttempt(wasCorrect);
 
         OnResolved?.Invoke(wasCorrect);
+    }
+
+    /// <summary>
+    /// Announces that an attempt was judged wrong and is being handed back. Call this INSTEAD
+    /// of <see cref="MarkResolved"/> - a rejected attempt files nothing, so the room stays
+    /// unresolved and the player keeps the clock-pressure of another go.
+    /// </summary>
+    protected void RaiseAttemptRejected()
+    {
+        OnAttemptRejected?.Invoke();
     }
 
     /// <summary>

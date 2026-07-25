@@ -12,11 +12,35 @@ public class GameManager : MonoBehaviour
     [Tooltip("Seconds to let an ending cutscene breathe before gameplay is torn down.")]
     [SerializeField] private float endGameSettleSeconds = 0.5f;
 
+    [Header("Verification")]
+    [Tooltip("Stages the central decoder expects. Set this to the rooms actually in the build - "
+             + "the doc's five essential rooms are Detect, Confirm, Classify, Authenticate, Authorize.")]
+    [SerializeField]
+    private VerificationStage[] requiredStages =
+    {
+        VerificationStage.Detect,
+        VerificationStage.Confirm,
+        VerificationStage.Classify,
+        VerificationStage.Authenticate,
+        VerificationStage.Authorize,
+    };
+
     public static GameManager Instance { get; private set; }
 
     private readonly PuzzleTracker puzzleTracker = new PuzzleTracker();
+    private readonly PuzzleCardInventory cardInventory = new PuzzleCardInventory();
 
     public PuzzleTracker PuzzleTracker => puzzleTracker;
+
+    /// <summary>Every card the player is carrying. Rooms file into this the moment they resolve.</summary>
+    public PuzzleCardInventory CardInventory => cardInventory;
+
+    /// <summary>
+    /// True once a card exists for every required stage, right or wrong. This is what the
+    /// central decoder gates on - note it is deliberately NOT the same question as
+    /// <see cref="AreAllPuzzlesSolved"/>, since a filed wrong answer still counts as done.
+    /// </summary>
+    public bool IsVerificationComplete => cardInventory.IsComplete;
 
     public bool IsGameOver { get; private set; }
     public EndingType? FinalEnding { get; private set; }
@@ -47,6 +71,10 @@ public class GameManager : MonoBehaviour
         Instance = this;
         WatchManager = new WatchManager();
         WatchManager.OnTimeExpired += OnTimeExpiredHandler;
+
+        // Declared in Awake so a puzzle that somehow resolves on the first frame still
+        // files against a fully configured inventory.
+        cardInventory.SetRequiredStages(requiredStages);
     }
 
     private void Start()
@@ -73,6 +101,7 @@ public class GameManager : MonoBehaviour
         FinalEnding = null;
         HasLeftControlRoom = false;
         CallChoice = PhoneCallChoice.NoCallMade;
+        cardInventory.Clear();
 
         OnGameStarted?.Invoke();
 

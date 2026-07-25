@@ -79,4 +79,27 @@ public class PlayerMovement : MonoBehaviour
         currentMoveInput = Vector2.zero;
         CurrentPlanarSpeed = 0f;
     }
+
+    private GameObject lastHitObject;
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (hit.collider == null)
+        {
+            return;
+        }
+
+        // Ignore floor hits to avoid spamming the console
+        if (hit.normal.y > 0.7f || hit.gameObject.name.StartsWith("Floor"))
+        {
+            return;
+        }
+
+        if (hit.gameObject != lastHitObject)
+        {
+            lastHitObject = hit.gameObject;
+            var parentName = hit.transform.parent != null ? hit.transform.parent.name : "None";
+            Debug.Log($"[PLAYER COLLISION DETECTED] Hit Object: '{hit.gameObject.name}' | Parent: '{parentName}' | Layer: '{LayerMask.LayerToName(hit.gameObject.layer)}' | Hit Point: {hit.point}", hit.gameObject);
+        }
+    }
 }

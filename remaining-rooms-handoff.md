@@ -9,6 +9,14 @@ and is play-tested — **the two remaining essential rooms need almost no new C#
 Read [CLAUDE.md](CLAUDE.md) and [SKILL.md](SKILL.md) before writing any code. Everything below
 assumes those rules.
 
+> **Design rule, changed 2026-07-26 — read this first.** A room now **refuses** a wrong answer
+> instead of filing it. The machine says what it thinks it is looking at, the panel resets itself,
+> and the player tries again; only a correct reading prints a card and finishes the room. You get
+> this for free from `SwitchComboPuzzle` (`rejectWrongAnswers`, default on) — but it changes how you
+> author a room: **the clues must make exactly one answer reachable.** An ambiguous room used to
+> produce a wrong-but-funny card; now it produces a player stuck at a lever with the clock running.
+> See [CLAUDE.md § Wrong answers are refused, not filed](CLAUDE.md#wrong-answers-are-refused-not-filed).
+
 ---
 
 ## 1. What is left
@@ -66,9 +74,10 @@ public class RadioPuzzle : SwitchComboPuzzle
 | --- | --- |
 | [ConfirmLever.cs](Assets/Scripts/Puzzles/ConfirmLever.cs) | The commit lever. Serialize the puzzle's **GameObject** in `Puzzle Object`. Set `Confirm Verb` to the room's verb (e.g. `Authenticate`, `Stamp`). Optionally wire `Printout Display` (a TMP) and `Printed Card` (a GameObject revealed on print). |
 | [ResetLever.cs](Assets/Scripts/Puzzles/ResetLever.cs) | Free retries. Same `Puzzle Object` field, plus `Reset Noun` for the prompt. |
-| [PuzzleResolutionAudio.cs](Assets/Scripts/Audio/PuzzleResolutionAudio.cs) | The verdict sting on solve *and* on failure. Sits on the room root, `Puzzle Object` = the puzzle. |
+| [PuzzleResolutionAudio.cs](Assets/Scripts/Audio/PuzzleResolutionAudio.cs) | The verdict sting on solve *and* on a refused attempt. Sits on the room root, `Puzzle Object` = the puzzle. |
 | [PuzzleDoorOpener.cs](Assets/Scripts/Puzzles/PuzzleDoorOpener.cs) / [SlidingDoor.cs](Assets/Scripts/Puzzles/SlidingDoor.cs) | Exit-door behaviour, if the room owns a door. **See §7 — coordinate before touching doors.** |
 | [InteractionSfx.cs](Assets/Scripts/Audio/InteractionSfx.cs) | Per-object interact sound. Optional; everything is audible without it. |
+| [RadarScopeDisplay.cs](Assets/Scripts/Puzzles/Radar/RadarScopeDisplay.cs) | Built for Radar, but reusable by any room where dials *filter a list*: authored contacts drop off a display as the player narrows the settings. Worth copying for the Trajectory stretch room. It gates nothing — the answer stays in the puzzle's combination. |
 
 **Evidence cards need zero wiring.** `BasePuzzle.MarkResolved` builds the card from the config and
 files it into `GameManager.CardInventory` *before* `OnResolved` fires. You do not write card code.
@@ -291,9 +300,10 @@ Create it via **Assets → Create → SovietBomb → Puzzle Config**. Fill in:
 | Incorrect → `Code Character` | `X` (anything, as long as it is **not** `K`) |
 | Incorrect → `Evidence` | *Transmission authenticated. Daily challenge code matches the launch order.* |
 
-The wrong-answer evidence must read as **confidently wrong** and support the launch warning — that
-is the tone of the whole game. `OnValidate` on the config will shout at you if the two characters
-match, or if the label and the stage disagree.
+Fill the incorrect output in even though **it will not appear in normal play** — a refusing room
+never files it. It is the opt-out for a build that wants wrong cards, and `OnValidate` warns on a
+blank one. `OnValidate` will also shout if the two characters match, or if the label and the stage
+disagree.
 
 ---
 
@@ -432,15 +442,22 @@ Wire all of this with **MCP for Unity** against the live editor (`manage_prefabs
 `manage_components`, `manage_scriptable_object`). **Never hand-edit `.prefab` or `.unity` YAML** —
 it is the single most reliable way to lose a day on this project.
 
-### Wrong-answer verdict strings
+### Refusal strings
 
-`SwitchComboPuzzle` picks from `Incorrect Verdicts[]` **deterministically** — keyed off the panel
-itself, so a player who retries the same wrong combination always gets the same answer. Write 3–4:
+`Incorrect Verdicts[]` is now what the machine says when it **turns a reading down**, not a filed
+answer. `SwitchComboPuzzle` picks from the list **deterministically** — keyed off the panel itself,
+so a player who retries the same wrong combination always gets the same message, which is what lets
+them tell "I already tried that" from "that's new". Write 3–4.
 
-- Radio: `NO AUTHENTICATION PATTERN DETECTED` / `CHALLENGE NUMBER REJECTED` /
-  `CHANNEL NOT MILITARY` / `TRANSMISSION IS A BEET ADVERTISEMENT`
-- Archive: `FILING ORDER ACCEPTED` / `CHRONOLOGY IMPOSSIBLE — RESUBMIT ON FORM 12-B` /
-  `DOCUMENT MISSING SIGNATURE`
+They are shown wrapped in `Rejected Verdict Format` (default `{0}\n- READING REJECTED -`), so
+write them as observations, not as verdicts the player has earned:
+
+- Radio: `NO AUTHENTICATION PATTERN ON THIS CHANNEL` / `CHALLENGE NUMBER DOES NOT MATCH` /
+  `SIGNAL IS CIVILIAN` / `THIS IS A BEET ADVERTISEMENT`
+- Archive: `CHRONOLOGY DOES NOT HOLD` / `RESUBMIT ON FORM 12-B` / `DOCUMENT MISSING SIGNATURE`
+
+Set `Reject Hold Seconds` (default 1.8) to however long the longest string takes to read. The panel
+locks for that hold and then returns to its start positions on its own.
 
 ---
 
@@ -529,7 +546,13 @@ Three small changes that are easy to forget and each breaks the endgame quietly:
   silently checks the answer against the wrong switch and is invisible until someone fails a
   correct panel. `OnValidate` warns; read the console.
 - **The wrong-answer card character must differ from the correct one**, or a player who fails every
-  room still assembles the correct final code.
+  room still assembles the correct final code. (Dormant while wrong answers are refused, but
+  `OnValidate` still checks it and the toggle is one click away.)
+- **`Confirm()` returns `PuzzleCard?`.** Null means nothing was filed. Anything you write that calls
+  it must check `HasValue` before printing or counting it.
+- **A failure is only audible through `OnAttemptRejected`.** `OnResolved` no longer fires on a wrong
+  answer, so anything reacting to failure — audio, a flashing light, a VFX — subscribes to the new
+  event. `PuzzleResolutionAudio` already does.
 - **`Stage` orders the final code; `Stage Label` is only the printed noun.** A config authored with
   the default `Detect` puts its card in the radar room's slot and silently corrupts the finale.
 - **Subscribe in `OnEnable`, unsubscribe in `OnDisable`.** No `GetComponent`, allocation, LINQ or
@@ -555,10 +578,18 @@ Test each room twice, in this order:
 - [ ] Reset lever returns every switch to its start position and clears the verdict.
 - [ ] Correct combination → confirm → verdict shows `Correct Verdict`, printout shows the card line
       plus its evidence, console logs `[Radio] Confirm filed … correct=True`.
-- [ ] Wrong combination → confirm → a *different* verdict, a card with the wrong character, and
-      `correct=False`.
-- [ ] After confirm: switches are locked, the reset lever says `Panel sealed`, the confirm lever
-      says `Result already filed`.
+- [ ] **Wrong combination → confirm → refused**: the display shows a refusal, the failure sound
+      plays, **nothing prints**, the switches lock for the hold, then the panel returns to its start
+      positions on its own. Console logs `[Radio] Attempt REFUSED … Nothing filed`.
+- [ ] During that hold: the confirm lever reads `Panel resetting` and the reset lever is refused.
+- [ ] After the hold: the switches move again, and confirm is refused until one of them is moved.
+- [ ] The same wrong combination twice gives the **same** refusal message; a different wrong
+      combination gives a different one.
+- [ ] After a *correct* confirm: switches are locked, the reset lever says `Panel sealed`, the
+      confirm lever says `Result already filed`.
+- [ ] **Every criterion the answer needs is stated somewhere in the room.** Hand it to someone who
+      has not seen your notes: if they cannot derive the answer, the room is now a dead end rather
+      than a wrong card.
 
 **In the real scene (with [GameSystems.prefab](Assets/prefabs/GameSystems.prefab)):**
 - [ ] The card appears in the Evidence HUD (**Tab**) under the right stage label.

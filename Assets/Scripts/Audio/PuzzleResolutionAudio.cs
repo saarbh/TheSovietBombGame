@@ -1,9 +1,13 @@
 using UnityEngine;
 
 /// <summary>
-/// The room's verdict sting. Hangs off <see cref="IPuzzleResolution.OnResolved"/>, which fires
-/// on a filed answer whether or not it was right - so this plays in both cases, and the two
-/// clips are what tells the player which happened.
+/// The room's verdict sting. Hangs off both outcomes a room can produce:
+/// <see cref="IPuzzleResolution.OnResolved"/> for a filed answer, and
+/// <see cref="IPuzzleResolution.OnAttemptRejected"/> for a wrong reading the room handed back.
+///
+/// Both routes play the failure clip, which matters because a room that refuses wrong answers
+/// never resolves incorrectly - without the rejection hook, failing would be silent, and silence
+/// reads as "the lever is broken" rather than "that was wrong".
 ///
 /// Sits on the room root next to the puzzle. Serialize the puzzle's GameObject, exactly like
 /// the confirm and reset levers do: a serialized field cannot hold an interface.
@@ -67,6 +71,7 @@ public class PuzzleResolutionAudio : MonoBehaviour
         }
 
         puzzle.OnResolved += HandleResolved;
+        puzzle.OnAttemptRejected += HandleAttemptRejected;
     }
 
     private void OnDisable()
@@ -77,6 +82,22 @@ public class PuzzleResolutionAudio : MonoBehaviour
         }
 
         puzzle.OnResolved -= HandleResolved;
+        puzzle.OnAttemptRejected -= HandleAttemptRejected;
+    }
+
+    /// <summary>
+    /// A wrong reading handed back. Plays the failure clip but never the card sound - nothing was
+    /// filed, and a filing noise here would tell the player they had banked something.
+    /// </summary>
+    private void HandleAttemptRejected()
+    {
+        if (failedSfx == SfxId.None)
+        {
+            return;
+        }
+
+        var position = emitFrom == null ? transform.position : emitFrom.position;
+        AudioManager.PlayAt(failedSfx, position, roomBank);
     }
 
     private void HandleResolved(bool wasCorrect)

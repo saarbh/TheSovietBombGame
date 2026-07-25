@@ -5,9 +5,14 @@ using UnityEngine;
 /// One outcome of a room: the character it contributes to the final code and the
 /// evidence printed alongside it.
 ///
-/// Every room has two of these - a correct and an incorrect one - because a confirmed
-/// but wrong attempt still prints a card. The characters must differ, or a player who
-/// fails every room still assembles the correct final code.
+/// Every room has two of these - a correct and an incorrect one. The incorrect one is only
+/// reachable for a room with <c>rejectWrongAnswers</c> off: rooms now refuse a wrong answer
+/// and hand it back rather than filing it, so in normal play only the correct output prints.
+/// Keep authoring both anyway - the wrong card is the opt-out, and a room that switches to it
+/// with a blank incorrect output silently prints '?' into the final code.
+///
+/// The characters must differ, or a player who fails every room in a wrong-card build still
+/// assembles the correct final code.
 /// </summary>
 [Serializable]
 public class PuzzleCardOutput
@@ -128,8 +133,12 @@ public class PuzzleConfig : ScriptableObject
 
         if (!incorrectOutput.IsAuthored)
         {
+            // Only bites a room with rejectWrongAnswers off, since a refusing room never files
+            // this output at all - but that toggle is one Inspector click away, so an unauthored
+            // wrong card is still a '?' waiting to appear in the final code.
             Debug.LogWarning(
-                $"[PuzzleConfig] '{name}' has no incorrect-outcome character; a failed attempt will print '?'.",
+                $"[PuzzleConfig] '{name}' has no incorrect-outcome character. Harmless while the room "
+                + "refuses wrong answers, but it would print '?' if the room is switched to filing them.",
                 this);
         }
     }

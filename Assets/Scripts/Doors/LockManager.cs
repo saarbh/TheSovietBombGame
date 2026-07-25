@@ -31,8 +31,8 @@ public class LockManager : MonoBehaviour
 
     private void Start()
     {
-        keypadPopup = FindObjectOfType<KeypadPopupUI>();
-        playerController = FindObjectOfType<PlayerController>();
+        keypadPopup = FindFirstObjectByType<KeypadPopupUI>();
+        playerController = FindFirstObjectByType<PlayerController>();
         EvaluateLocks();
     }
 

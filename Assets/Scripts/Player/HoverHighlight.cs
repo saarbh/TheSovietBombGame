@@ -53,7 +53,7 @@ public class HoverHighlight : MonoBehaviour
     {
         if (interaction == null)
         {
-            interaction = FindObjectOfType<PlayerInteraction>();
+            interaction = FindFirstObjectByType<PlayerInteraction>();
         }
 
         if (interaction != null)

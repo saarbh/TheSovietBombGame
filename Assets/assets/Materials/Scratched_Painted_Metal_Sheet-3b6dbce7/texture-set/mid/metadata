@@ -1,0 +1,167 @@
+{
+	"assetNamespace": "fab",
+	"listing":
+	{
+		"averageRating": 0,
+		"createdAt": "",
+		"description": "<p><strong>Texel density:</strong> 4096 px/m</p><p><strong>Scan Area:</strong> 2x1 m</p><p><strong>Maps:</strong> AO Diffuse Displacement Specular Gloss Metalness Normal Basecolor Roughness Bump Cavity</p>\n<p><span>Create high-quality 3D experiences and worlds with Quixel Megascans. Browse thousands of photorealistic assets and environments, including materials, 3D assets, plants, decals, and more available </span><a target=\"_blank\" href=\"https://www.fab.com/sellers/Quixel\" rel=\"noopener noreferrer nofollow\"><span><u>here</u></span></a><span> on Fab.</span></p><p></p><p><span>For any questions or support regarding Quixel content, please get in touch </span><a target=\"_blank\" href=\"https://support.fab.com/s/?ProductOrigin=1PC\" rel=\"noopener noreferrer nofollow\"><span><u>here</u></span></a><span>.</span></p>",
+		"isAiForbidden": true,
+		"isAiGenerated": false,
+		"lastUpdatedAt": "",
+		"listingType": "material",
+		"media": "https://media.fab.com/image_previews/gallery_images/a43b122c-0b66-49c1-9579-897e334f47c3/94ff8ac2-bf60-43c6-a16b-6488fcdf0f1f.jpeg",
+		"publishedAt": "2024-10-20T18:31:27.679666Z",
+		"reviewCount": 0,
+		"thumbnail": "https://media.fab.com/image_previews/gallery_images/9b6db500-e2e1-4dc1-bb90-dc447b692c6c/7ca804f0-19cc-4b9d-8434-1412b3b94c1f.jpeg",
+		"title": "Scratched Painted Metal Sheet",
+		"uid": "3b6dbce7-fbb4-46b3-bee6-1485b9b407b6",
+		"updatedAt": "",
+		"user":
+		{
+			"coverImageUrl": "https://cdn1.epicgames.com/fab/seller/o-cbf5bbfdb340d6a839b5520cb31328/cover/67dbdb8f.jpg",
+			"profileImageUrl": "https://cdn1.epicgames.com/fab/seller/o-cbf5bbfdb340d6a839b5520cb31328/profile/39e5dabd.png",
+			"sellerName": "Quixel Megascans",
+			"uid": "45ea3429-f62c-4f17-aa15-5bb9dfcd0079"
+		},
+		"tags": [
+			{
+				"name": "Rural",
+				"slug": "rural",
+				"uid": "38048c85-e4e5-4e3d-a0c6-ec8dff3e5e00"
+			},
+			{
+				"name": "Damaged",
+				"slug": "damaged",
+				"uid": "540d9215-2e43-430b-9673-48b5300b894d"
+			},
+			{
+				"name": "Metal",
+				"slug": "metal",
+				"uid": "55165238-19a2-4184-85f1-e8650bd2a38d"
+			},
+			{
+				"name": "Scratch",
+				"slug": "scratch",
+				"uid": "869e2f1f-c6c4-43fa-9900-0beec51d98f1"
+			},
+			{
+				"name": "Paint",
+				"slug": "paint",
+				"uid": "88299db6-d6a9-4c34-8963-1eb7b0068d27"
+			},
+			{
+				"name": "Sheet",
+				"slug": "sheet",
+				"uid": "88fcd98e-c21f-429e-988f-ab752dc3cbe7"
+			},
+			{
+				"name": "Painted",
+				"slug": "painted",
+				"uid": "90c21351-ff24-4615-add4-17feab3e8211"
+			},
+			{
+				"name": "Worn",
+				"slug": "worn",
+				"uid": "98cd7d65-d9bb-4efc-9f13-2d3d6f29629d"
+			},
+			{
+				"name": "Exterior",
+				"slug": "exterior",
+				"uid": "98cde8e0-56a5-4019-8889-2b409949fdb9"
+			},
+			{
+				"name": "Urban",
+				"slug": "urban",
+				"uid": "a689898c-31ae-4d96-8b43-45002335d552"
+			},
+			{
+				"name": "Wall",
+				"slug": "wall",
+				"uid": "b138d7ed-637e-4c63-b1dd-2295e069f06f"
+			},
+			{
+				"name": "Fencing",
+				"slug": "fencing",
+				"uid": "b5380c4e-0378-4df1-b885-714b9caad6d5"
+			},
+			{
+				"name": "Industrial",
+				"slug": "industrial",
+				"uid": "bf46a0e3-cde2-44f8-858a-3e539cd8bba6"
+			},
+			{
+				"name": "Scratched",
+				"slug": "scratched",
+				"uid": "c60e546c-bd74-4ec9-af9a-9b1802d66dd1"
+			},
+			{
+				"name": "Thin",
+				"slug": "thin",
+				"uid": "cd813761-4ae3-4fa7-9f24-88f3f97c0c2a"
+			}
+		],
+		"category":
+		{
+			"name": "Metal",
+			"path": "building-human-made/metal",
+			"slug": "building-human-made--metal",
+			"uid": "a70f194e-2807-4119-8c05-d352345ff570"
+		},
+		"assetFormats": [
+			{
+				"assetFormatType":
+				{
+					"name": "Texture Set",
+					"groupName": "Material Formats",
+					"code": "texture-set",
+					"icon": "cube",
+					"extensions": [
+						"zip"
+					]
+				}
+			},
+			{
+				"assetFormatType":
+				{
+					"name": "GLTF",
+					"groupName": "3D Exchange Formats",
+					"code": "gltf",
+					"icon": "cube",
+					"extensions": [
+						"gltf"
+					]
+				}
+			},
+			{
+				"assetFormatType":
+				{
+					"name": "Additional files",
+					"groupName": "Other Formats",
+					"code": "additional-files",
+					"icon": "file",
+					"extensions": [
+						"zip"
+					]
+				}
+			}
+		],
+		"_PluginMetas":
+		{
+			"apiDataVersion": "0.0.1",
+			"entitlementUid": "",
+			"cacheSize": 0,
+			"downloaded": []
+		}
+	},
+	"target": "",
+	"quality": "mid",
+	"format": "texture-set",
+	"fileId": "1d371c3d-7cd3-4899-aa4b-b5494cb87acb",
+	"platformIncluded": "",
+	"distributionPointBaseUrls": [],
+	"distributionMethod": "",
+	"entitlementUid": "",
+	"invertedNormal": false,
+	"isConverted": false,
+	"isQuixel": true
+}

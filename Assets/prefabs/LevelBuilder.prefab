@@ -1,0 +1,86 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1794305626863729428
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6711117806050050982}
+  - component: {fileID: 5051143955465629094}
+  m_Layer: 0
+  m_Name: LevelBuilder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6711117806050050982
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1794305626863729428}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.99193, y: 2.03158, z: -5.41404}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5051143955465629094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1794305626863729428}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac380089fec558642bd8ccb7aa5cdd04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TheHotWar.HotWarLevelKit
+  rooms:
+  - name: Room 1
+    size: {x: 10, y: 10}
+    shape: 1
+    notchScale: 0.379
+    feature: 1
+    side: 0
+    extraGapBefore: 0
+    plateText: 'Room One
+
+'
+    doorSlab: 1
+    accent: {r: 0, g: 0, b: 0, a: 0}
+  lastRoomCapsCorridor: 0
+  startRoomName: CONTROL ROOM
+  startRoomSize: {x: 10, y: 5}
+  startRoomLabel: 'DUTY STATION 07
+
+'
+  corridorWidth: 4
+  startGap: 2
+  roomSpacing: 1
+  endGap: 10
+  wallHeight: 4.3
+  platformHeight: 2
+  basementDepth: 5
+  buildCeilings: 1
+  autoRebuild: 0
+  rebuildDelay: 0.35
+  totalTime: 420
+  realUnlockElapsed:
+  - 1
+  - 2
+  - 3
+  - 4
+  shownUnlockElapsed:
+  - 2
+  - 4
+  - 6
+  - 8

@@ -10,7 +10,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PlayerMovement movementSystem;
     [SerializeField] private CameraController cameraSystem;
     [SerializeField] private PlayerInteraction interactionSystem;
-    [SerializeField] private PlayerAnimationController animationController;
 
     // TODO: WorldWatchView is not written yet (Module 2).
     // OnWatchInput raises OnWatchToggled so the watch view can subscribe once it exists.
@@ -43,11 +42,6 @@ public class PlayerController : MonoBehaviour
         {
             interactionSystem = GetComponentInChildren<PlayerInteraction>();
         }
-
-        if (animationController == null)
-        {
-            animationController = GetComponentInChildren<PlayerAnimationController>();
-        }
     }
 
     private void Start()
@@ -77,13 +71,6 @@ public class PlayerController : MonoBehaviour
     public void SetInputEnabled(bool isEnabled)
     {
         IsInputEnabled = isEnabled;
-
-        // Gamepad look is polled inside CameraController, so it must be gated here
-        // too - otherwise the right stick could still turn the view while frozen.
-        if (cameraSystem != null)
-        {
-            cameraSystem.LookEnabled = isEnabled;
-        }
 
         if (isEnabled)
         {
@@ -123,14 +110,6 @@ public class PlayerController : MonoBehaviour
         if (!IsInputEnabled)
         {
             return;
-        }
-
-        // Fire the "Taking Item" animation only when actually aimed at an interactable,
-        // so pressing Interact at empty space doesn't play the pickup. CurrentTarget is a
-        // pure C# interface reference, so != null is a plain identity check.
-        if (interactionSystem != null && interactionSystem.CurrentTarget != null && animationController != null)
-        {
-            animationController.TriggerInteract();
         }
 
         interactionSystem?.ExecuteInteraction(this);

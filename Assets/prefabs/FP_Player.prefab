@@ -307,7 +307,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b0d004ad315848d2b6b8a67c6351cb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
-  mouseSensitivity: 0.1
+  mouseSensitivity: 2
   pitchLimits: {x: -80, y: 80}
   bodyTransform: {fileID: 8539456289796852140}
   playerCamera: {fileID: 0}

@@ -75,11 +75,9 @@ public class GeneratorUnit : MonoBehaviour, IInteractable
         // ignored rather than restarting it, so a panicked player cannot spoil a good run.
         if (State != GeneratorState.Idle)
         {
-            Debug.Log($"[Interact] Generator {generatorLabel} ignored - already {State}.", this);
             return;
         }
 
-        Debug.Log($"[Interact] Generator {generatorLabel} STARTED ({startupSeconds:0.#}s to full power).", this);
         BeginStartup();
     }
 
@@ -153,7 +151,6 @@ public class GeneratorUnit : MonoBehaviour, IInteractable
         SetState(GeneratorState.AtFullPower);
         UpdateDisplay();
 
-        Debug.Log($"[Generator] {generatorLabel} reached FULL POWER at t={CompletionTime:0.00}s.", this);
         OnReachedFullPower?.Invoke(this);
     }
 

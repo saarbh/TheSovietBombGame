@@ -39,40 +39,6 @@ Four people are working in parallel, **one scene per person**, specifically to a
 
 `Packages/manifest.json` and `ProjectSettings/` *are* shared across all four branches and are the usual conflict points — validate the manifest parses after any merge (it has already taken one bad resolution that duplicated a key).
 
-## Open design questions
-
-Unresolved divergences between the design doc and what is built. Raise these before building on either side, and flag it if a new room hits the same fork.
-
-- **Room access: combo locks vs. the global countdown.** `DoorComboLock` gates rooms behind a Helldivers-style arrow sequence, but the design doc's own correction states room access is controlled **entirely** by the global countdown, with a visible per-door timer and no puzzle to get in. `RoomConfig` also still carries a `correctPasscode` from a third, earlier scheme. Three access models exist in the repo at once. *Team is deciding; not settled as of 2026-07-24.*
-- **Puzzle count.** `PuzzleTracker.TOTAL_ROOM_PUZZLES` is 4; the doc settles on five essential rooms plus two stretch rooms. The all-solved gate fires a room early until these agree. The *card* side no longer depends on this — `GameManager.requiredStages` is a serialized `VerificationStage[]` (default: the doc's five), so `IsVerificationComplete` follows the rooms actually in the build. `PuzzleTracker` is still on the old constant.
-- **Ending gate.** `GameManager.EvaluateEnding` resolves two endings from `AreAllPuzzlesSolved()` + phone choice. The doc's finale assembles a multi-character code ordered by verification stage and describes four endings.
-
-### Evidence cards: rooms produce, the inventory collects
-
-Per the design doc, a confirmed room's card "enters their inventory automatically" — there is no pickup step and no way to discard evidence.
-
-- `VerificationStage` (Detect → Confirm → Classify → Trace → Authenticate → Authorize → Report) — **declaration order is procedural order**, and the finale sorts on it. Rooms unlock in a scrambled order, so room order ≠ code order; that mismatch is the whole point of the central decoder. Reordering the enum silently rewrites every saved `PuzzleConfig`.
-- `PuzzleConfig.Stage` decides the slot; `stageLabel` is only the printed noun. `OnValidate` warns when the two disagree, which is what caught `GeneratorRoomConfig` sitting on the default `Detect` after the enum was added.
-- **A new room needs no card wiring.** `BasePuzzle.MarkResolved` builds the card from the config and files it before `OnResolved` fires. Override `BuildCard` only for a room whose card isn't fully described by its config.
-- `PuzzleCardInventory` is plain C# on `GameManager`, exactly like `PuzzleTracker`. First card per stage wins — a second is refused and logged, since that means two configs claim the same stage.
-- Presentation is disposable: subclass `PuzzleCardInventoryView` and the data layer doesn't change. `EvidenceHudView` (`Assets/prefabs/EvidenceHud.prefab`, Tab) is the placeholder; going diegetic means deleting it and writing a clipboard view. `EvidenceLogFormatter` holds the wording so the HUD, a clipboard and the console can't disagree.
-- `Assets/prefabs/GameSystems.prefab` carries the `GameManager`. Without it in a scene, rooms still resolve and print — the card just has nowhere to go, which is the supported single-room-test setup.
-
-### Room parts worth reusing before writing new ones
-
-- `IConfirmablePuzzle` — `ConfirmLever` and `ResetLever` are shared by every room and are written once against this. A room implements it (`IsConfirmed`, `CanConfirm`, `ConfirmBlockedReason`, `Confirm`, `CanReset`, `ResetAttempt`) and the levers need no code. Serialize the puzzle's **GameObject** on the lever; both also fall back to `GetComponentInParent`, so a room authored before the field existed still resolves.
-- `SelectorSwitch` — a rotary selector with labelled positions, wrapping on each interact. Knows nothing about any puzzle; it reports its index and the room decides what that means. Intended for the Radar knobs, the Radio dial and the Trajectory overlays, not just Identification. `OnSelectionChanged` fires **only on player input**, never on init or reset, which is what lets a room tell an untouched panel from a chosen answer.
-- Guard the confirm lever so an idle pull can't seal a room the player hasn't attempted — the generators require full power, Identification requires at least one switch moved.
-
-**World-space TMP faces its local −Z.** Any `TextMeshPro` a player reads while standing on the room's +Z side needs `localEulerAngles = (0, 180, 0)` or it renders mirrored. World font sizes are around 0.3–1.0, not the 20–40 of UI text.
-
-### Doors: two mechanisms, pick by ownership
-
-- [SlidingDoor.cs](Assets/Scripts/Puzzles/SlidingDoor.cs) — the room owns its own panel. Slides along the panel's **own** local X (`transform.right`), not `localPosition.x`, which follows the parent's axes and ignores the panel's rotation.
-- [PuzzleDoorOpener.cs](Assets/Scripts/Puzzles/PuzzleDoorOpener.cs) — the doorway already has someone else's `RoomDoor`. Opens that instead of adding a second leaf.
-
-Both hang off `IPuzzleResolution.OnResolved`, which fires on a **filed answer, right or wrong** — a wrong answer still ends the player's business in the room, and sealing them in would be a dead end with the clock running.
-
 ## Assembly definitions
 
 **Deliberately not used** — this is a jam, and asmdefs are not worth the wiring cost. Everything compiles into `Assembly-CSharp`. Editor-only code goes in an `Editor/` folder or is wrapped in `#if UNITY_EDITOR`, as [HotWarLevelKit.cs](Assets/assets/HotWarLevelKit.cs) does. Do not introduce `.asmdef` files without asking; adding one forces every other script that references it to be sorted into assemblies too.

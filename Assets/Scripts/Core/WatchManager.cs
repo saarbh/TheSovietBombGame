@@ -16,9 +16,6 @@ public class WatchManager
     private int lastMinuteRemaining = -1;
 
     public float TimeRemaining => timeRemaining;
-    public float ElapsedSeconds => Mathf.Max(0f, TOTAL_TIME_SECONDS - timeRemaining);
-    public float ElapsedMinutes => ElapsedSeconds / 60f;
-    public int ElapsedMinutesInt => Mathf.FloorToInt(ElapsedMinutes);
     public bool IsRunning => isRunning;
 
     /// <summary>Invoked when the time remaining updates (passes remaining seconds).</summary>
@@ -26,9 +23,6 @@ public class WatchManager
 
     /// <summary>Invoked when the remaining minute boundary changes (passes remaining minutes).</summary>
     public event Action<int> OnMinuteChanged;
-
-    /// <summary>Invoked when an elapsed minute boundary ticks (passes elapsed minutes: 0, 1, 2...).</summary>
-    public event Action<int> OnElapsedMinuteChanged;
 
     /// <summary>Invoked when the countdown timer hits 0.</summary>
     public event Action OnTimeExpired;
@@ -71,7 +65,6 @@ public class WatchManager
                 {
                     lastMinuteRemaining = currentMinuteRemaining;
                     OnMinuteChanged?.Invoke(currentMinuteRemaining);
-                    OnElapsedMinuteChanged?.Invoke(ElapsedMinutesInt);
                 }
 
                 if (timeRemaining <= 0)

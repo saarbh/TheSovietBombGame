@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PlayerMovement movementSystem;
     [SerializeField] private CameraController cameraSystem;
     [SerializeField] private PlayerInteraction interactionSystem;
+    [SerializeField] private PlayerAnimationController animationController;
 
     // TODO: WorldWatchView is not written yet (Module 2).
     // OnWatchInput raises OnWatchToggled so the watch view can subscribe once it exists.
@@ -41,6 +42,11 @@ public class PlayerController : MonoBehaviour
         if (interactionSystem == null)
         {
             interactionSystem = GetComponentInChildren<PlayerInteraction>();
+        }
+
+        if (animationController == null)
+        {
+            animationController = GetComponentInChildren<PlayerAnimationController>();
         }
     }
 
@@ -117,6 +123,14 @@ public class PlayerController : MonoBehaviour
         if (!IsInputEnabled)
         {
             return;
+        }
+
+        // Fire the "Taking Item" animation only when actually aimed at an interactable,
+        // so pressing Interact at empty space doesn't play the pickup. CurrentTarget is a
+        // pure C# interface reference, so != null is a plain identity check.
+        if (interactionSystem != null && interactionSystem.CurrentTarget != null && animationController != null)
+        {
+            animationController.TriggerInteract();
         }
 
         interactionSystem?.ExecuteInteraction(this);

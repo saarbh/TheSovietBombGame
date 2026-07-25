@@ -19,6 +19,11 @@ public class LockManager : MonoBehaviour
     private KeypadPopupUI keypadPopup;
     private PlayerController playerController;
 
+#if UNITY_EDITOR
+    private bool[] wasDigitPressedLastFrame = new bool[4];
+    private bool[] wasNumpadPressedLastFrame = new bool[4];
+#endif
+
     private void OnEnable()
     {
         SubscribeToEvents();
@@ -145,22 +150,41 @@ public class LockManager : MonoBehaviour
 
         var isShiftPressed = keyboard.leftShiftKey.isPressed || keyboard.rightShiftKey.isPressed;
 
-        if (keyboard.digit1Key.wasPressedThisFrame || keyboard.numpad1Key.wasPressedThisFrame)
+        bool d1 = keyboard.digit1Key.isPressed;
+        bool n1 = keyboard.numpad1Key.isPressed;
+        bool d2 = keyboard.digit2Key.isPressed;
+        bool n2 = keyboard.numpad2Key.isPressed;
+        bool d3 = keyboard.digit3Key.isPressed;
+        bool n3 = keyboard.numpad3Key.isPressed;
+        bool d4 = keyboard.digit4Key.isPressed;
+        bool n4 = keyboard.numpad4Key.isPressed;
+
+        if ((d1 && !wasDigitPressedLastFrame[0]) || (n1 && !wasNumpadPressedLastFrame[0]))
         {
             HandleDevHackKey(0, isShiftPressed);
         }
-        else if (keyboard.digit2Key.wasPressedThisFrame || keyboard.numpad2Key.wasPressedThisFrame)
+        else if ((d2 && !wasDigitPressedLastFrame[1]) || (n2 && !wasNumpadPressedLastFrame[1]))
         {
             HandleDevHackKey(1, isShiftPressed);
         }
-        else if (keyboard.digit3Key.wasPressedThisFrame || keyboard.numpad3Key.wasPressedThisFrame)
+        else if ((d3 && !wasDigitPressedLastFrame[2]) || (n3 && !wasNumpadPressedLastFrame[2]))
         {
             HandleDevHackKey(2, isShiftPressed);
         }
-        else if (keyboard.digit4Key.wasPressedThisFrame || keyboard.numpad4Key.wasPressedThisFrame)
+        else if ((d4 && !wasDigitPressedLastFrame[3]) || (n4 && !wasNumpadPressedLastFrame[3]))
         {
             HandleDevHackKey(3, isShiftPressed);
         }
+
+        wasDigitPressedLastFrame[0] = d1;
+        wasDigitPressedLastFrame[1] = d2;
+        wasDigitPressedLastFrame[2] = d3;
+        wasDigitPressedLastFrame[3] = d4;
+
+        wasNumpadPressedLastFrame[0] = n1;
+        wasNumpadPressedLastFrame[1] = n2;
+        wasNumpadPressedLastFrame[2] = n3;
+        wasNumpadPressedLastFrame[3] = n4;
     }
 
     private void HandleDevHackKey(int index, bool forceUnlock)

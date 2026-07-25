@@ -137,6 +137,7 @@ Ending matrix (two endings): victory = stay in the control room and don't call, 
 - New Input System only — never `Input.GetKeyDown`. The template `InputSystem_Actions.inputactions` already has a `Player` map (Move, Look, Interact, Crouch, Jump, Sprint…) and a `UI` map; extend it rather than adding a second asset. Guard callbacks with `if (Time.timeScale == 0) return;`.
 - UniTask over coroutines and `System.Threading.Tasks`; always pass a `CancellationToken` (`this.GetCancellationTokenOnDestroy()`), and `ignoreTimeScale: true` for anything that must tick while paused. DOTween over manual lerps in `Update`; `.SetUpdate(true)` for tweens that play while paused.
 - VContainer over new singletons. No `LifetimeScope` exists yet — the first system that needs injection creates it, and registers to interfaces rather than concrete types. `AudioManager` is the one sanctioned persistent singleton.
+- **Developer Cheats:** Any new developer cheats, hacks, or information helpers must be registered in `Assets/Resources/cheats.json` to keep the CheatHelper UI up-to-date.
 
 ## Repo notes
 

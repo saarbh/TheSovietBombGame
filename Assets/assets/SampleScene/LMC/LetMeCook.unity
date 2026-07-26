@@ -369,20 +369,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TheHotWar.HW_TestLevel
   totalTime: 420
   realUnlockElapsed:
-  - 1
-  - 2
-  - 3
-  - 4
+  - 30
+  - 50
+  - 90
+  - 70
   shownUnlockElapsed:
-  - 1
-  - 2
-  - 3
-  - 4
+  - 60
+  - 120
+  - 250
+  - 180
   hallwayLength: 40
   hallwayWidth: 4
   roomSize: 8
   wallHeight: 3.2
-  showDebugHud: 1
+  showDebugHud: 0
 --- !u!4 &675360893
 Transform:
   m_ObjectHideFlags: 0

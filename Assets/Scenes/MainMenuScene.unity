@@ -583,7 +583,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0f00d46e2b20a843bb4c5617b59554c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI.MainMenu.MainMenuController
-  targetSceneName: SampleScene
+  targetSceneName: Clean Scene
   musicAudioSource: {fileID: 1990319648}
   ambAudioSource: {fileID: 1271198538}
   sfxAudioSource: {fileID: 396000283}

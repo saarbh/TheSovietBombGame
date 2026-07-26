@@ -192,7 +192,12 @@ public class KeypadPopupUI : MonoBehaviour
 
         for (var d = 0; d <= 9; d++)
         {
-            var alphaKey = Key.Digit0 + d;
+            // Key.Digit0 is 50 and sits AFTER Digit1..Digit9 (41..49), so `Digit0 + d`
+            // walks straight into the modifier keys - 1 became LeftShift, 2 RightShift,
+            // and so on. That made every passcode containing a non-zero digit
+            // impossible to type on the number row. Numpad0..Numpad9 (84..93) really
+            // are contiguous and in order, which is why the numpad always worked.
+            var alphaKey = d == 0 ? Key.Digit0 : Key.Digit1 + (d - 1);
             var numpadKey = Key.Numpad0 + d;
 
             if (kb[alphaKey].wasPressedThisFrame || kb[numpadKey].wasPressedThisFrame)

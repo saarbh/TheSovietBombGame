@@ -131,7 +131,8 @@ public class EvidenceHudView : PuzzleCardInventoryView
         // Authored in code rather than added to InputSystem_Actions.inputactions: that
         // asset is shared by all four branches and is a standing merge-conflict risk.
         // A locally owned action is not a second input asset, just a private binding.
-        resolvedToggleAction = new InputAction("ToggleEvidence", InputActionType.Button, "<Keyboard>/tab");
+        var customPath = PlayerPrefs.GetString("Petrov_EvidenceKey_Override", "<Keyboard>/tab");
+        resolvedToggleAction = new InputAction("ToggleEvidence", InputActionType.Button, customPath);
         ownsToggleAction = true;
     }
 

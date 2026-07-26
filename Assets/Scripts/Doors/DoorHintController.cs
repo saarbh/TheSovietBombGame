@@ -61,6 +61,6 @@ public class DoorHintController : MonoBehaviour
             return;
         }
 
-        textMesh.text = $"{roomConfig.RoomId} Code: {roomConfig.CorrectPasscode}\n\nOpens at {roomConfig.ExpectedUnlockTimeMinutes}";
+        textMesh.text = $"{roomConfig.RoomId} Code: {roomConfig.CorrectPasscode}";
     }
 }

@@ -1,18 +1,21 @@
 using UnityEngine;
 
 /// <summary>
-/// Authoring data for a single locked room: when its door may actually be opened,
-/// when the control room paperwork *claims* it may be opened, and the passcode.
+/// Authoring data for a single locked room. The passcode is the only thing that opens
+/// a door; the two unlock-time fields are retained authored data and gate nothing.
 /// </summary>
 [CreateAssetMenu(fileName = "RoomConfig", menuName = "SovietBomb/Room Config")]
 public class RoomConfig : ScriptableObject
 {
     [SerializeField] private string roomId;
 
-    [Tooltip("Minutes elapsed before the door will really accept its passcode.")]
+    [Tooltip("INERT. Doors are gated on the passcode alone - nothing reads this to decide "
+             + "whether a keypad works. Kept so the timed-door design can be restored without "
+             + "re-authoring every RoomConfig asset.")]
     [SerializeField] private float actualUnlockTimeMinutes;
 
-    [Tooltip("Minutes the in-world documentation claims the door unlocks. May differ from the actual time.")]
+    [Tooltip("INERT. The minute the paperwork used to claim - no longer printed anywhere, "
+             + "since a player cannot act on it. Kept alongside actualUnlockTimeMinutes.")]
     [SerializeField] private float expectedUnlockTimeMinutes;
 
     [SerializeField] private string correctPasscode;

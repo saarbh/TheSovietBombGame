@@ -67,8 +67,9 @@ public class ControlRoomCodeCard : MonoBehaviour
             return;
         }
 
+        // No unlock time is printed: doors are gated on the passcode alone, so advertising
+        // a minute would be a instruction the player can never act on.
         textMesh3D.text = $"<b>{cardTitle} ({roomConfig.RoomId})</b>\n" +
-                          $"<size=85%>OPENS AT: MINUTE {roomConfig.ExpectedUnlockTimeMinutes}</size>\n" +
                           $"<color=#FFD700><b>PASSCODE: {roomConfig.CorrectPasscode}</b></color>";
     }
 }

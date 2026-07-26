@@ -1,0 +1,24 @@
+{
+  "cheats": [
+    {
+      "key": "Shift + H",
+      "description": "Toggle the Cheat sheet overlay"
+    },
+    {
+      "key": "Shift + T",
+      "description": "Reduce remaining time by 60 seconds"
+    },
+    {
+      "key": "1, 2, 3, 4",
+      "description": "Toggle door lock 1-4 interactable state"
+    },
+    {
+      "key": "Shift + 1, 2, 3, 4",
+      "description": "Force unlock door 1-4"
+    },
+    {
+      "key": "Tab",
+      "description": "Toggle Evidence HUD / collected evidence cards"
+    }
+  ]
+}

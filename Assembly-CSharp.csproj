@@ -94,6 +94,12 @@
     <Compile Include="Assets\Scripts\Puzzles\Generator\GeneratorUnit.cs" />
     <Compile Include="Assets\Scripts\Puzzles\PuzzleTracker.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
+    <Compile Include="Assets\Scripts\Core\CheatHelper.cs" />
+    <Compile Include="Assets\Scripts\Puzzles\SelectorSwitch.cs" />
+    <Compile Include="Assets\Scripts\Core\RoomProgressionController.cs" />
+    <Compile Include="Assets\Scripts\UI\EvidenceHudView.cs" />
+    <Compile Include="Assets\Scripts\Puzzles\Cards\VerificationStages.cs" />
+    <Compile Include="Assets\Scripts\Doors\DoorHintController.cs" />
     <Compile Include="Assets\Scripts\Audio\RoomAudioZone.cs" />
     <Compile Include="Assets\Scripts\Audio\GeneratorAudio.cs" />
     <Compile Include="Assets\Scripts\Puzzles\ThreatVolume\ThreatVolumeTerminalUI.cs" />

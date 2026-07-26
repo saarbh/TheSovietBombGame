@@ -10,9 +10,15 @@ using UnityEngine.UI;
 /// Controls CRT monitor text display, command input field, sticky note prompt,
 /// alarm banner status, and doctrine help modal popup window.
 /// Includes OnGUI fallback rendering if serialized UI references are unassigned.
-/// Implements <see cref="IInteractable"/> so the player must interact (E) to open the view.
+///
+/// Deliberately NOT an <see cref="IInteractable"/>. This component lives on the room
+/// root, and <c>PlayerInteraction.Raycast</c> resolves a hit by walking **parents
+/// first** - so while this implemented the interface, every collider in the room
+/// (all four walls, the floor, and anything aimed near the door) resolved to it and
+/// opened the terminal. <see cref="ThreatVolumeComputerInteractable"/> on the Computer
+/// child is the single entry point and calls <see cref="Interact"/> directly.
 /// </summary>
-public class ThreatVolumeTerminalUI : MonoBehaviour, IInteractable
+public class ThreatVolumeTerminalUI : MonoBehaviour
 {
     [Header("Puzzle Reference")]
     [SerializeField] private ThreatVolumePuzzle puzzle;
@@ -43,8 +49,9 @@ public class ThreatVolumeTerminalUI : MonoBehaviour, IInteractable
 
     public bool IsOpen => isOpen;
 
-    #region IInteractable Implementation
+    #region Terminal open/close - driven by ThreatVolumeComputerInteractable
 
+    /// <summary>Toggles the terminal. Called by the computer's interactable, not by the player directly.</summary>
     public void Interact(PlayerController player)
     {
         if (isOpen)

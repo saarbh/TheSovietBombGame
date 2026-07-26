@@ -65,9 +65,11 @@
     <Compile Include="Assets\Scripts\Player\MissileLaunchButton.cs" />
     <Compile Include="Assets\Survivalist\StarterAssets\ThirdPersonController\Scripts\ThirdPersonController.cs" />
     <Compile Include="Assets\Scripts\UI\KeypadPopupUI.cs" />
+    <Compile Include="Assets\assets\SampleScene\LMC\HW_TestLevel.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerInteraction.cs" />
     <Compile Include="Assets\Scripts\Player\CameraController.cs" />
     <Compile Include="Assets\Scripts\Core\PhoneCallChoice.cs" />
+    <Compile Include="Assets\assets\SampleScene\LMC\HW_Interactables.cs" />
     <Compile Include="Assets\Scripts\Puzzles\IPuzzleResolution.cs" />
     <Compile Include="Assets\Scripts\Audio\RoomLoopSource.cs" />
     <Compile Include="Assets\Scripts\UI\PuzzleCardInventoryView.cs" />
@@ -100,6 +102,7 @@
     <Compile Include="Assets\Scripts\Audio\SfxBank.cs" />
     <Compile Include="Assets\Megapoly.Art\Vintage Controls\Scripts\ButtonLamp.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerController.cs" />
+    <Compile Include="Assets\assets\SampleScene\LMC\HW_UI.cs" />
     <Compile Include="Assets\Scripts\Puzzles\Generator\GeneratorUnit.cs" />
     <Compile Include="Assets\Scripts\Puzzles\PuzzleTracker.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
@@ -123,6 +126,8 @@
     <Compile Include="Assets\Scripts\Puzzles\BasePuzzle.cs" />
     <Compile Include="Assets\Scripts\Puzzles\Cards\PuzzleCardInventory.cs" />
     <Compile Include="Assets\Megapoly.Art\Vintage Controls\Scripts\ControlAnimateLights.cs" />
+    <Compile Include="Assets\assets\SampleScene\LMC\HW_Game.cs" />
+    <Compile Include="Assets\assets\SampleScene\LMC\HW_Puzzles.cs" />
     <Compile Include="Assets\Scripts\Audio\InteractionAudio.cs" />
     <Compile Include="Assets\Scripts\Puzzles\Cards\VerificationStage.cs" />
     <Compile Include="Assets\Megapoly.Art\Vintage Controls\Scripts\Monitor.cs" />
@@ -135,6 +140,7 @@
     <Compile Include="Assets\Scripts\Core\PhoneInteractable.cs" />
     <Compile Include="Assets\Scripts\Puzzles\ConfirmLever.cs" />
     <Compile Include="Assets\Scripts\Doors\RoomDoor.cs" />
+    <Compile Include="Assets\assets\SampleScene\LMC\HW_Player.cs" />
     <Compile Include="Assets\Survivalist\StarterAssets\ThirdPersonController\Scripts\BasicRigidBodyPush.cs" />
     <Compile Include="Assets\Scripts\Puzzles\Cards\EvidenceLogFormatter.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerInputHandler.cs" />

@@ -1437,6 +1437,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
+      <Project>{328E2A80-EBA1-0499-4FC7-B17E07A8F5F8}</Project>
+      <Name>Assembly-CSharp-firstpass</Name>
+    </ProjectReference>
     <ProjectReference Include="Assembly-CSharp.csproj">
       <Project>{0696D460-2EBA-E7C7-7A0B-796FECED6BC9}</Project>
       <Name>Assembly-CSharp</Name>
@@ -1448,10 +1452,6 @@
     <ProjectReference Include="UniTask.DOTween.csproj">
       <Project>{DF1E83D5-2E0E-E615-62D0-BF7840DAF5BF}</Project>
       <Name>UniTask.DOTween</Name>
-    </ProjectReference>
-    <ProjectReference Include="DOTween.Modules.csproj">
-      <Project>{DCF8644D-74E2-C375-E4DF-1FEF68B2211F}</Project>
-      <Name>DOTween.Modules</Name>
     </ProjectReference>
     <ProjectReference Include="UniTask.Addressables.csproj">
       <Project>{50787C22-9B39-A79D-2CBB-0973A04CC923}</Project>

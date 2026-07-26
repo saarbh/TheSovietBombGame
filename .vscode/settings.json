@@ -67,5 +67,9 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "TheSovietBombGame.slnx"
+    "dotnet.defaultSolution": "TheSovietBombGame.slnx",
+    "csharp-dev-tools.roslyn.projectOrSolutionFiles": [
+        "c:\\Users\\yam23\\OneDrive\\Desktop\\GMTK_JAM_2026\\TheSovietBombGame\\GMTK_CountDown.sln",
+        "c:\\Users\\yam23\\OneDrive\\Desktop\\GMTK_JAM_2026\\TheSovietBombGame\\TheSovietBombGame.sln"
+    ]
 }

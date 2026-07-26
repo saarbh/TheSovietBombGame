@@ -52,7 +52,7 @@ public class PuzzleResolutionAudio : MonoBehaviour
             puzzle = GetComponentInParent<IPuzzleResolution>();
         }
 
-        hasPuzzle = puzzle != null;
+        hasPuzzle = puzzle != null && (puzzle as MonoBehaviour) != null;
         roomBank = RoomAudioZone.BankFor(this);
 
         if (emitFrom == null)
@@ -63,9 +63,9 @@ public class PuzzleResolutionAudio : MonoBehaviour
 
     private void OnEnable()
     {
-        if (!hasPuzzle)
+        if (!hasPuzzle || puzzle == null || (puzzle as MonoBehaviour) == null)
         {
-            Debug.LogError("[Audio] PuzzleResolutionAudio has no IPuzzleResolution; this room's "
+            Debug.LogError("[Audio] PuzzleResolutionAudio has no valid IPuzzleResolution; this room's "
                            + "verdict will be silent.", this);
             return;
         }
@@ -76,7 +76,7 @@ public class PuzzleResolutionAudio : MonoBehaviour
 
     private void OnDisable()
     {
-        if (!hasPuzzle)
+        if (!hasPuzzle || puzzle == null || (puzzle as MonoBehaviour) == null)
         {
             return;
         }

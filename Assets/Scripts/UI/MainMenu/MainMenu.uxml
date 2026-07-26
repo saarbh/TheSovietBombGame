@@ -1,0 +1,127 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" path-mode="Absolute" version="0.1.0">
+    <Style src="MainMenu.uss" />
+    <ui:VisualElement name="menu-root" class="menu-root">
+        <ui:VisualElement name="vignette-overlay" class="vignette-overlay" picking-mode="Ignore" />
+        <ui:VisualElement name="scanline-overlay" class="scanline-overlay" picking-mode="Ignore" />
+        
+        <!-- Header -->
+        <ui:VisualElement name="header-container" class="header-container">
+            <ui:Label name="title-label" text="PETROV" class="game-title-label" />
+            <ui:Label name="subtitle-label" text="A COLD WAR BUNKER PUZZLE" class="subtitle-label" />
+        </ui:VisualElement>
+
+        <!-- Main Buttons -->
+        <ui:VisualElement name="buttons-container" class="buttons-container">
+            <ui:Button name="start-button" text="▶  START MISSION" class="menu-button" />
+            <ui:Button name="options-button" text="⚙  OPTIONS" class="menu-button" />
+            <ui:Button name="quit-button" text="✕  QUIT" class="menu-button" />
+        </ui:VisualElement>
+
+        <!-- Footer -->
+        <ui:VisualElement name="footer-container" class="footer-container">
+            <ui:Label name="version-label" text="v0.1 — GMTK Jam 2026" class="version-label" />
+            <ui:Label name="credits-label" text="Team Credits" class="credits-label" />
+        </ui:VisualElement>
+
+        <!-- Options Modal Overlay (Hidden by default) -->
+        <ui:VisualElement name="options-modal" class="options-modal hidden">
+            <ui:Label text="SETTINGS &amp; CONTROLS" class="options-title" />
+            
+            <ui:ScrollView class="options-scroll">
+                <!-- Audio Section -->
+                <ui:Label text="AUDIO" class="section-title" />
+                
+                <ui:VisualElement class="slider-row">
+                    <ui:Label text="Master Volume" class="slider-label" />
+                    <ui:Slider name="master-volume-slider" low-value="0" high-value="1" value="1" class="volume-slider" />
+                    <ui:Label name="master-volume-value" text="100%" class="volume-value-label" />
+                </ui:VisualElement>
+
+                <ui:VisualElement class="slider-row">
+                    <ui:Label text="Music Volume" class="slider-label" />
+                    <ui:Slider name="music-volume-slider" low-value="0" high-value="1" value="0.7" class="volume-slider" />
+                    <ui:Label name="music-volume-value" text="70%" class="volume-value-label" />
+                </ui:VisualElement>
+
+                <ui:VisualElement class="slider-row">
+                    <ui:Label text="SFX Volume" class="slider-label" />
+                    <ui:Slider name="sfx-volume-slider" low-value="0" high-value="1" value="0.8" class="volume-slider" />
+                    <ui:Label name="sfx-volume-value" text="80%" class="volume-value-label" />
+                </ui:VisualElement>
+
+                <ui:VisualElement class="slider-row">
+                    <ui:Label text="Ambience Volume" class="slider-label" />
+                    <ui:Slider name="ambience-volume-slider" low-value="0" high-value="1" value="0.5" class="volume-slider" />
+                    <ui:Label name="ambience-volume-value" text="50%" class="volume-value-label" />
+                </ui:VisualElement>
+
+                <!-- Keymap Section -->
+                <ui:Label text="PLAYER KEYMAP" class="section-title" />
+                <ui:VisualElement class="keymap-container">
+                    <ui:VisualElement class="keymap-row">
+                        <ui:Label text="Move Forward" class="keymap-action-label" />
+                        <ui:Button name="rebind-forward-btn" text="W" class="key-badge-btn" />
+                    </ui:VisualElement>
+
+                    <ui:VisualElement class="keymap-row">
+                        <ui:Label text="Move Backward" class="keymap-action-label" />
+                        <ui:Button name="rebind-backward-btn" text="S" class="key-badge-btn" />
+                    </ui:VisualElement>
+
+                    <ui:VisualElement class="keymap-row">
+                        <ui:Label text="Move Left" class="keymap-action-label" />
+                        <ui:Button name="rebind-left-btn" text="A" class="key-badge-btn" />
+                    </ui:VisualElement>
+
+                    <ui:VisualElement class="keymap-row">
+                        <ui:Label text="Move Right" class="keymap-action-label" />
+                        <ui:Button name="rebind-right-btn" text="D" class="key-badge-btn" />
+                    </ui:VisualElement>
+                    
+                    <ui:VisualElement class="keymap-row">
+                        <ui:Label text="Look around" class="keymap-action-label" />
+                        <ui:Label text="Mouse" class="key-badge" />
+                    </ui:VisualElement>
+
+                    <ui:VisualElement class="keymap-row">
+                        <ui:Label text="Interact / Use Prop" class="keymap-action-label" />
+                        <ui:Button name="rebind-interact-btn" text="E" class="key-badge-btn" />
+                    </ui:VisualElement>
+
+                    <ui:VisualElement class="keymap-row">
+                        <ui:Label text="Raise/Lower Wristwatch" class="keymap-action-label" />
+                        <ui:Button name="rebind-watch-btn" text="Q" class="key-badge-btn" />
+                    </ui:VisualElement>
+
+                    <ui:VisualElement class="keymap-row">
+                        <ui:Label text="Toggle Evidence Log" class="keymap-action-label" />
+                        <ui:Button name="rebind-evidence-btn" text="Tab" class="key-badge-btn" />
+                    </ui:VisualElement>
+
+                    <ui:VisualElement class="keymap-row">
+                        <ui:Label text="Pause Game" class="keymap-action-label" />
+                        <ui:Label text="Escape" class="key-badge" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:ScrollView>
+
+            <ui:Button name="options-back-button" text="◄ BACK TO MENU" class="menu-button" />
+        </ui:VisualElement>
+
+        <!-- Loading Screen Overlay (Hidden by default) -->
+        <ui:VisualElement name="loading-overlay" class="loading-overlay hidden">
+            <ui:Label name="loading-title" text="INITIALIZING BUNKER TELEMETRY..." class="loading-title" />
+            
+            <ui:VisualElement class="progress-bar-container">
+                <ui:VisualElement name="loading-progress-fill" class="loading-progress-fill" />
+            </ui:VisualElement>
+
+            <ui:VisualElement class="loading-status-container">
+                <ui:Label name="loading-status-label" text="ESTABLISHING SECURE PROTOCOLS..." class="loading-status-text" />
+                <ui:Label name="loading-percent-label" text="0%" class="loading-percent-text" />
+            </ui:VisualElement>
+
+            <ui:Label text="CLASSIFIED DOCUMENTATION — SOVIET BOMB DEFENSE PROTOCOL" class="loading-footer" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 8321162149049581547}
   - component: {fileID: 5052429311425255867}
   - component: {fileID: 4484877126585934391}
+  - component: {fileID: 2891369409498318498}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -96,13 +97,11 @@ MonoBehaviour:
   interactDistance: 5
   interactableMask:
     serializedVersion: 2
-    m_Bits: 4294967039
+    m_Bits: 55
   rayOrigin: {fileID: 4783142928487095559}
   detectTriggers: 1
   interactCrosshair: {fileID: 0}
-  highlightColor: {r: 0.2, g: 1, b: 0.2, a: 1}
-  highlightIntensity: 1.5
-  tintColor: {r: 0.05, g: 0.05, b: 0.05, a: 0}
+  highlightOverlayMaterial: {fileID: 0}
 --- !u!114 &8321162149049581547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -119,6 +118,7 @@ MonoBehaviour:
   cameraSystem: {fileID: 6461624645170862709}
   interactionSystem: {fileID: 5711321219237218697}
   animationController: {fileID: 2679802977118224239}
+  fastForwardTimeScale: 4
 --- !u!114 &5052429311425255867
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132,7 +132,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInputHandler
   playerController: {fileID: 8321162149049581547}
-  lockCursorOnStart: 1
+  lockCursorOnStart: 0
   recaptureCursorOnClick: 1
 --- !u!114 &4484877126585934391
 MonoBehaviour:
@@ -164,6 +164,27 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &2891369409498318498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4003769538910784481}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74fb8de0b02441349be6afc655d07f17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PersistentPlayerSpawner
+  playerRoot: {fileID: 4003769538910784481}
+  characterController: {fileID: 5470037362673574624}
+  spawnId: 
+  warnWhenNoAnchor: 1
+  playerInput: {fileID: 0}
+  lockCursorOnFirstMove: 1
+  moveLockThreshold: 0.05
+  playerMovement: {fileID: 8067435972534001}
+  cameraController: {fileID: 6461624645170862709}
 --- !u!1 &4572566765197220011
 GameObject:
   m_ObjectHideFlags: 0
@@ -177,6 +198,7 @@ GameObject:
   - component: {fileID: 4876069848464291814}
   - component: {fileID: 7880925514498191331}
   - component: {fileID: 657082142846819339}
+  - component: {fileID: 1775838784893027090}
   - component: {fileID: 6461624645170862709}
   m_Layer: 0
   m_Name: Main Camera
@@ -194,7 +216,7 @@ Transform:
   m_GameObject: {fileID: 4572566765197220011}
   serializedVersion: 2
   m_LocalRotation: {x: 0.0000000019163053, y: 0.0000000037252903, z: 1.3982038e-11, w: -1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.00019472459, y: 0.8642806, z: 0.0039221803}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -231,7 +253,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.2
+  near clip plane: 0.29
   far clip plane: 5000
   field of view: 40
   orthographic: 0
@@ -285,7 +307,7 @@ MonoBehaviour:
   Lens:
     FieldOfView: 40
     OrthographicSize: 10
-    NearClipPlane: 0.1
+    NearClipPlane: 0.2
     FarClipPlane: 5000
     Dutch: 0
     ModeOverride: 0
@@ -346,6 +368,25 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!114 &1775838784893027090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4572566765197220011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b617507da6d07e749b7efdb34e1173e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineFollow
+  TrackerSettings:
+    BindingMode: 1
+    PositionDamping: {x: 0, y: 0, z: 0}
+    AngularDampingMode: 0
+    RotationDamping: {x: 0, y: 0, z: 0}
+    QuaternionDamping: 1
+  FollowOffset: {x: 0, y: 0.26, z: 0.06}
 --- !u!114 &6461624645170862709
 MonoBehaviour:
   m_ObjectHideFlags: 0

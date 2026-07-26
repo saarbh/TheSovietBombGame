@@ -36,6 +36,7 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        DontDestroyOnLoad(this);
         if (movementSystem == null)
         {
             movementSystem = GetComponentInChildren<PlayerMovement>();

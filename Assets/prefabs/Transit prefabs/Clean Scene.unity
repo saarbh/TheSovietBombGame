@@ -457,11 +457,11 @@ PrefabInstance:
     - target: {fileID: 3052032290405283750, guid: d5fc9cb02f2e93e4b8bb66661dbcbcc5, type: 3}
       propertyPath: 'locks.Array.data[3]'
       value: 
-      objectReference: {fileID: 1794844974}
+      objectReference: {fileID: 0}
     - target: {fileID: 3052032290405283750, guid: d5fc9cb02f2e93e4b8bb66661dbcbcc5, type: 3}
       propertyPath: 'locks.Array.data[4]'
       value: 
-      objectReference: {fileID: 1794844974}
+      objectReference: {fileID: 0}
     - target: {fileID: 5249741749094957055, guid: d5fc9cb02f2e93e4b8bb66661dbcbcc5, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -647,6 +647,51 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1186873671
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1186873673}
+  - component: {fileID: 1186873672}
+  m_Layer: 0
+  m_Name: PlayerSpawnAnchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1186873672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1186873671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0e18c714aa6871408de553e9e0d2e49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerSpawnAnchor
+  spawnId: 
+--- !u!4 &1186873673
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1186873671}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+  m_LocalPosition: {x: 0, y: 1.036, z: -0.652}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1121,6 +1166,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4003769538910784481, guid: f38cca12d5697c644ae0a5e0b30a6b1b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1528780158}
+    - targetCorrespondingSourceObject: {fileID: 4003769538910784481, guid: f38cca12d5697c644ae0a5e0b30a6b1b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1528780160}
     - targetCorrespondingSourceObject: {fileID: 4572566765197220011, guid: f38cca12d5697c644ae0a5e0b30a6b1b, type: 3}
       insertIndex: 4
       addedObject: {fileID: 1528780159}
@@ -1185,6 +1233,27 @@ MonoBehaviour:
     RotationDamping: {x: 1, y: 1, z: 1}
     QuaternionDamping: 1
   FollowOffset: {x: 0, y: 0.12, z: 0.14}
+--- !u!114 &1528780160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1528780154}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74fb8de0b02441349be6afc655d07f17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PersistentPlayerSpawner
+  playerRoot: {fileID: 0}
+  characterController: {fileID: 0}
+  spawnId: 
+  warnWhenNoAnchor: 1
+  playerInput: {fileID: 0}
+  lockCursorOnFirstMove: 1
+  moveLockThreshold: 0.05
+  playerMovement: {fileID: 0}
+  cameraController: {fileID: 0}
 --- !u!1001 &1619483177
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1380,17 +1449,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d4e5f67890123456789abcdef0123456, type: 3}
---- !u!114 &1794844974 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8341346178767358181, guid: d4e5f67890123456789abcdef0123456, type: 3}
-  m_PrefabInstance: {fileID: 1794844973}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 183d1d9c21beb2749a626d51d7d070b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DoorLockController
 --- !u!1 &1883386762
 GameObject:
   m_ObjectHideFlags: 0
@@ -1683,6 +1741,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2136562717}
+  - component: {fileID: 2136562718}
   m_Layer: 0
   m_Name: CinmachineManager
   m_TagString: Untagged
@@ -1698,13 +1757,45 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2136562716}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 1.3982038e-11, y: -1, z: -0.0000000019163053, w: -0.0000000037252903}
+  m_LocalPosition: {x: 0.00019472514, y: 1.7742805, z: -0.73592216}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2136562718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2136562716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72ece51f2901e7445ab60da3685d6b5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineBrain
+  ShowDebugText: 0
+  ShowCameraFrustum: 1
+  IgnoreTimeScale: 0
+  WorldUpOverride: {fileID: 0}
+  ChannelMask: -1
+  UpdateMethod: 2
+  BlendUpdateMethod: 1
+  LensModeOverride:
+    Enabled: 0
+    DefaultMode: 2
+  DefaultBlend:
+    Style: 1
+    Time: 2
+    CustomCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  CustomBlends: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1727,3 +1818,4 @@ SceneRoots:
   - {fileID: 1526117660}
   - {fileID: 1794844973}
   - {fileID: 1883386764}
+  - {fileID: 1186873673}

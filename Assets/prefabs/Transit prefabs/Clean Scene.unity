@@ -440,7 +440,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3052032290405283750, guid: d5fc9cb02f2e93e4b8bb66661dbcbcc5, type: 3}
       propertyPath: locks.Array.size
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3052032290405283750, guid: d5fc9cb02f2e93e4b8bb66661dbcbcc5, type: 3}
       propertyPath: 'locks.Array.data[0]'
@@ -449,15 +449,15 @@ PrefabInstance:
     - target: {fileID: 3052032290405283750, guid: d5fc9cb02f2e93e4b8bb66661dbcbcc5, type: 3}
       propertyPath: 'locks.Array.data[1]'
       value: 
-      objectReference: {fileID: 2026624662}
+      objectReference: {fileID: 2026624661}
     - target: {fileID: 3052032290405283750, guid: d5fc9cb02f2e93e4b8bb66661dbcbcc5, type: 3}
       propertyPath: 'locks.Array.data[2]'
       value: 
-      objectReference: {fileID: 2026624661}
+      objectReference: {fileID: 2026624654}
     - target: {fileID: 3052032290405283750, guid: d5fc9cb02f2e93e4b8bb66661dbcbcc5, type: 3}
       propertyPath: 'locks.Array.data[3]'
       value: 
-      objectReference: {fileID: 2026624654}
+      objectReference: {fileID: 1794844974}
     - target: {fileID: 3052032290405283750, guid: d5fc9cb02f2e93e4b8bb66661dbcbcc5, type: 3}
       propertyPath: 'locks.Array.data[4]'
       value: 
@@ -1528,6 +1528,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HOTWAR_PROPS
       objectReference: {fileID: 0}
+    - target: {fileID: 4065331409980573551, guid: 997086db15e4f92439dedb953ad53d69, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4711716205420627792, guid: 997086db15e4f92439dedb953ad53d69, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1651,17 +1655,6 @@ MonoBehaviour:
 --- !u!114 &2026624661 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6075818744289413361, guid: 997086db15e4f92439dedb953ad53d69, type: 3}
-  m_PrefabInstance: {fileID: 2026624653}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 183d1d9c21beb2749a626d51d7d070b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DoorLockController
---- !u!114 &2026624662 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6390688272256018218, guid: 997086db15e4f92439dedb953ad53d69, type: 3}
   m_PrefabInstance: {fileID: 2026624653}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}

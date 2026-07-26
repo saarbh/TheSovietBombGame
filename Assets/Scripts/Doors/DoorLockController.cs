@@ -3,11 +3,15 @@ using UnityEngine;
 
 /// <summary>
 /// Controls interactive door locks attached to doors. Implements <see cref="IInteractable"/>.
+///
+/// The passcode is the only gate: keypads are interactable from the start of the run and
+/// the clock has no say in whether a door will open. The countdown still runs, but it now
+/// only bounds the whole run rather than staging which room is reachable when.
 /// </summary>
 public class DoorLockController : MonoBehaviour, IInteractable
 {
     [Header("Configuration")]
-    [Tooltip("Room configuration carrying expected unlock time and correct passcode.")]
+    [Tooltip("Room configuration carrying this room's passcode.")]
     [SerializeField] private RoomConfig config;
 
     [Header("Door Link")]
@@ -15,7 +19,9 @@ public class DoorLockController : MonoBehaviour, IInteractable
     [SerializeField] private RoomDoor door;
 
     [Header("Prompts")]
-    [SerializeField] private string lockedPrompt = "[E] Keypad Locked (Time-Gated)";
+    [Tooltip("Only ever shown if something explicitly calls SetInteractable(false) - "
+             + "doors are no longer gated on the clock, so a keypad is reachable from the start.")]
+    [SerializeField] private string lockedPrompt = "[E] Keypad Locked";
     [SerializeField] private string interactPrompt = "[E] Enter Passcode";
     [SerializeField] private string unlockedPrompt = "";
 
@@ -39,7 +45,10 @@ public class DoorLockController : MonoBehaviour, IInteractable
     private void Awake()
     {
         isUnlocked = false;
-        isInteractable = false;
+
+        // Passcode is the only gate. Doors used to open this at minute N via LockManager;
+        // now every keypad is live from the first frame and the code is the whole puzzle.
+        isInteractable = true;
 
         if (config == null)
         {
@@ -73,16 +82,6 @@ public class DoorLockController : MonoBehaviour, IInteractable
         }
 
         isInteractable = interactable;
-    }
-
-    public bool CanUnlockAtCurrentTime(float elapsedMinutes)
-    {
-        if (config == null)
-        {
-            return true;
-        }
-
-        return elapsedMinutes >= config.ActualUnlockTimeMinutes;
     }
 
     public void Interact(PlayerController player)

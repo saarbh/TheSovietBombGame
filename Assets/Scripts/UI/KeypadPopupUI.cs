@@ -75,15 +75,7 @@ public class KeypadPopupUI : MonoBehaviour
 
         UpdateDisplay();
 
-        if (!targetLock.IsInteractable)
-        {
-            var unlockTime = targetLock.Config != null ? targetLock.Config.ExpectedUnlockTimeMinutes : 1;
-            SetStatus($"LOCKED: Time-Gated (Unlocks at Min {unlockTime})\n[Press 1-4 for Dev Hack]");
-        }
-        else
-        {
-            SetStatus(defaultStatusPrompt);
-        }
+        SetStatus(defaultStatusPrompt);
 
         if (focusedPlayer != null)
         {

@@ -115,12 +115,14 @@ public class PlayerInputHandler : MonoBehaviour
         playerController.OnInteractInput();
     }
 
+    /// <summary>
+    /// Hold-to-fast-forward, on the existing "Watch" action (Q / gamepad north). The action
+    /// is a plain Button with no interactions, so PlayerInput sends this on both performed
+    /// and canceled - the release must be forwarded, not filtered out like the tap actions above.
+    /// </summary>
     public void OnWatch(InputValue value)
     {
-        if (value.isPressed)
-        {
-            playerController.OnWatchInput();
-        }
+        playerController.OnFastForwardInput(value.isPressed);
     }
 
     // Bound to the UI/Cancel action name as well; harmless if unused.

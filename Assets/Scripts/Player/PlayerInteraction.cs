@@ -23,9 +23,9 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] private GameObject interactCrosshair;
 
     [Header("Highlighting Settings")]
-    [SerializeField] private Color highlightColor = new Color(0.2f, 1f, 0.2f); // Light green glow
-    [SerializeField] private float highlightIntensity = 1.5f;
-    [SerializeField] private Color tintColor = new Color(0.05f, 0.05f, 0.05f, 0f);
+    [Tooltip("Overlay material added to the highlighted object while aimed at it " +
+             "(e.g. Assets/Materials/UI_Mat/FresnelHighlight). Removed automatically on unhover.")]
+    [SerializeField] private Material highlightOverlayMaterial;
 
     private readonly Dictionary<Renderer, Material[]> originalMaterials = new Dictionary<Renderer, Material[]>();
     private IInteractable currentTarget;
@@ -39,6 +39,13 @@ public class PlayerInteraction : MonoBehaviour
     /// listeners don't rebuild UI every frame.
     /// </summary>
     public event Action<IInteractable> OnInteractableTargetChanged;
+
+    /// <summary>
+    /// Fires after an interaction actually runs, carrying what was used. Distinct from the
+    /// target-changed event, which also fires for merely looking at something. Audio hangs off
+    /// this so every interactable makes a noise without each one having to remember to.
+    /// </summary>
+    public event Action<IInteractable> OnInteractionExecuted;
 
     private void Awake()
     {
@@ -79,7 +86,17 @@ public class PlayerInteraction : MonoBehaviour
     /// </summary>
     public void ExecuteInteraction(PlayerController player)
     {
-        currentTarget?.Interact(player);
+        if (currentTarget == null)
+        {
+            return;
+        }
+
+        // Captured first: an interaction that seals a panel can change the target from under
+        // us, and listeners must be told what was used, not what replaced it.
+        var used = currentTarget;
+
+        used.Interact(player);
+        OnInteractionExecuted?.Invoke(used);
     }
 
     /// <summary>Prompt for the current target, or empty when nothing is targeted.</summary>
@@ -150,7 +167,7 @@ public class PlayerInteraction : MonoBehaviour
 
     private void ApplyHighlight(GameObject obj)
     {
-        if (obj == null)
+        if (obj == null || highlightOverlayMaterial == null)
         {
             return;
         }
@@ -168,33 +185,14 @@ public class PlayerInteraction : MonoBehaviour
                 originalMaterials[r] = r.sharedMaterials;
             }
 
-            var mats = r.materials;
-            foreach (var mat in mats)
-            {
-                if (mat == null)
-                {
-                    continue;
-                }
-
-                if (mat.HasProperty("_EmissionColor"))
-                {
-                    mat.EnableKeyword("_EMISSION");
-                    mat.SetColor("_EmissionColor", highlightColor * highlightIntensity);
-                }
-
-                if (mat.HasProperty("_BaseColor"))
-                {
-                    var baseCol = mat.GetColor("_BaseColor");
-                    mat.SetColor("_BaseColor", baseCol + tintColor);
-                }
-                else if (mat.HasProperty("_Color"))
-                {
-                    var baseCol = mat.GetColor("_Color");
-                    mat.SetColor("_Color", baseCol + tintColor);
-                }
-            }
-
-            r.materials = mats;
+            // Append ONLY the Fresnel overlay as an extra submaterial - the object's own
+            // materials are left untouched (no colour/emission change). RemoveHighlight
+            // restores the original sharedMaterials, which drops this overlay again.
+            var current = r.sharedMaterials;
+            var withOverlay = new Material[current.Length + 1];
+            Array.Copy(current, withOverlay, current.Length);
+            withOverlay[current.Length] = highlightOverlayMaterial;
+            r.sharedMaterials = withOverlay;
         }
     }
 

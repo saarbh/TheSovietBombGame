@@ -7,13 +7,16 @@ using UnityEngine;
 /// </summary>
 public class PlayerController : MonoBehaviour
 {
+
     [SerializeField] private PlayerMovement movementSystem;
     [SerializeField] private CameraController cameraSystem;
     [SerializeField] private PlayerInteraction interactionSystem;
     [SerializeField] private PlayerAnimationController animationController;
 
-    // TODO: WorldWatchView is not written yet (Module 2).
-    // OnWatchInput raises OnWatchToggled so the watch view can subscribe once it exists.
+    [Header("Time Skip")]
+    [Tooltip("Countdown multiplier while the fast-forward button is held. Doors unlock on "
+             + "elapsed time, so this is how the player skips the wait instead of standing still.")]
+    [SerializeField] private float fastForwardTimeScale = 4f;
 
     /// <summary>One-way flag set by ControlRoomTrigger. Once departed, never unset.</summary>
     public bool IsControlRoomDeparted { get; private set; }
@@ -22,10 +25,14 @@ public class PlayerController : MonoBehaviour
 
     public PlayerInteraction InteractionSystem => interactionSystem;
 
-    /// <summary>Raised when the player raises/lowers the wrist watch.</summary>
-    public event Action<bool> OnWatchToggled;
+    /// <summary>True while the player is holding fast-forward and the clock is running fast.</summary>
+    public bool IsFastForwarding { get; private set; }
 
-    private bool isWatchRaised;
+    /// <summary>
+    /// Raised when fast-forward starts or stops. The HUD clock and the cigarette smoke
+    /// both hang off this rather than polling the watch.
+    /// </summary>
+    public event Action<bool> OnFastForwardChanged;
 
     private void Awake()
     {
@@ -70,7 +77,7 @@ public class PlayerController : MonoBehaviour
     public void InitializePlayer()
     {
         IsControlRoomDeparted = false;
-        isWatchRaised = false;
+        SetFastForwarding(false);
         SetInputEnabled(true);
     }
 
@@ -94,6 +101,10 @@ public class PlayerController : MonoBehaviour
         // half-applied while a modal (keypad, phone, pause) is open.
         movementSystem?.ResetMotion();
         interactionSystem?.ClearTarget();
+
+        // The keypad deliberately does not pause the countdown, so a hold left
+        // running here would keep burning the clock at 4x behind a modal.
+        SetFastForwarding(false);
     }
 
     /// <summary>Feed the move axis. Hook to your input callback.</summary>
@@ -136,16 +147,33 @@ public class PlayerController : MonoBehaviour
         interactionSystem?.ExecuteInteraction(this);
     }
 
-    public void OnWatchInput()
+    /// <summary>
+    /// Hold-to-fast-forward. Called on both press and release, so a release is never
+    /// swallowed: if input has since been disabled the hold is force-ended rather than
+    /// early-returned, which would otherwise strand the clock at 4x with no way to stop it.
+    /// </summary>
+    public void OnFastForwardInput(bool isHeld)
     {
-        if (!IsInputEnabled)
+        SetFastForwarding(isHeld && IsInputEnabled);
+    }
+
+    private void SetFastForwarding(bool isFastForwarding)
+    {
+        if (IsFastForwarding == isFastForwarding)
         {
             return;
         }
 
-        isWatchRaised = !isWatchRaised;
-        cameraSystem?.SetWatchViewPose(isWatchRaised);
-        OnWatchToggled?.Invoke(isWatchRaised);
+        IsFastForwarding = isFastForwarding;
+
+        // GameManager is a scene singleton and may legitimately be absent in the
+        // single-room test scenes, where fast-forward is simply a no-op.
+        if (GameManager.Instance != null && GameManager.Instance.WatchManager is not null)
+        {
+            GameManager.Instance.WatchManager.TimeScale = isFastForwarding ? fastForwardTimeScale : 1f;
+        }
+
+        OnFastForwardChanged?.Invoke(isFastForwarding);
     }
 
     /// <summary>Called by ControlRoomTrigger on exit. Idempotent.</summary>

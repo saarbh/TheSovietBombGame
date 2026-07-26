@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e47d100411a243458765432109876501, type: 3}
+  m_Name: ThreatVolumeRoomConfig
+  m_EditorClassIdentifier: Assembly-CSharp::ThreatVolumeRoomConfig
+  puzzleId: threat_volume_room
+  puzzleName: Threat Volume Room
+  preserveProgressOnExit: 1
+  stage: 3
+  stageLabel: TRACE
+  correctOutput:
+    codeCharacter: 5
+    evidence: Satellite warning system rebooted. ICBM count is single-digit cloud
+      glare reflection anomaly. Alarm silenced with OVERRIDE-05.
+  incorrectOutput:
+    codeCharacter: 9
+    evidence: Satellite warning system reported full first-strike saturation. Counterstrike
+      authorized with OVERRIDE-99.
+  rebootSequenceCommands:
+  - init 0
+  - check-mem
+  - start-oko
+  initialMissileCount: 1
+  updatedMissileCount: 5
+  telemetryUpdateDelaySeconds: 2.5
+  correctOverrideCode: OVERRIDE-05
+  incorrectOverrideCode: OVERRIDE-99
+  stickyNoteText: Type /help for system commands
+  doctrineHelpText: "[STRATEGIC DEFENSE DOCTRINE MANUAL]\n------------------------------------\n\u2022
+    FULL FIRST STRIKE: >= 1,000 ICBMs (Mass saturation) -> Code: OVERRIDE-99\n\u2022
+    SENSOR ANOMALY:    < 10 ICBMs    (High-altitude solar glare reflection) -> Code:
+    OVERRIDE-05\n\nRULE: Do not initiate counterstrike on single-digit cloud glare
+    anomaly!"

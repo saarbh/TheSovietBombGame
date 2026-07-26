@@ -14,12 +14,44 @@ public class WatchManager
     private float timeRemaining;
     private bool isRunning;
     private int lastMinuteRemaining = -1;
+    private float timeScale = 1f;
 
     public float TimeRemaining => timeRemaining;
     public float ElapsedSeconds => Mathf.Max(0f, TOTAL_TIME_SECONDS - timeRemaining);
     public float ElapsedMinutes => ElapsedSeconds / 60f;
     public int ElapsedMinutesInt => Mathf.FloorToInt(ElapsedMinutes);
     public bool IsRunning => isRunning;
+
+    /// <summary>
+    /// Multiplier applied to the countdown tick. 1 is real time; the player's
+    /// fast-forward raises it while held.
+    ///
+    /// Scaling the tick rather than jumping via <see cref="ReduceTime"/> keeps every
+    /// downstream event firing in order, since a jump can step straight over a minute
+    /// boundary without raising <see cref="OnMinuteChanged"/> or
+    /// <see cref="OnElapsedMinuteChanged"/>. Doors no longer listen to those - they are
+    /// gated on their passcode alone - but the endings and any future minute-driven beat
+    /// still depend on the sequence being complete.
+    /// </summary>
+    public float TimeScale
+    {
+        get => timeScale;
+        set
+        {
+            var clamped = Mathf.Max(0f, value);
+
+            if (Mathf.Approximately(clamped, timeScale))
+            {
+                return;
+            }
+
+            timeScale = clamped;
+            OnTimeScaleChanged?.Invoke(timeScale);
+        }
+    }
+
+    /// <summary>True while the countdown is running faster than real time.</summary>
+    public bool IsAccelerated => timeScale > 1f;
 
     /// <summary>Invoked when the time remaining updates (passes remaining seconds).</summary>
     public event Action<float> OnTimeUpdated;
@@ -32,6 +64,9 @@ public class WatchManager
 
     /// <summary>Invoked when the countdown timer hits 0.</summary>
     public event Action OnTimeExpired;
+
+    /// <summary>Invoked when <see cref="TimeScale"/> changes, so HUD and VFX can react.</summary>
+    public event Action<float> OnTimeScaleChanged;
 
     public WatchManager()
     {
@@ -57,7 +92,7 @@ public class WatchManager
 
             if (Time.timeScale > 0)
             {
-                timeRemaining -= Time.deltaTime;
+                timeRemaining -= Time.deltaTime * timeScale;
 
                 if (timeRemaining < 0)
                 {

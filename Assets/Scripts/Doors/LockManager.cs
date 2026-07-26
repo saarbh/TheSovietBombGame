@@ -5,13 +5,17 @@ using UnityEngine.InputSystem;
 #endif
 
 /// <summary>
-/// Decides which door locks are currently interactable based on global <see cref="WatchManager"/> elapsed time.
-/// Also provides Editor-only developer hack keys (1-4) to toggle interactable state or force unlock doors.
+/// Registry of the level's door locks, and the Editor-only developer hack keys (1-4)
+/// that toggle interactable state or force a door open.
+///
+/// This used to decide which locks were reachable from <see cref="WatchManager"/> elapsed
+/// time. Doors are gated on their passcode alone now, so there is nothing left to evaluate
+/// per minute - every keypad is live from the start.
 /// </summary>
 public class LockManager : MonoBehaviour
 {
     [Header("Door Locks")]
-    [Tooltip("Door locks managed by time-gating in progression order (1-4).")]
+    [Tooltip("Door locks in progression order (1-4). Order only affects the dev hack keys.")]
     [SerializeField] private DoorLockController[] locks = new DoorLockController[4];
 
     public IReadOnlyList<DoorLockController> Locks => locks;
@@ -36,100 +40,43 @@ public class LockManager : MonoBehaviour
 
     private void Start()
     {
-        keypadPopup = FindObjectOfType<KeypadPopupUI>();
-        playerController = FindObjectOfType<PlayerController>();
-        EvaluateLocks();
+        keypadPopup = FindFirstObjectByType<KeypadPopupUI>();
+        playerController = FindFirstObjectByType<PlayerController>();
     }
 
     private void SubscribeToEvents()
     {
-        if (locks != null)
-        {
-            foreach (var lockController in locks)
-            {
-                if (lockController != null)
-                {
-                    lockController.OnUnlocked += HandleLockUnlocked;
-                }
-            }
-        }
-
         if (GameManager.Instance != null)
         {
             GameManager.Instance.OnGameStarted += HandleGameStarted;
-
-            if (GameManager.Instance.WatchManager != null)
-            {
-                GameManager.Instance.WatchManager.OnElapsedMinuteChanged += HandleElapsedMinuteChanged;
-            }
         }
     }
 
     private void UnsubscribeFromEvents()
     {
-        if (locks != null)
-        {
-            foreach (var lockController in locks)
-            {
-                if (lockController != null)
-                {
-                    lockController.OnUnlocked -= HandleLockUnlocked;
-                }
-            }
-        }
-
         if (GameManager.Instance != null)
         {
             GameManager.Instance.OnGameStarted -= HandleGameStarted;
-
-            if (GameManager.Instance.WatchManager != null)
-            {
-                GameManager.Instance.WatchManager.OnElapsedMinuteChanged -= HandleElapsedMinuteChanged;
-            }
         }
-    }
-
-    private void HandleGameStarted()
-    {
-        EvaluateLocks();
-    }
-
-    private void HandleElapsedMinuteChanged(int elapsedMinutes)
-    {
-        EvaluateLocks();
-    }
-
-    private void HandleLockUnlocked()
-    {
-        EvaluateLocks();
     }
 
     /// <summary>
-    /// Evaluates each door lock and sets interactable = true if watch elapsed time has reached the lock's unlock time threshold.
+    /// A restart rebuilds the run, so any lock a dev hack key had switched off is put
+    /// back the way a fresh door starts: reachable, waiting on its passcode.
     /// </summary>
-    public void EvaluateLocks()
+    private void HandleGameStarted()
     {
-        if (locks == null || locks.Length == 0)
+        if (locks == null)
         {
             return;
         }
-
-        if (GameManager.Instance == null || GameManager.Instance.WatchManager == null)
-        {
-            return;
-        }
-
-        var elapsedMinutes = GameManager.Instance.WatchManager.ElapsedMinutes;
 
         foreach (var lockController in locks)
         {
-            if (lockController == null || lockController.IsUnlocked)
+            if (lockController != null && !lockController.IsUnlocked)
             {
-                continue;
+                lockController.SetInteractable(true);
             }
-
-            var canInteract = lockController.CanUnlockAtCurrentTime(elapsedMinutes);
-            lockController.SetInteractable(canInteract);
         }
     }
 

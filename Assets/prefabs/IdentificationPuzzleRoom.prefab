@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2270467751295855304}
   - component: {fileID: 657844699281499891}
   - component: {fileID: 5697165248836057307}
+  - component: {fileID: 4962280938619129126}
   m_Layer: 0
   m_Name: ResetLever
   m_TagString: Untagged
@@ -127,6 +128,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ResetLever
   puzzleObject: {fileID: 2192516381301065087}
   resetNoun: switches
+--- !u!114 &4962280938619129126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 584233084269154789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 845349d55803a0048b126083fa6891e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteractionSfx
+  sfxOnInteract: 11
+  clipOverride: {fileID: 0}
+  overrideVolume: 1
+  emitFrom: {fileID: 0}
 --- !u!1 &586609955560396272
 GameObject:
   m_ObjectHideFlags: 0
@@ -432,6 +449,7 @@ GameObject:
   - component: {fileID: 8769154105973388469}
   - component: {fileID: 6212647485585428005}
   - component: {fileID: 3894247454497548549}
+  - component: {fileID: 7784341882182341423}
   m_Layer: 0
   m_Name: ClassifyLever
   m_TagString: Untagged
@@ -548,6 +566,22 @@ MonoBehaviour:
   confirmVerb: Classify
   printoutDisplay: {fileID: 6736247256228400066}
   printedCard: {fileID: 4402521602044978117}
+--- !u!114 &7784341882182341423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1088562947441514342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 845349d55803a0048b126083fa6891e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteractionSfx
+  sfxOnInteract: 10
+  clipOverride: {fileID: 0}
+  overrideVolume: 1
+  emitFrom: {fileID: 0}
 --- !u!1 &1425112280534148294
 GameObject:
   m_ObjectHideFlags: 0
@@ -579,7 +613,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 3.2, y: 1, z: 0.8}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 5711368625622049723}
   m_Father: {fileID: 2768453205402851535}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3543433969960448604
@@ -788,7 +823,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -915,7 +950,10 @@ GameObject:
   m_Component:
   - component: {fileID: 2768453205402851535}
   - component: {fileID: 5250159567609455382}
-  m_Layer: 0
+  - component: {fileID: 467608216885301602}
+  - component: {fileID: 1980753196889764261}
+  - component: {fileID: 3205993708536161574}
+  m_Layer: 8
   m_Name: IdentificationPuzzleRoom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -953,6 +991,7 @@ Transform:
   - {fileID: 8808213691824149221}
   - {fileID: 2523738025289627655}
   - {fileID: 1194437543915693151}
+  - {fileID: 5314053127667768105}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5250159567609455382
@@ -973,7 +1012,7 @@ MonoBehaviour:
   - {fileID: 1604288388031200959}
   - {fileID: 6743947485609960030}
   - {fileID: 4805029493497906573}
-  correctOptionIndices: 000000000100000002000000
+  correctOptionIndices: 000000000000000002000000
   verdictDisplay: {fileID: 1041388443606279504}
   correctVerdict: PROBABLE METEOROLOGICAL OBJECT
   incorrectVerdicts:
@@ -982,6 +1021,65 @@ MonoBehaviour:
   - OBJECT INSUFFICIENTLY PATRIOTIC
   - UNKNOWN. RECOMMEND ESCALATING.
   requireAnyChange: 1
+  rejectWrongAnswers: 1
+  rejectHoldSeconds: 1.8
+  rejectedVerdictFormat: '{0}
+
+    - READING REJECTED -'
+--- !u!65 &467608216885301602
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2192516381301065087}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 11.549999, y: 3.4, z: 6.700003}
+  m_Center: {x: -1.5379996, y: 1.5, z: 2.9939995}
+--- !u!114 &1980753196889764261
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2192516381301065087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc18cdf8d499dd745ae80a09d85573e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoomAudioZone
+  roomBank: {fileID: 11400000, guid: 1299824368a28314789faa16c3a26fcf, type: 2}
+  zoneVolume: {fileID: 467608216885301602}
+  reconcileInterval: 0.5
+  managedLoops: []
+--- !u!114 &3205993708536161574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2192516381301065087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8522b6c151a29941860824b3ed78f2f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PuzzleResolutionAudio
+  puzzleObject: {fileID: 2192516381301065087}
+  solvedSfx: 30
+  failedSfx: 31
+  cardFiledSfx: 32
+  emitFrom: {fileID: 1232103429567108855}
 --- !u!1 &2199958054741128184
 GameObject:
   m_ObjectHideFlags: 0
@@ -1126,6 +1224,158 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &2431279207770219626
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5711368625622049723}
+  - component: {fileID: 8353638643981971637}
+  - component: {fileID: 955387055900726239}
+  m_Layer: 0
+  m_Name: Loop_ConsoleHum
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5711368625622049723
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2431279207770219626}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2647135166276875962}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8353638643981971637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2431279207770219626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22cc06402cfd0854d98555e861db9776, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoomLoopSource
+  source: {fileID: 955387055900726239}
+  loopClip: {fileID: 8300000, guid: 759cb64366764df4a9d23d3cd9e00747, type: 3}
+  targetVolume: 0.22
+  fadeInSeconds: 1
+  fadeOutSeconds: 0.6
+  spatial: 1
+  minDistance: 1.5
+  maxDistance: 9
+  runsWhileRoomIsOccupied: 1
+  randomiseStartTime: 1
+--- !u!82 &955387055900726239
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2431279207770219626}
+  m_Enabled: 0
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: 759cb64366764df4a9d23d3cd9e00747, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 0
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1.5
+  MaxDistance: 9
+  Pan2D: 0
+  rolloffMode: 1
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &2543370578600761365
 GameObject:
   m_ObjectHideFlags: 0
@@ -1254,7 +1504,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -1307,6 +1557,158 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 2855040222176180770}
   m_maskType: 0
+--- !u!1 &3037095554675516281
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5314053127667768105}
+  - component: {fileID: 2729997287540873279}
+  - component: {fileID: 1320281735167868366}
+  m_Layer: 0
+  m_Name: Ambience_RoomTone
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5314053127667768105
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3037095554675516281}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.5379996, y: 1.5, z: 2.9939995}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2768453205402851535}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2729997287540873279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3037095554675516281}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22cc06402cfd0854d98555e861db9776, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoomLoopSource
+  source: {fileID: 1320281735167868366}
+  loopClip: {fileID: 8300000, guid: 5fc9adc2cd2ba0d4da74d58b6a910742, type: 3}
+  targetVolume: 0.18
+  fadeInSeconds: 1.2
+  fadeOutSeconds: 0.8
+  spatial: 0
+  minDistance: 1
+  maxDistance: 500
+  runsWhileRoomIsOccupied: 1
+  randomiseStartTime: 1
+--- !u!82 &1320281735167868366
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3037095554675516281}
+  m_Enabled: 0
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: 5fc9adc2cd2ba0d4da74d58b6a910742, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 0
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 1
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &3212322829004761685
 GameObject:
   m_ObjectHideFlags: 0
@@ -1430,6 +1832,7 @@ GameObject:
   - component: {fileID: 1704952810600410571}
   - component: {fileID: 7481125746364701203}
   - component: {fileID: 1604288388031200959}
+  - component: {fileID: 5081518633498617706}
   m_Layer: 0
   m_Name: Switch_SPEED
   m_TagString: Untagged
@@ -1498,6 +1901,22 @@ MonoBehaviour:
   degreesPerStep: 50
   stepSeconds: 0.12
   readout: {fileID: 1152959676206437123}
+--- !u!114 &5081518633498617706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3873943501445566396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 845349d55803a0048b126083fa6891e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteractionSfx
+  sfxOnInteract: 12
+  clipOverride: {fileID: 0}
+  overrideVolume: 1
+  emitFrom: {fileID: 0}
 --- !u!1 &4045557530165397408
 GameObject:
   m_ObjectHideFlags: 0
@@ -1629,7 +2048,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4279704090
   m_fontColor: {r: 0.1, g: 0.1, b: 0.09, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -1642,7 +2061,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -1886,6 +2305,7 @@ GameObject:
   - component: {fileID: 3799915254567013704}
   - component: {fileID: 1791711177027358367}
   - component: {fileID: 4805029493497906573}
+  - component: {fileID: 5749483561671436210}
   m_Layer: 0
   m_Name: Switch_HEAT
   m_TagString: Untagged
@@ -1954,6 +2374,22 @@ MonoBehaviour:
   degreesPerStep: 50
   stepSeconds: 0.12
   readout: {fileID: 4023296550085077068}
+--- !u!114 &5749483561671436210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4893941160315865383}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 845349d55803a0048b126083fa6891e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteractionSfx
+  sfxOnInteract: 12
+  clipOverride: {fileID: 0}
+  overrideVolume: 1
+  emitFrom: {fileID: 0}
 --- !u!1 &5541554301464593843
 GameObject:
   m_ObjectHideFlags: 0
@@ -2284,7 +2720,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -2465,7 +2901,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -2529,6 +2965,7 @@ GameObject:
   - component: {fileID: 5109094248272842674}
   - component: {fileID: 7496520972258677990}
   - component: {fileID: 6743947485609960030}
+  - component: {fileID: 7987880699205171588}
   m_Layer: 0
   m_Name: Switch_ALTITUDE
   m_TagString: Untagged
@@ -2588,15 +3025,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SelectorSwitch
   switchLabel: ALTITUDE
   options:
-  - OVER 100 KM
   - UNDER 10 KM
   - 10-100 KM
-  startIndex: 0
+  - OVER 100 KM
+  startIndex: 2
   pointer: {fileID: 5368370928368928983}
   rotationAxis: {x: 0, y: 1, z: 0}
   degreesPerStep: 50
   stepSeconds: 0.12
   readout: {fileID: 3524927327066372631}
+--- !u!114 &7987880699205171588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6556186491983475703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 845349d55803a0048b126083fa6891e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteractionSfx
+  sfxOnInteract: 12
+  clipOverride: {fileID: 0}
+  overrideVolume: 1
+  emitFrom: {fileID: 0}
 --- !u!1 &7179184135812484310
 GameObject:
   m_ObjectHideFlags: 0
@@ -2725,7 +3178,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -2884,9 +3337,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "IDENTIFICATION CHART\n(SIMPLIFIED)\n\nSPEED\n  OVER 5000 ... missile\n 
-    1500-5000 ... aircraft\n  UNDER 1500 .. too slow\n\nALTITUDE\n  OVER 100 KM .
-    orbital\n  10-100 KM ... high\n  UNDER 10 KM . low\n\nHEAT\n  BRIGHT ...... powered\n 
+  m_text: "IDENTIFICATION CHART\n(SIMPLIFIED)\n\nSPEED\n  UNDER 1500 .. too slow\n 
+    1500-5000 ... aircraft\n  OVER 5000 ... missile\n\nALTITUDE\n  UNDER 10 KM .
+    low\n  10-100 KM ... high\n  OVER 100 KM . orbital\n\nHEAT\n  BRIGHT ...... powered\n 
     FAINT ....... warm\n  NONE ........ unpowered"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2896,7 +3349,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4279704090
   m_fontColor: {r: 0.1, g: 0.1, b: 0.09, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -2909,7 +3362,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2

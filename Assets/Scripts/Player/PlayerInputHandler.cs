@@ -63,6 +63,16 @@ public class PlayerInputHandler : MonoBehaviour
             return;
         }
 
+        // A modal that freezes the player owns the pointer just as much, and the
+        // keypad deliberately does not pause - the countdown has to keep running,
+        // so the timeScale check above never fires for it. Without this, the first
+        // click on a keypad button re-locks and hides the cursor, leaving the player
+        // unable to click anything while their input is still disabled.
+        if (playerController != null && !playerController.IsInputEnabled)
+        {
+            return;
+        }
+
         var mouse = Mouse.current;
 
         if (mouse != null && mouse.leftButton.wasPressedThisFrame)
@@ -105,12 +115,14 @@ public class PlayerInputHandler : MonoBehaviour
         playerController.OnInteractInput();
     }
 
+    /// <summary>
+    /// Hold-to-fast-forward, on the existing "Watch" action (Q / gamepad north). The action
+    /// is a plain Button with no interactions, so PlayerInput sends this on both performed
+    /// and canceled - the release must be forwarded, not filtered out like the tap actions above.
+    /// </summary>
     public void OnWatch(InputValue value)
     {
-        if (value.isPressed)
-        {
-            playerController.OnWatchInput();
-        }
+        playerController.OnFastForwardInput(value.isPressed);
     }
 
     // Bound to the UI/Cancel action name as well; harmless if unused.

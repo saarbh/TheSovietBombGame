@@ -1221,7 +1221,7 @@ GameObject:
   - component: {fileID: 3153686373816536035}
   - component: {fileID: 8341346178767358181}
   m_Layer: 0
-  m_Name: Room5_DoorLock
+  m_Name: ThreatVolume_DoorLock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1275,7 +1275,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 183d1d9c21beb2749a626d51d7d070b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DoorLockController
-  config: {fileID: 11400000, guid: d9b1d85594442964d984c24f182b6b6d, type: 2}
+  config: {fileID: 11400000, guid: 2965be45954d42748ace7ea0e2fb88f3, type: 2}
   door: {fileID: 1140000000000081}
   lockedPrompt: '[E] Keypad Locked'
   interactPrompt: '[E] Enter Passcode'

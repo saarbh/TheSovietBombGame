@@ -79,6 +79,8 @@ public class GameManager : MonoBehaviour
         cardInventory.SetRequiredStages(requiredStages);
 
         victoryLoseManager = new VictoryLoseManager(this);
+
+        gameObject.AddComponent<CheatHelper>();
     }
 
     private void Start()

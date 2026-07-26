@@ -15,6 +15,8 @@ public class VictoryLoseManager
     private float toastTimer = 0f;
     private GUIStyle toastStyle;
 
+    private bool wasTPressedLastFrame = false;
+
     public string ToastMessage => toastMessage;
     public bool IsToastVisible => isToastVisible;
 
@@ -56,14 +58,24 @@ public class VictoryLoseManager
             }
         }
 
+        if (gameManager != null && gameManager.IsGameOver)
+        {
+            if (Keyboard.current != null && Keyboard.current.rKey.wasPressedThisFrame)
+            {
+                gameManager.RestartScene();
+            }
+        }
+
 #if UNITY_EDITOR
         // Developer cheat code: Shift + T reduces time remaining by 1 minute
         if (Keyboard.current != null)
         {
-            if (Keyboard.current.shiftKey.isPressed && Keyboard.current.tKey.wasPressedThisFrame)
+            bool isTPressed = Keyboard.current.tKey.isPressed;
+            if (Keyboard.current.shiftKey.isPressed && isTPressed && !wasTPressedLastFrame)
             {
                 TriggerTimeCheat();
             }
+            wasTPressedLastFrame = isTPressed;
         }
 #endif
     }
@@ -240,11 +252,6 @@ public class VictoryLoseManager
             restartStyle.normal.textColor = Color.yellow;
             GUI.backgroundColor = new Color(0.15f, 0.15f, 0.15f, 0.9f);
             GUI.Box(restartRect, "Press <b>R</b> to restart the game", restartStyle);
-
-            if (Keyboard.current != null && Keyboard.current.rKey.wasPressedThisFrame)
-            {
-                gameManager.RestartScene();
-            }
         }
     }
 }

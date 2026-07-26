@@ -831,6 +831,8 @@ MonoBehaviour:
   - {fileID: 8742870647101366516}
   - {fileID: 5169558261554466222}
   syncToleranceSeconds: 0.75
+  rejectWrongAnswers: 1
+  rejectHoldSeconds: 1.5
 --- !u!114 &2194626480660811609
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -843,7 +845,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08c23d461c6793f4d81bdddffdb8c599, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GeneratorMisfire
-  puzzle: {fileID: 0}
+  puzzle: {fileID: 6871539905813053415}
   props:
   - prop: {fileID: 2862446317410383141}
     caption: 'DESK FAN: OPERATIONAL'

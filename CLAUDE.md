@@ -6,7 +6,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **The Hot War** (repo `GMTKJam2026`, README title `TheSovietBombGame`) — a first-person Cold-War bunker puzzle game for GMTK Jam 2026. Unity **6000.3.15f1**, **URP 17.3.0**, built for **WebGL** (see the `Web - Desktop - Release` build profile).
 
-The core mechanic: a constant **7-minute countdown** (`TOTAL_TIME_SECONDS = 420f`) with four passcode-locked rooms that only unlock at specific elapsed times. The painted plates on the doors **lie** about those times — `RoomConfig` carries both `actualUnlockTimeMinutes` and `expectedUnlockTimeMinutes`, and the discrepancy is the puzzle. Solving all four rooms unlocks the "Report False Alarm" phone option, which is the only path to a victory ending that involves calling.
+The core mechanic: a constant **7-minute countdown** (`TOTAL_TIME_SECONDS = 420f`) bounding a run through four **passcode-locked rooms**. Solving all four unlocks the "Report False Alarm" phone option, which is the only path to a victory ending that involves calling.
+
+> **Doors are gated on their passcode alone (settled 2026-07-26).** Earlier revisions of this file described rooms unlocking at specific elapsed times behind door plates that **lie** about those times. That mechanic is gone: no door consults the clock, and every keypad is live from the first frame. The countdown still runs and still decides the endings — it just no longer stages which room is reachable when. See [Doors: passcode only](#doors-passcode-only).
 
 ## Current state — spec-first repo
 
@@ -43,7 +45,6 @@ Four people are working in parallel, **one scene per person**, specifically to a
 
 Unresolved divergences between the design doc and what is built. Raise these before building on either side, and flag it if a new room hits the same fork.
 
-- **Room access: combo locks vs. the global countdown.** `DoorComboLock` gates rooms behind a Helldivers-style arrow sequence, but the design doc's own correction states room access is controlled **entirely** by the global countdown, with a visible per-door timer and no puzzle to get in. `RoomConfig` also still carries a `correctPasscode` from a third, earlier scheme. Three access models exist in the repo at once. *Team is deciding; not settled as of 2026-07-24.*
 - **Puzzle count.** `PuzzleTracker.TOTAL_ROOM_PUZZLES` is 4; the doc settles on five essential rooms plus two stretch rooms. The all-solved gate fires a room early until these agree. The *card* side no longer depends on this — `GameManager.requiredStages` is a serialized `VerificationStage[]` (default: the doc's five), so `IsVerificationComplete` follows the rooms actually in the build. `PuzzleTracker` is still on the old constant.
 - **Ending gate.** `GameManager.EvaluateEnding` resolves two endings from `AreAllPuzzlesSolved()` + phone choice. The doc's finale assembles a multi-character code ordered by verification stage and describes four endings.
 
@@ -79,6 +80,25 @@ Changed 2026-07-26, and it reverses the earlier rule that a confirmed wrong answ
 - **Author the clues so only the right answer is reachable.** With refusals in play, an ambiguous room is no longer a wrong-but-plausible card, it is a player stuck at a lever burning clock. The evidence in the room must name every criterion the answer needs.
 - **Every room refuses now.** `GeneratorPuzzle` has its own `Confirm()` and its own copy of the flow (a misfire drops the generators to idle after `rejectHoldSeconds`, default 1.5s — shorter than the knob rooms, because the respin is already the cost). A new room built on `SwitchComboPuzzle` inherits it for free; a room with a bespoke `Confirm()` has to implement it, and the two existing ones are the pattern to copy.
 
+### Doors: passcode only
+
+Settled 2026-07-26, replacing the three competing access models that used to coexist here (arrow-sequence combo locks, the global countdown, and passcodes). **The passcode is the only gate.** Don't reintroduce a clock check on a new room's door.
+
+- `DoorLockController.isInteractable` defaults to **true** in `Awake` — every keypad is reachable from the first frame. `CanUnlockAtCurrentTime()` is deleted; nothing replaces it.
+- `LockManager` is now just a lock registry plus the Editor-only dev hack keys (**1-4** toggle interactable, **Shift+1-4** force unlock). It no longer subscribes to `WatchManager.OnElapsedMinuteChanged` and has no `EvaluateLocks()`.
+- `RoomConfig.actualUnlockTimeMinutes` and `expectedUnlockTimeMinutes` are **retained but inert** — kept so the timed design can be restored without re-authoring every asset, and read by nothing. `correctPasscode` is the live field. Worth knowing: the "lying plates" discrepancy was never actually authored — all four `Room*Config` assets shipped with actual == expected.
+- **A `RoomConfig` with an empty `correctPasscode` is now a permanently sealed door.** The passcode is the single point of failure; there is no longer a time path that opens it anyway. Current codes: Room1 `1492`, Room2 `2589`, Room3 `3821`, Room4 `4710`.
+- `DoorComboLock` (the Helldivers-style arrow sequence) is still in the repo but is **not** the access model. Don't build against it without asking.
+
+### Time skip: hold Q to run the clock at 4x
+
+Built 2026-07-26 for the timed doors, and kept after they were cut because it costs nothing to leave in — but it is now a **playtest tool, not a mechanic**. With doors passcode-only, holding Q only burns the player's clock with nothing to gain.
+
+- Rides the existing `Watch` action (Q / gamepad north), which previously tilted the camera at a wrist that has no watch model. `CameraController.SetWatchViewPose` is now unused, left in for a future real watch.
+- `WatchManager.TimeScale` multiplies the tick rather than jumping via `ReduceTime()`. Keep it that way if anything ever re-subscribes to the minute events: a jump can step straight over a minute boundary without raising `OnMinuteChanged` / `OnElapsedMinuteChanged`.
+- `PlayerController` force-clears fast-forward in `SetInputEnabled(false)` — the keypad deliberately doesn't pause the countdown, so a held key behind a modal would otherwise burn clock with no way to release it.
+- `ClockHudView` (screen-space MM:SS) and `PlayerSmokeEffect` (cigarette smoke while accelerating) exist but are **wired into no scene**. `Tools → The Hot War → Setup Time Skip (Clock HUD + Smoke)` builds and wires both; it is idempotent. Until then the only on-screen clock is the green debug box from `VictoryLoseManager.DrawGUI`.
+
 ### Doors: two mechanisms, pick by ownership
 
 - [SlidingDoor.cs](Assets/Scripts/Puzzles/SlidingDoor.cs) — the room owns its own panel. Slides along the panel's **own** local X (`transform.right`), not `localPosition.x`, which follows the parent's axes and ignores the panel's rotation.
@@ -110,6 +130,15 @@ $UNITY = "C:\Program Files\Unity\Hub\Editor\6000.3.15f1\Editor\Unity.exe"
 
 Unity holds a project lock — batchmode and the open Editor cannot both run. Prefer MCP against the live Editor.
 
+**When MCP is also unavailable, `dotnet build` is the third option** and the only one that works while the Editor is open:
+
+```powershell
+# Real compile check, no project lock, ~35s. Output goes to the gitignored Temp/Bin/Debug/.
+dotnet build Assembly-CSharp.csproj -nologo -v q -clp:ErrorsOnly
+```
+
+This was needed on 2026-07-26 when the MCP bridge wedged (`Command TCS timed out (N consecutive)` in the Editor log) while the Editor itself stayed open and responsive. Two gotchas: the csproj may predate a brand-new script, so confirm your file is in its `<Compile Include=...>` list before trusting a green build; and it verifies **code only**, never scene or prefab wiring.
+
 ### MCP for Unity
 
 `com.coplaydev.unity-mcp` (10.1.0, from the `package.openupm.com` scoped registry) is installed, and a **`unity-mcp-skill`** is available. Use it for anything touching the live Editor — creating GameObjects, wiring serialized references, reading console errors after a script change, entering play mode. It is faster and far more reliable than editing `.unity`/`.prefab` YAML by hand. **Never hand-edit scene or prefab YAML** when an MCP call can do it.
@@ -123,7 +152,7 @@ Two conventions matter more than anything else in that file:
 - **`HOTWAR_ROOMS` is disposable output.** `RebuildLevel()` destroys and regenerates the whole root. Never put hand-authored work or gameplay components inside it.
 - **`HOTWAR_PROPS` is hand-polish and is never touched by a rebuild.** Anything authored by hand — real props, gameplay scripts, spawn points — goes here or in a separate root.
 
-`OnValidate` triggers a debounced rebuild (`rebuildDelay`, default 0.35s) on every Inspector change while `autoRebuild` is on. Context-menu entries: `Rebuild Level`, `Load Doc Layout` (the canonical 4-room layout with the lying plates), `Append Example Rooms`, `Spawn Doc Control-Room Props`, `Apply Mood Lighting`, `Clear Rooms`, `Clear Props`.
+`OnValidate` triggers a debounced rebuild (`rebuildDelay`, default 0.35s) on every Inspector change while `autoRebuild` is on. Context-menu entries: `Rebuild Level`, `Load Doc Layout` (the canonical 4-room layout; its `realUnlockElapsed` / `shownUnlockElapsed` arrays are leftovers of the cut timed-door design and paint plates nothing reads), `Append Example Rooms`, `Spawn Doc Control-Room Props`, `Apply Mood Lighting`, `Clear Rooms`, `Clear Props`.
 
 Internally it compiles specs into `InternalRoom` via a door-relative `Frame` (u = across the door wall, v = away from the door), so feature placement logic is written once and mapped to whichever wall the door lands on. Output is plain primitives with no scripts attached.
 
@@ -133,7 +162,7 @@ Five feature modules, detailed in [overview.md](overview.md) with the full class
 
 - **Thin MonoBehaviour / composed facade.** `PlayerController` owns `PlayerMovement`, `CameraController`, and `PlayerInteraction` as sub-controllers and exposes the one-way `IsControlRoomDeparted` flag. `WatchManager` and `PuzzleTracker` are plain C# controllers, not MonoBehaviours — keep them scene-independent and unit-testable.
 - **`IInteractable` is the universal interaction contract** (`Interact(PlayerController)`, `GetPrompt()`). `PlayerInteraction` raycasts for it and fires `OnInteractableTargetChanged`; both `CrosshairUI` and `InteractionPromptUI` subscribe to that one event rather than polling.
-- **Per-door state, not a central door manager.** Each door GameObject carries its own `DoorLockController` + `RoomConfig` ScriptableObject. `CanUnlockAtCurrentTime()` gates whether the keypad opens at all; `ValidateCode()` checks the passcode. `RoomDoor` is purely the visual/pivot view owned by the lock controller.
+- **Per-door state, not a central door manager.** Each door GameObject carries its own `DoorLockController` + `RoomConfig` ScriptableObject. `ValidateCode()` checks the passcode and is the only thing that opens a door — see [Doors: passcode only](#doors-passcode-only). `RoomDoor` is purely the visual/pivot view owned by the lock controller.
 - **`BasePuzzle<T>` is generic and abstract.** `CheckSolve()` compares `currentState` to `targetState` via `EqualityComparer<T>.Default`. Concrete subclasses must close the generic (`class RadarPuzzle : BasePuzzle<float>`) — an open generic cannot be attached to a GameObject.
 - **`GameManager` owns all ending evaluation** (`EvaluateEnding(bool leftControlRoom, PhoneCallChoice)`), is a scene singleton in the gameplay scene, and is destroyed on reload. `AudioManager` is the only `DontDestroyOnLoad` singleton, with three enum-indexed `AudioClip[]` arrays (`SFXType`/`BGMType`/`MusicType`) mapped to three separate `AudioSource` channels — index by casting the enum, keep array order in sync with the enum.
 

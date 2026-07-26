@@ -3,7 +3,7 @@ using UnityEngine;
 
 /// <summary>
 /// Controls initial room progression when leaving the control room (see <see cref="ControlRoomTrigger"/>).
-/// Doors require manual passcode entry and time-gating rather than auto-unlocking on puzzle completion.
+/// Doors require manual passcode entry rather than auto-unlocking on puzzle completion.
 /// </summary>
 public class RoomProgressionController : MonoBehaviour
 {

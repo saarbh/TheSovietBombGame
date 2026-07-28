@@ -427,6 +427,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 5711321219237218697, guid: f38cca12d5697c644ae0a5e0b30a6b1b, type: 3}
+      propertyPath: highlightOverlayMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: e3845b4299dd148408474898b0b7e04f, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -130,6 +130,22 @@ public class GameManager : MonoBehaviour
 
         if (WatchManager is not null)
         {
+            if (CutsceneManager.Instance == null || !CutsceneManager.Instance.HasStartCutscene)
+            {
+                StartWatchCountdown();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Starts the watch countdown loop if not already running.
+    /// Called directly by <see cref="StartGame"/> if there is no start cutscene, or by
+    /// <see cref="CutsceneManager"/> once the start cutscene finishes playing.
+    /// </summary>
+    public void StartWatchCountdown()
+    {
+        if (WatchManager is not null && !WatchManager.IsRunning && !IsGameOver)
+        {
             WatchManager.StartCountdownAsync(this.GetCancellationTokenOnDestroy()).Forget();
         }
     }

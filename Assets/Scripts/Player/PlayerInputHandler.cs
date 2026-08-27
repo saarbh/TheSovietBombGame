@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Bridges Unity's <c>PlayerInput</c> component (New Input System, "Send Messages"
@@ -47,6 +48,13 @@ public class PlayerInputHandler : MonoBehaviour
     private void Update()
     {
         if (!recaptureCursorOnClick)
+        {
+            return;
+        }
+
+        // Never recapture cursor in menu scenes
+        var activeScene = SceneManager.GetActiveScene();
+        if (activeScene.name.Equals("MainMenuScene", System.StringComparison.OrdinalIgnoreCase))
         {
             return;
         }

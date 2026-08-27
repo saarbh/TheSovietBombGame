@@ -8,7 +8,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
 
-    /// <summary>Global access to the persistent PlayerController instance.</summary>
+    /// <summary>Global access to the active PlayerController instance.</summary>
     public static PlayerController Instance { get; private set; }
 
     /// <summary>Static event raised whenever any player receives the Back (Escape) input action.</summary>
@@ -45,15 +45,8 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            // A persistent player from a previous scene already exists — destroy this duplicate.
-            Destroy(gameObject);
-            return;
-        }
-
         Instance = this;
-        DontDestroyOnLoad(this);
+
         if (movementSystem == null)
         {
             movementSystem = GetComponentInChildren<PlayerMovement>();

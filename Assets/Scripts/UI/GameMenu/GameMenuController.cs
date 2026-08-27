@@ -161,9 +161,7 @@ namespace UI.GameMenu
         {
             if (playerController == null)
             {
-                playerController = PlayerController.Instance != null
-                    ? PlayerController.Instance
-                    : FindFirstObjectByType<PlayerController>();
+                playerController = FindFirstObjectByType<PlayerController>();
             }
 
             if (playerController != null && playerInput == null)
@@ -566,12 +564,23 @@ namespace UI.GameMenu
             Debug.Log($"[{nameof(GameMenuController)}] MAIN MENU button clicked.");
             PlaySfx(clickSfx);
 
-            // Restore timescale, action map, EventSystem, and free cursor for main menu
+            // Restore timescale, dynamic input mode, action map, EventSystem, and free cursor for main menu
             Time.timeScale = 1f;
+
+            if (UnityEngine.InputSystem.InputSystem.settings != null)
+            {
+                UnityEngine.InputSystem.InputSystem.settings.updateMode = UnityEngine.InputSystem.InputSettings.UpdateMode.ProcessEventsInDynamicUpdate;
+            }
+
+            if (inputActionsAsset != null)
+            {
+                inputActionsAsset.Enable();
+                inputActionsAsset.FindActionMap("UI")?.Enable();
+            }
 
             if (playerInput != null && playerInput.inputIsActive)
             {
-                playerInput.SwitchCurrentActionMap("Player");
+                playerInput.SwitchCurrentActionMap("UI");
             }
 
             if (cachedEventSystem != null)

@@ -77,6 +77,7 @@ public class PlayerInputHandler : MonoBehaviour
 
         if (mouse != null && mouse.leftButton.wasPressedThisFrame)
         {
+            Debug.Log($"[{nameof(PlayerInputHandler)}] Left mouse click in Update while cursor is unlocked (TimeScale: {Time.timeScale}, IsInputEnabled: {playerController?.IsInputEnabled}). Locking cursor.");
             SetCursorLocked(true);
         }
     }
@@ -99,6 +100,8 @@ public class PlayerInputHandler : MonoBehaviour
 
     public void OnInteract(InputValue value)
     {
+        Debug.Log($"[{nameof(PlayerInputHandler)}] OnInteract received (isPressed: {value.isPressed}, cursorLock: {Cursor.lockState}).");
+
         if (!value.isPressed)
         {
             return;
@@ -109,6 +112,7 @@ public class PlayerInputHandler : MonoBehaviour
         // press whatever the crosshair happens to be resting on. Mirrors the OnLook guard.
         if (Cursor.lockState != CursorLockMode.Locked)
         {
+            Debug.Log($"[{nameof(PlayerInputHandler)}] OnInteract discarded because cursor is not locked.");
             return;
         }
 
@@ -128,6 +132,7 @@ public class PlayerInputHandler : MonoBehaviour
     // Bound to the UI/Cancel action name as well; harmless if unused.
     public void OnCancel(InputValue value)
     {
+        Debug.Log($"[{nameof(PlayerInputHandler)}] OnCancel received (isPressed: {value.isPressed}).");
         if (value.isPressed)
         {
             SetCursorLocked(false);

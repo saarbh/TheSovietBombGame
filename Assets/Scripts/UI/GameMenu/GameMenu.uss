@@ -1,0 +1,32 @@
+/* In-Game Menu Stylesheet — Petrov Soviet Retro Theme */
+@import url("project://database/Assets/Scripts/UI/MainMenu/MainMenu.uss");
+
+.in-game-menu-root {
+    background-color: rgba(10, 10, 18, 0.92);
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+/* Disable all transitions inside the pause menu because Time.timeScale == 0 freezes CSS transitions */
+.in-game-menu-root,
+.in-game-menu-root * {
+    transition-duration: 0s;
+    transition-property: none;
+}
+
+.in-game-menu-root .menu-button:hover {
+    background-color: #2d5a27;
+    border-color: #d4a017;
+    color: #ffffff;
+    scale: 1.04 1.04;
+}
+
+.in-game-menu-root .menu-button:active {
+    background-color: #c41e3a;
+    border-color: #ffffff;
+    color: #ffffff;
+    scale: 0.98 0.98;
+}

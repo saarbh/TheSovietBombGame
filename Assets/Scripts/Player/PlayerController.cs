@@ -8,6 +8,15 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
 
+    /// <summary>Global access to the persistent PlayerController instance.</summary>
+    public static PlayerController Instance { get; private set; }
+
+    /// <summary>Static event raised whenever any player receives the Back (Escape) input action.</summary>
+    public static event Action OnAnyBackPressed;
+
+    /// <summary>Instance event raised when this player receives the Back (Escape) input action.</summary>
+    public event Action OnBackPressed;
+
     [SerializeField] private PlayerMovement movementSystem;
     [SerializeField] private CameraController cameraSystem;
     [SerializeField] private PlayerInteraction interactionSystem;
@@ -36,6 +45,14 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            // A persistent player from a previous scene already exists — destroy this duplicate.
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
         DontDestroyOnLoad(this);
         if (movementSystem == null)
         {
@@ -55,6 +72,14 @@ public class PlayerController : MonoBehaviour
         if (animationController == null)
         {
             animationController = GetComponentInChildren<PlayerAnimationController>();
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            Instance = null;
         }
     }
 
@@ -128,6 +153,14 @@ public class PlayerController : MonoBehaviour
         }
 
         cameraSystem?.ProcessMouseLook(lookInput);
+    }
+
+    /// <summary>Invoked when the Back / Escape input action is triggered.</summary>
+    public void OnBackInput()
+    {
+        Debug.Log($"[{nameof(PlayerController)}] OnBackInput triggered. Invoking OnBackPressed / OnAnyBackPressed events.");
+        OnBackPressed?.Invoke();
+        OnAnyBackPressed?.Invoke();
     }
 
     public void OnInteractInput()

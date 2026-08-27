@@ -75,6 +75,13 @@ public class PersistentPlayerSpawner : MonoBehaviour
         // change leaves a non-null C# reference that must still count as "no instance".
         if (Instance != null && Instance != this)
         {
+            // If the duplicate component is on the exact same GameObject, destroy only the duplicate component
+            if (Instance.gameObject == gameObject)
+            {
+                Destroy(this);
+                return;
+            }
+
             isDuplicate = true;
 
             // The travelling player wins. The scene's own copy goes, so designers can keep

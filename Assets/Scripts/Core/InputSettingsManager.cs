@@ -12,6 +12,16 @@ namespace Core
         public const string EVIDENCE_KEY_PREFS_KEY = "Petrov_EvidenceKey_Override";
         public const string DEFAULT_EVIDENCE_PATH = "<Keyboard>/tab";
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void InitializeOnGameStart()
+        {
+            Time.timeScale = 1f;
+            if (InputSystem.settings != null)
+            {
+                InputSystem.settings.updateMode = InputSettings.UpdateMode.ProcessEventsInDynamicUpdate;
+            }
+        }
+
         /// <summary>
         /// Loads overrides from PlayerPrefs and applies them to the given action asset.
         /// </summary>

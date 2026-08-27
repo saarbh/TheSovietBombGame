@@ -5,26 +5,12 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Keeps the DontDestroyOnLoad player working across scene loads: finds the new scene's
-/// <see cref="PlayerSpawnAnchor"/>, parks the player on it, and power-cycles the
-/// GameObject so every component re-runs OnEnable and starts listening again.
-///
-/// Also the player's singleton guard. The first instance survives every load; any player
-/// already sitting in a scene the travelling player arrives in destroys itself, so a scene
-/// can keep its own Player for solo testing without producing two at runtime.
-///
-/// Lives on the player root, next to <see cref="PlayerController"/>.
+/// Handles positioning the player on the scene's <see cref="PlayerSpawnAnchor"/>
+/// and managing input/cursor state for the player within the scene.
 /// </summary>
 public class PersistentPlayerSpawner : MonoBehaviour
 {
-    /// <summary>The one surviving player. Null before the first one wakes.</summary>
-    public static PersistentPlayerSpawner Instance { get; private set; }
-
-    // Set on the loser of the singleton race so its OnEnable does not subscribe and its
-    // Update-time work never starts - it is destroyed at the end of the frame, not instantly.
-    private bool isDuplicate;
-
-    // Set once the player lands in a new scene; cleared when they take their first step
+    // Set once the player lands in a scene; cleared when they take their first step
     // and the cursor is locked.
     private bool awaitingFirstMove;
 
@@ -71,35 +57,6 @@ public class PersistentPlayerSpawner : MonoBehaviour
             playerRoot = gameObject;
         }
 
-        // Unity's overridden == is required here: a player destroyed by an earlier scene
-        // change leaves a non-null C# reference that must still count as "no instance".
-        if (Instance != null && Instance != this)
-        {
-            isDuplicate = true;
-
-            // The travelling player wins. The scene's own copy goes, so designers can keep
-            // a Player in each scene for solo testing without doubling up in a real run.
-            Debug.Log($"[{nameof(PersistentPlayerSpawner)}] Duplicate player in scene " +
-                      $"'{gameObject.scene.name}' destroyed; the persistent one survives.", Instance);
-
-            Destroy(playerRoot);
-            return;
-        }
-
-        Instance = this;
-
-        // Marking the root here as well as in PlayerController keeps this component
-        // self-contained; DontDestroyOnLoad is idempotent, so the repeat is harmless.
-        if (playerRoot.transform.parent == null)
-        {
-            DontDestroyOnLoad(playerRoot);
-        }
-        else
-        {
-            Debug.LogWarning($"[{nameof(PersistentPlayerSpawner)}] '{playerRoot.name}' is not a root " +
-                             "GameObject, so it cannot survive a scene load. Unparent it.", this);
-        }
-
         if (characterController == null)
         {
             characterController = playerRoot.GetComponent<CharacterController>();
@@ -121,55 +78,8 @@ public class PersistentPlayerSpawner : MonoBehaviour
         }
     }
 
-    private void OnEnable()
-    {
-        if (isDuplicate)
-        {
-            return;
-        }
-
-        SceneManager.sceneLoaded += HandleSceneLoaded;
-    }
-
     private void Start()
     {
-        if (isDuplicate)
-        {
-            return;
-        }
-
-        // sceneLoaded does not fire for the scene the player is already sitting in at
-        // startup, so the very first scene is evaluated here. Without this a player left
-        // in the menu scene stays fully controllable until the first transition.
-        // Applied immediately rather than deferred a frame, so the player is never
-        // controllable even briefly; Update below re-asserts it against later Starts.
-        MoveToSceneAnchor();
-    }
-
-    private void OnDisable()
-    {
-        SceneManager.sceneLoaded -= HandleSceneLoaded;
-    }
-
-    private void OnDestroy()
-    {
-        // Only the reigning instance clears the slot - a duplicate being torn down must
-        // not blank out the player that beat it.
-        if (Instance == this)
-        {
-            Instance = null;
-        }
-    }
-
-    private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        // Additive loads don't replace the world the player is standing in, so moving
-        // them would be wrong.
-        if (mode != LoadSceneMode.Single)
-        {
-            return;
-        }
-
         MoveToSceneAnchor();
     }
 
@@ -183,10 +93,10 @@ public class PersistentPlayerSpawner : MonoBehaviour
 
         if (anchor == null)
         {
-            // No anchor means this isn't a scene the player is played in - a menu, a
-            // cutscene, a loading screen. Go dormant rather than letting the player walk
-            // around invisibly behind the UI and steal the mouse.
-            SetControlEnabled(false);
+            if (warnWhenNoAnchor)
+            {
+                Debug.LogWarning($"[{nameof(PersistentPlayerSpawner)}] No PlayerSpawnAnchor found in scene '{gameObject.scene.name}'. Player remaining at current position.", this);
+            }
             return;
         }
 
@@ -228,10 +138,19 @@ public class PersistentPlayerSpawner : MonoBehaviour
             if (isEnabled)
             {
                 playerInput.ActivateInput();
+                if (!string.IsNullOrEmpty(playerInput.defaultActionMap))
+                {
+                    playerInput.SwitchCurrentActionMap(playerInput.defaultActionMap);
+                }
             }
             else
             {
-                playerInput.DeactivateInput();
+                // Switch to UI map instead of deactivating entire action asset, preserving UI inputs
+                if (playerInput.actions != null)
+                {
+                    playerInput.SwitchCurrentActionMap("UI");
+                    playerInput.actions.FindActionMap("UI")?.Enable();
+                }
             }
         }
 

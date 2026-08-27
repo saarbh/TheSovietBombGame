@@ -73,21 +73,53 @@ namespace UI.MainMenu
 
         private void Awake()
         {
-            uiDocument = GetComponent<UIDocument>();
+            Time.timeScale = 1f;
+            UnityEngine.Cursor.lockState = CursorLockMode.None;
+            UnityEngine.Cursor.visible = true;
+
+            if (UnityEngine.InputSystem.InputSystem.settings != null)
+            {
+                UnityEngine.InputSystem.InputSystem.settings.updateMode = UnityEngine.InputSystem.InputSettings.UpdateMode.ProcessEventsInDynamicUpdate;
+            }
+
             if (inputActionsAsset != null)
             {
+                inputActionsAsset.Enable();
+                inputActionsAsset.FindActionMap("UI")?.Enable();
                 actionsInstance = Instantiate(inputActionsAsset);
                 Core.InputSettingsManager.LoadOverrides(actionsInstance);
             }
+
+            uiDocument = GetComponent<UIDocument>();
         }
 
         private void Start()
         {
+            Time.timeScale = 1f;
+            UnityEngine.Cursor.lockState = CursorLockMode.None;
+            UnityEngine.Cursor.visible = true;
+
+            if (inputActionsAsset != null)
+            {
+                inputActionsAsset.Enable();
+                inputActionsAsset.FindActionMap("UI")?.Enable();
+            }
+
             EnsureAudioPlaying();
         }
 
         private void OnEnable()
         {
+            Time.timeScale = 1f;
+            UnityEngine.Cursor.lockState = CursorLockMode.None;
+            UnityEngine.Cursor.visible = true;
+
+            if (inputActionsAsset != null)
+            {
+                inputActionsAsset.Enable();
+                inputActionsAsset.FindActionMap("UI")?.Enable();
+            }
+
             var root = uiDocument.rootVisualElement;
             if (root == null)
             {

@@ -1,9 +1,8 @@
 using UnityEngine;
 
 /// <summary>
-/// Marks where the persistent player should be placed when this scene loads.
-/// Drop one empty GameObject carrying this component into every scene the player
-/// travels to - <see cref="PersistentPlayerSpawner"/> looks it up after each load.
+/// Marks where the player should be placed in the scene.
+/// Drop one empty GameObject carrying this component into scenes where the player is spawned.
 ///
 /// The transform's position and Y rotation are used; pitch and roll are ignored so a
 /// carelessly tilted anchor can't leave the player looking at the floor.
